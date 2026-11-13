@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SyncLearn | Interactive YouTube Study Studio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            dark: {
+              950: '#090d16',
+              900: '#0f172a',
+              850: '#141e33',
+              800: '#1e293b',
+              700: '#334155',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- KaTeX for crisp LaTeX formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body class="bg-[#090d16] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 bg-[#0c1220]/95 backdrop-blur-md border-b border-slate-800 px-4 lg:px-6 py-2.5">
+    <div class="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Team -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[1.5px] shadow-lg shadow-indigo-500/20">
+          <div class="w-full h-full bg-[#090d16] rounded-[10px] flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-indigo-100 to-slate-200 bg-clip-text text-transparent">
+              SyncLearn
+            </span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-semibold">
+              Study Studio
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-300 flex items-center gap-1">
+            Interactive YouTube Study Studio <span class="text-slate-600" aria-hidden="true">•</span> <span class="text-slate-300 font-mono">by Team ClaudeNSons</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Center: Personal Subject Folder Dropdown -->
+      <div class="flex items-center space-x-2 bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-1.5 shadow-inner">
+        <i data-lucide="folder" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i>
+        <label for="folder-select" class="text-xs text-slate-300 font-medium hidden sm:inline">Subject Folder:</label>
+        <select 
+          id="folder-select" 
+          aria-label="Select Subject Study Folder"
+          class="bg-transparent text-xs text-slate-100 font-semibold focus:outline-none cursor-pointer pr-4 focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
+        >
+          <option value="1">Engineering Chemistry: Polymers</option>
+          <option value="2">Intro to Mechatronics</option>
+          <option value="3">Digital Electronics</option>
+          <option value="add_new">+ Add To Personal Library</option>
+        </select>
+      </div>
+
+      <!-- Right: Load YouTube URL Input Bar with Visible Label & Error Feedback -->
+      <div class="flex flex-col flex-1 max-w-md min-w-[280px]">
+        <div class="flex items-center">
+          <label for="youtube-url-input" class="sr-only">Paste YouTube Video Link</label>
+          <div class="relative w-full flex items-center">
+            <i data-lucide="youtube" class="w-4 h-4 text-red-500 absolute left-3 pointer-events-none" aria-hidden="true"></i>
+            <input 
+              type="text" 
+              id="youtube-url-input" 
+              placeholder="Paste YouTube link (e.g., https://youtube.com/watch?v=...)" 
+              aria-label="Paste YouTube Lecture Link"
+              class="w-full bg-slate-900 border border-slate-700 rounded-l-xl pl-9 pr-3 py-2 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+              value="https://www.youtube.com/watch?v=fnF67w6rDpg"
+            />
+            <button 
+              id="load-video-btn" 
+              class="min-h-[38px] bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs font-semibold px-4 py-2 rounded-r-xl border border-indigo-500 transition-all flex items-center gap-1.5 whitespace-nowrap shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+            >
+              <i data-lucide="play" class="w-3.5 h-3.5 fill-current" aria-hidden="true"></i>
+              <span>Load Video</span>
+            </button>
+          </div>
+        </div>
+        <!-- Inline Error Feedback -->
+        <p id="youtube-url-error" class="hidden text-[11px] text-rose-300 mt-1 pl-1 flex items-center gap-1 font-medium" role="alert">
+          <i data-lucide="alert-circle" class="w-3 h-3 text-rose-400 shrink-0" aria-hidden="true"></i>
+          <span>Please paste a valid YouTube video link (for example: https://www.youtube.com/watch?v=fnF67w6rDpg).</span>
+        </p>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN SPLIT-SCREEN STUDIO LAYOUT -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto p-3 lg:p-4 grid grid-cols-1 lg:grid-cols-12 gap-5">
+    
+    <!-- LEFT COLUMN (60% width = 7/12 cols in LG) -->
+    <div class="lg:col-span-7 flex flex-col space-y-3.5">
+      
+      <!-- Video Player Card -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl overflow-hidden backdrop-blur-sm">
+        
+        <!-- Lecture Header Banner -->
+        <div class="flex items-center justify-between mb-2.5 pb-2.5 border-b border-slate-800">
+          <div class="flex items-center space-x-2 truncate">
+            <span class="px-2 py-0.5 rounded bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-[10px] font-semibold tracking-wide uppercase">
+              Current Video
+            </span>
+            <h1 id="video-title" class="text-sm font-semibold text-slate-100 truncate">
+              Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry
+            </h1>
+          </div>
+          <span id="video-duration-badge" class="text-xs font-mono text-slate-300 bg-slate-800 px-2 py-0.5 rounded font-medium">
+            45:00
+          </span>
+        </div>
+
+        <!-- Auto-Pause Toast Notification Banner -->
+        <div id="autopause-toast" class="hidden mb-2.5 p-3 rounded-xl bg-gradient-to-r from-amber-950/95 via-indigo-950/95 to-slate-900 border border-amber-500/60 shadow-xl flex items-center justify-between text-xs text-amber-200" role="status" aria-live="polite">
+          <div class="flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-400 shrink-0 animate-bounce" aria-hidden="true"></i>
+            <span id="autopause-toast-msg" class="font-medium">⚡ Tricky spot passed — Auto-pausing for quick practice!</span>
+          </div>
+          <button id="dismiss-autopause-toast-btn" class="text-amber-400/90 hover:text-white p-1 rounded hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Dismiss Notification">
+            <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <!-- Embedded YouTube IFrame Container -->
+        <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-inner border border-slate-800">
+          <div id="youtube-player" class="w-full h-full"></div>
+          <!-- Loading placeholder if player initializing (auto-fades, non-blocking) -->
+          <div id="player-loader" class="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center text-slate-300 text-xs gap-2 pointer-events-none transition-opacity duration-300">
+            <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-indigo-400" aria-hidden="true"></i>
+            <span>Connecting to YouTube Studio Player...</span>
+          </div>
+        </div>
+
+        <!-- Player Quick Controls Bar -->
+        <div class="flex items-center justify-between mt-3 px-1 text-xs text-slate-200">
+          <div class="flex items-center space-x-2">
+            <button id="ctrl-play-pause" class="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" title="Play / Pause (Space)" aria-label="Play or Pause Video">
+              <i data-lucide="play" class="w-4 h-4 fill-current" aria-hidden="true"></i>
+            </button>
+            <button id="ctrl-rewind" class="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" title="Rewind 10 seconds" aria-label="Rewind 10 seconds">
+              <i data-lucide="rotate-ccw" class="w-4 h-4" aria-hidden="true"></i>
+            </button>
+            <button id="ctrl-forward" class="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" title="Forward 10 seconds" aria-label="Fast forward 10 seconds">
+              <i data-lucide="rotate-cw" class="w-4 h-4" aria-hidden="true"></i>
+            </button>
+            <span id="time-display" class="font-mono text-xs text-indigo-300 font-semibold ml-2">
+              00:00 / 45:00
+            </span>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <label for="playback-speed-select" class="text-xs text-slate-300 font-medium">Speed:</label>
+            <select id="playback-speed-select" aria-label="Playback Speed" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer">
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1.0x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2.0x</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- DUAL-SIGNAL SCRUBBER & HEATMAP TIMELINE (USER-CENTRED NAMING) -->
+        <div class="mt-3.5 pt-3 border-t border-slate-800">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-1.5 gap-1.5 text-xs">
+            <div class="flex items-center space-x-2 flex-wrap">
+              <span class="font-bold text-slate-100 text-xs tracking-wide">
+                Most Replayed Parts of This Video
+              </span>
+              <span id="timeline-peak-count" class="text-[10px] text-amber-300 font-mono bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded font-semibold">
+                ⚡ 3 Tricky Spots Found
+              </span>
+            </div>
+            <!-- Pin Legend (Never rely on color alone) -->
+            <div class="flex items-center space-x-2.5 text-[11px] text-slate-300">
+              <span class="flex items-center gap-1 font-medium"><span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> ★ Exam Important</span>
+              <span class="flex items-center gap-1 font-medium"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> ? Needs Review</span>
+              <span class="flex items-center gap-1 font-medium"><span class="w-2 h-2 rounded-full bg-cyan-500 inline-block"></span> ∑ Key Formula</span>
+            </div>
+          </div>
+
+          <!-- Helper caption for first-time students -->
+          <p class="text-[11px] text-slate-300 mb-2">
+            Peaks show where students rewind the most. Click any highlighted peak to get a simpler explanation.
+          </p>
+
+          <!-- Interactive Timeline Scrubber Container -->
+          <div 
+            id="timeline-container" 
+            role="slider"
+            aria-label="Video Timeline and Replay Peaks"
+            aria-valuemin="0"
+            aria-valuemax="2700"
+            aria-valuenow="0"
+            class="relative w-full h-20 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer overflow-hidden select-none group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+          >
+            
+            <!-- SVG Heatmap Curve Background -->
+            <svg id="heatmap-svg" class="w-full h-full absolute inset-0 preserve-3d" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="heat-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#818cf8" stop-opacity="0.85" />
+                  <stop offset="60%" stop-color="#6366f1" stop-opacity="0.3" />
+                  <stop offset="100%" stop-color="#4338ca" stop-opacity="0.05" />
+                </linearGradient>
+                <linearGradient id="peak-zone-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.05" />
+                </linearGradient>
+              </defs>
+              <!-- Highlighted Tricky Spots Rects -->
+              <g id="difficult-zones-group"></g>
+              <!-- Heatmap Curve Fill -->
+              <path id="heatmap-curve-fill" fill="url(#heat-grad)" d="" />
+              <!-- Heatmap Curve Stroke Line -->
+              <path id="heatmap-curve-stroke" fill="none" stroke="#a5b4fc" stroke-width="2" d="" />
+            </svg>
+
+            <!-- Overlay Clickable Personal Study Pins Layer -->
+            <div id="timeline-pins-overlay" class="absolute inset-0 pointer-events-none">
+              <!-- Pin elements injected by JS with pointer-events-auto -->
+            </div>
+
+            <!-- Current Playhead Scrubber Bar -->
+            <div id="timeline-playhead" class="absolute top-0 bottom-0 w-0.5 bg-cyan-400 shadow-[0_0_8px_#22d3ee] pointer-events-none transition-all duration-75" style="left: 0%;">
+              <div class="absolute -top-1 -left-1.5 w-3.5 h-3.5 rounded-full bg-cyan-400 border-2 border-slate-900 shadow"></div>
+            </div>
+
+            <!-- Hover Time & Intensity Tooltip -->
+            <div id="timeline-tooltip" class="absolute -top-9 bg-slate-900 border border-slate-700 text-slate-100 text-[11px] font-mono px-2 py-0.5 rounded shadow-lg pointer-events-none hidden whitespace-nowrap z-30 font-medium">
+              <span id="tooltip-text">08:30 (94% Replay)</span>
+            </div>
+
+          </div>
+
+          <!-- Timeline Time Markers (Dynamically populated) -->
+          <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono mt-1 px-1">
+            <span>00:00</span>
+            <div id="timeline-peaks-label-container" class="flex items-center gap-3 overflow-hidden">
+              <!-- Populated dynamically with active video peaks -->
+            </div>
+            <span id="timeline-end-time">45:00</span>
+          </div>
+
+        </div>
+
+        <!-- ACTION BAR (FITTS'S LAW & VISUAL HIERARCHY: PRIMARY vs SECONDARY) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mt-3.5 pt-3.5 border-t border-slate-800 items-center">
+          
+          <!-- Primary CTA + Advanced Settings -->
+          <div class="md:col-span-7 flex items-center gap-2">
+            <!-- Button 1: Explain This Part Simply (High-Contrast Solid Primary CTA, min-h 48px) -->
+            <button 
+              id="btn-confused-rescue" 
+              class="flex-1 min-h-[48px] bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white text-sm font-bold px-4 py-3 rounded-xl shadow-lg shadow-indigo-600/30 border border-indigo-400/40 transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 cursor-pointer"
+              title="Breaks down the current 4-minute section in plain English (Alt + E)"
+            >
+              <i data-lucide="sparkles" class="w-5 h-5 text-indigo-200 shrink-0" aria-hidden="true"></i>
+              <span class="truncate">Explain This Part Simply</span>
+              <span class="text-[11px] font-mono text-indigo-200/80 bg-indigo-700/60 px-1.5 py-0.5 rounded hidden sm:inline font-semibold">Alt + E</span>
+            </button>
+
+            <!-- Advanced Settings Popover Button -->
+            <div class="relative">
+              <button 
+                id="btn-advanced-settings" 
+                class="min-h-[48px] w-12 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" 
+                title="Advanced Analysis Settings"
+                aria-label="Advanced Settings"
+                aria-expanded="false"
+              >
+                <i data-lucide="sliders-horizontal" class="w-4 h-4" aria-hidden="true"></i>
+              </button>
+
+              <!-- Advanced Settings Popover Dropdown -->
+              <div 
+                id="advanced-settings-popover" 
+                class="hidden absolute bottom-full left-0 mb-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl p-3.5 shadow-2xl z-40 space-y-3 backdrop-blur-md"
+              >
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-indigo-400" aria-hidden="true"></i> Advanced Settings
+                  </span>
+                  <button id="close-advanced-settings-btn" class="text-slate-400 hover:text-white p-0.5 rounded cursor-pointer" aria-label="Close Settings">
+                    <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+                <div>
+                  <label class="block text-[11px] font-semibold text-slate-200 mb-1">Explanation Window</label>
+                  <div class="grid grid-cols-3 gap-1">
+                    <button class="window-size-btn text-[11px] font-mono py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer" data-window="120">±1 min</button>
+                    <button class="window-size-btn active text-[11px] font-mono py-1.5 rounded-lg border border-indigo-500 bg-indigo-600/30 text-indigo-200 font-bold transition-colors cursor-pointer" data-window="240">±2m (Def)</button>
+                    <button class="window-size-btn text-[11px] font-mono py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer" data-window="480">±4 min</button>
+                  </div>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                  <span class="text-[11px] text-slate-200 leading-tight font-medium">Auto-pause for practice quiz after tricky parts</span>
+                  <label class="relative inline-flex items-center cursor-pointer select-none shrink-0 ml-2">
+                    <input type="checkbox" id="toggle-autopause" class="sr-only peer" checked />
+                    <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Button: Save Timestamp Note (Distinct Outline, min-h 48px) -->
+          <div class="md:col-span-5">
+            <button 
+              id="btn-drop-pin" 
+              class="w-full min-h-[48px] px-4 py-3 rounded-xl border border-slate-600 hover:border-slate-400 bg-slate-900/60 hover:bg-slate-800 text-slate-100 text-sm font-semibold transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 cursor-pointer shadow-sm"
+              title="Save a note at this video timestamp (Alt + S)"
+            >
+              <i data-lucide="bookmark-plus" class="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true"></i>
+              <span class="truncate">Save Timestamp Note</span>
+              <span class="text-[11px] font-mono text-slate-400 hidden sm:inline ml-1 font-semibold">Alt + S</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Quick Peak Jump Navigator Bar (Dynamically populated) -->
+      <div id="quick-peaks-container" class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex items-center gap-2 overflow-x-auto text-xs">
+        <span class="text-slate-300 text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 shrink-0">
+          <i data-lucide="flame" class="w-3.5 h-3.5 text-amber-400" aria-hidden="true"></i> Jump to Tricky Spots:
+        </span>
+        <div id="quick-peaks-buttons" class="flex items-center gap-2">
+          <!-- Dynamically populated buttons -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN (40% width = 5/12 cols in LG) -->
+    <div class="lg:col-span-5 flex flex-col space-y-3.5">
+      
+      <!-- Studio Tabs Card Container -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[calc(100vh-100px)] min-h-[620px] backdrop-blur-sm overflow-hidden">
+        
+        <!-- Tab Navigation Headers with ARIA attributes & Plain Language -->
+        <div class="flex items-center border-b border-slate-800 bg-slate-950/80 p-2 gap-1.5" role="tablist" aria-label="Studio Study Views">
+          <button 
+            id="tab-btn-rescue" 
+            role="tab"
+            aria-selected="true"
+            aria-controls="tab-content-rescue"
+            tabindex="0"
+            class="tab-btn active flex-1 min-h-[44px] py-2 px-2.5 text-center rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-indigo-300 bg-slate-800 border border-indigo-500/40 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+            data-target="tab-content-rescue"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i>
+            <span class="truncate">1. Simple Explanation</span>
+          </button>
+          
+          <button 
+            id="tab-btn-recall" 
+            role="tab"
+            aria-selected="false"
+            aria-controls="tab-content-recall"
+            tabindex="-1"
+            class="tab-btn flex-1 min-h-[44px] py-2 px-2.5 text-center rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all flex items-center justify-center gap-1.5 border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+            data-target="tab-content-recall"
+          >
+            <i data-lucide="target" class="w-4 h-4 text-cyan-400" aria-hidden="true"></i>
+            <span class="truncate">2. Quick Practice</span>
+          </button>
+
+          <button 
+            id="tab-btn-cheatsheet" 
+            role="tab"
+            aria-selected="false"
+            aria-controls="tab-content-cheatsheet"
+            tabindex="-1"
+            class="tab-btn flex-1 min-h-[44px] py-2 px-2.5 text-center rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all flex items-center justify-center gap-1.5 border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+            data-target="tab-content-cheatsheet"
+          >
+            <i data-lucide="bookmark-check" class="w-4 h-4 text-amber-400" aria-hidden="true"></i>
+            <span class="truncate">3. Saved Notes</span>
+            <span id="pins-count-badge" class="ml-0.5 px-2 py-0.5 rounded-full bg-slate-800 text-[10px] text-slate-200 font-mono font-bold">4</span>
+          </button>
+        </div>
+
+        <!-- TAB CONTENT 1: SIMPLE EXPLANATION (PROGRESSIVE DISCLOSURE & HICK'S LAW) -->
+        <div id="tab-content-rescue" role="tabpanel" aria-labelledby="tab-btn-rescue" class="tab-pane flex-1 p-5 overflow-y-auto space-y-5">
+          
+          <!-- Step-by-Step Friendly Skeleton Loader -->
+          <div id="rescue-loading-skeleton" class="hidden p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4" aria-live="polite">
+            <div class="flex items-center gap-2.5 text-xs text-indigo-300 font-bold">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-indigo-400" aria-hidden="true"></i>
+              <span id="skeleton-status-text">Analyzing this section for you...</span>
+            </div>
+            <div class="space-y-2 text-xs text-slate-200">
+              <div id="sk-step-1" class="flex items-center gap-2 text-indigo-300 font-medium">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                <span>1. Reading video captions around this timestamp...</span>
+              </div>
+              <div id="sk-step-2" class="flex items-center gap-2 text-slate-400">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                <span>2. Writing a simpler explanation in plain English...</span>
+              </div>
+              <div id="sk-step-3" class="flex items-center gap-2 text-slate-400">
+                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                <span>3. Preparing quick practice questions and key takeaways...</span>
+              </div>
+            </div>
+            <div class="space-y-2 pt-2">
+              <div class="h-4 bg-slate-800 rounded animate-pulse w-3/4"></div>
+              <div class="h-4 bg-slate-800/80 rounded animate-pulse w-full"></div>
+              <div class="h-4 bg-slate-800/60 rounded animate-pulse w-5/6"></div>
+            </div>
+          </div>
+
+          <!-- Real Content Container -->
+          <div id="rescue-real-content" class="space-y-5" aria-live="polite">
+
+            <!-- Active Focus Window & Auto-Save Pin Bar -->
+            <div class="bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/40 border border-indigo-800/50 rounded-2xl p-4 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs font-bold text-indigo-300 uppercase tracking-wide flex items-center gap-1.5">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400" aria-hidden="true"></i>
+                  Explaining <span id="rescue-window-time" class="font-mono text-white ml-1">08:00 – 12:00</span>
+                </span>
+                <button 
+                  id="btn-autosave-summary-pin" 
+                  class="bg-indigo-600/30 hover:bg-indigo-600 border border-indigo-500/50 text-indigo-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" 
+                  title="Auto-save this explanation as a note"
+                >
+                  <i data-lucide="bookmark-plus" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                  <span>Save as Note</span>
+                </button>
+              </div>
+              <div class="flex items-center gap-2 mt-2 flex-wrap">
+                <span id="rescue-classification-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/15 border border-rose-500/30 text-rose-300">
+                  ★ Potentially Difficult Math
+                </span>
+                <h2 id="rescue-title" class="text-xs font-bold text-white truncate max-w-sm">
+                  Degree of Polymerization & Molecular Weight Distribution (PDI)
+                </h2>
+              </div>
+            </div>
+
+            <!-- CORE CARD 1 (OPEN BY DEFAULT): Why Students Rewatch This Part + Key Takeaways -->
+            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xs font-bold text-amber-300 flex items-center gap-2">
+                    <i data-lucide="help-circle" class="w-4 h-4 text-amber-400" aria-hidden="true"></i> Why Students Rewatch This Part
+                  </h3>
+                  <span class="text-[10px] font-mono text-amber-300/80 font-semibold bg-amber-500/10 px-2 py-0.5 rounded">Core Insight</span>
+                </div>
+                <p id="rescue-why-struggle" class="text-xs text-slate-200 leading-relaxed font-serif">
+                  Students struggle with discrete summations and fail to recognize why weight-average (Mw) squares individual chain masses while number-average (Mn) weights them linearly.
+                </p>
+              </div>
+
+              <!-- Key Takeaways (Concepts & Pills) -->
+              <div class="pt-3 border-t border-slate-800/80 space-y-2">
+                <h4 class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                  <i data-lucide="check-square" class="w-3.5 h-3.5 text-cyan-400" aria-hidden="true"></i> Key Takeaways
+                </h4>
+                <div id="rescue-concept-pills" class="flex flex-wrap gap-1.5">
+                  <!-- Dynamically populated pills -->
+                </div>
+              </div>
+            </div>
+
+            <!-- CORE CARD 2 (OPEN BY DEFAULT): Step-by-Step Breakdown (Using the Video's Exact Terms) -->
+            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2.5 shadow-sm">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-slate-100 flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Step-by-Step Breakdown (Using the Video's Exact Terms)
+                </h3>
+                <span class="text-[10px] text-indigo-300 font-mono font-semibold bg-indigo-500/10 px-2 py-0.5 rounded">Formulas Verified</span>
+              </div>
+              <div id="rescue-explanation" class="text-xs text-slate-200 leading-relaxed space-y-2.5 font-serif text-[13px]">
+                <!-- KaTeX rendered equations & step-by-step intuition -->
+              </div>
+            </div>
+
+            <!-- EXPANDABLE SECTION A (PROGRESSIVE DISCLOSURE): Compare Terms & Watch Alternative Videos -->
+            <details class="group bg-slate-950/70 border border-slate-800 rounded-2xl overflow-hidden transition-all">
+              <summary class="p-4 text-xs font-bold text-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-900/80 select-none transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="git-compare" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i>
+                  <span>Compare Terms & Watch Alternative Videos</span>
+                </div>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180" aria-hidden="true"></i>
+              </summary>
+              <div class="p-4 pt-2 border-t border-slate-800/80 space-y-4">
+                
+                <!-- Term Comparison Table -->
+                <div class="space-y-2">
+                  <h4 class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                    <i data-lucide="columns-2" class="w-3.5 h-3.5 text-emerald-400" aria-hidden="true"></i> Term Comparison (Lecture vs. Other Videos)
+                  </h4>
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border border-slate-800 rounded-lg overflow-hidden">
+                      <thead class="bg-slate-900 text-slate-300 text-[10px] uppercase font-mono">
+                        <tr>
+                          <th class="p-2 border-b border-slate-800 font-bold">Lecture Term / Symbol</th>
+                          <th class="p-2 border-b border-slate-800 font-bold">What Other Videos Call It</th>
+                          <th class="p-2 border-b border-slate-800 font-bold">How They Connect</th>
+                        </tr>
+                      </thead>
+                      <tbody id="rescue-terminology-bridge-body" class="divide-y divide-slate-800/80 text-slate-200">
+                        <!-- Populated dynamically by JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Alternative Video Cards -->
+                <div class="space-y-2 pt-2 border-t border-slate-800/70">
+                  <h4 class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                    <i data-lucide="film" class="w-3.5 h-3.5 text-rose-400" aria-hidden="true"></i> Other Videos on This Topic (With Term Comparison)
+                  </h4>
+                  <div id="rescue-alt-videos" class="space-y-2">
+                    <!-- Injected by JS -->
+                  </div>
+                </div>
+
+              </div>
+            </details>
+
+            <!-- EXPANDABLE SECTION B (PROGRESSIVE DISCLOSURE): Ask a Specific Question About This Part -->
+            <details class="group bg-slate-950/70 border border-slate-800 rounded-2xl overflow-hidden transition-all">
+              <summary class="p-4 text-xs font-bold text-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-900/80 select-none transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <i data-lucide="message-square" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i>
+                  <span>Ask a Specific Question About This Part</span>
+                </div>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180" aria-hidden="true"></i>
+              </summary>
+              <div class="p-4 pt-2 border-t border-slate-800/80 space-y-3">
+                <label for="ai-question-input" class="text-xs font-medium text-slate-300 block">
+                  Have a specific doubt about this moment in the video?
+                </label>
+                <div class="flex items-center gap-2">
+                  <input 
+                    type="text" 
+                    id="ai-question-input" 
+                    placeholder="e.g., Why does the virtual ground not draw current?" 
+                    class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 min-h-[44px]"
+                  />
+                  <button 
+                    id="ai-ask-btn" 
+                    class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-4 py-2 rounded-xl font-bold transition-colors cursor-pointer"
+                  >
+                    Ask
+                  </button>
+                </div>
+                <!-- AI Response Box -->
+                <div id="ai-response-box" class="hidden text-xs text-slate-200 bg-slate-900 border border-slate-800 rounded-xl p-3 leading-relaxed" aria-live="polite">
+                  <div class="flex items-center gap-1.5 text-indigo-300 font-bold mb-1.5">
+                    <i data-lucide="bot" class="w-4 h-4" aria-hidden="true"></i> Study Assistant:
+                  </div>
+                  <div id="ai-response-content"></div>
+                </div>
+              </div>
+            </details>
+
+          </div>
+
+        </div>
+
+        <!-- TAB CONTENT 2: QUICK PRACTICE (VISUAL FLOW & MCQS) -->
+        <div id="tab-content-recall" role="tabpanel" aria-labelledby="tab-btn-recall" class="tab-pane hidden flex-1 p-5 overflow-y-auto space-y-5">
+          
+          <!-- Recall Header -->
+          <div class="bg-gradient-to-r from-cyan-950/50 via-slate-900 to-indigo-950/30 border border-cyan-800/40 rounded-2xl p-4 shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-cyan-300 uppercase tracking-wide flex items-center gap-1.5">
+                <i data-lucide="target" class="w-3.5 h-3.5 text-cyan-400" aria-hidden="true"></i> Quick Practice: Check Your Understanding
+              </span>
+              <span id="recall-score-badge" class="text-xs font-mono font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-0.5 rounded">
+                0 / 5 Unlocked
+              </span>
+            </div>
+            <h2 id="diagram-title" class="text-sm font-bold text-white mt-1.5">
+              Practice: Polydispersity Index & Molecular Weight Formulas
+            </h2>
+          </div>
+
+          <!-- Fill-in-the-Blank Visual Concept Flow Diagram -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                <i data-lucide="git-commit" class="w-4 h-4 text-cyan-400" aria-hidden="true"></i> Visual Concept Flow (Click <span class="text-cyan-300 font-mono">[ ? Click to Recall ]</span> to Test)
+              </h3>
+              <span class="text-[11px] text-slate-300">Fill in the missing step</span>
+            </div>
+
+            <!-- Interactive Flow Nodes Container -->
+            <div id="diagram-nodes-container" class="space-y-3" aria-live="polite">
+              <!-- Dynamically rendered visual flowchart cards -->
+            </div>
+          </div>
+
+          <!-- Checkpoint Multiple Choice Questions (MCQs) -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                <i data-lucide="help-circle" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Quick Checkpoint Questions
+              </h3>
+              <button id="reset-quiz-btn" class="text-xs text-slate-300 hover:text-white underline cursor-pointer font-medium">
+                Reset Quiz
+              </button>
+            </div>
+
+            <!-- MCQ Questions Container -->
+            <div id="mcqs-container" class="space-y-4" aria-live="polite">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB CONTENT 3: SAVED NOTES (CHEAT-SHEET & SUMMARY) -->
+        <div id="tab-content-cheatsheet" role="tabpanel" aria-labelledby="tab-btn-cheatsheet" class="tab-pane hidden flex-1 p-5 overflow-y-auto space-y-5">
+          
+          <!-- Cheat Sheet Header -->
+          <div class="bg-gradient-to-r from-amber-950/50 via-slate-900 to-indigo-950/30 border border-amber-800/40 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
+                  <i data-lucide="bookmark-check" class="w-4 h-4 text-amber-400" aria-hidden="true"></i>
+                  Saved Notes & Study Guide
+                </h2>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold">1-Page Study Guide</span>
+              </div>
+              <p class="text-[11px] text-slate-300 mt-1">
+                Saved formulas, term comparisons & questions to review before exams
+              </p>
+            </div>
+            <button 
+              id="export-cheatsheet-btn" 
+              class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-bold px-3.5 py-2 rounded-xl border border-indigo-500 flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            >
+              <i data-lucide="file-down" class="w-4 h-4" aria-hidden="true"></i>
+              <span>Export Saved Notes</span>
+            </button>
+          </div>
+
+          <!-- Section 1: Study Pins & Formulas -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                <i data-lucide="bookmark" class="w-4 h-4 text-rose-400" aria-hidden="true"></i> Saved Timestamp Notes & Formulas
+              </h3>
+              <!-- Filter Pills (Non-Color Relying) -->
+              <div class="flex items-center gap-1.5 text-xs">
+                <button class="pin-filter-btn active bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer" data-filter="all">
+                  All (<span id="filter-cnt-all">4</span>)
+                </button>
+                <button class="pin-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer" data-filter="exam_priority">
+                  ★ Exam (<span id="filter-cnt-exam">1</span>)
+                </button>
+                <button class="pin-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer" data-filter="revisit">
+                  ? Review (<span id="filter-cnt-revisit">1</span>)
+                </button>
+                <button class="pin-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer" data-filter="key_formula">
+                  ∑ Formula (<span id="filter-cnt-formula">2</span>)
+                </button>
+              </div>
+            </div>
+
+            <!-- Pins List Container -->
+            <div id="pins-list-container" class="space-y-2.5" aria-live="polite">
+              <!-- Dynamically populated from SQLite -->
+            </div>
+          </div>
+
+          <!-- Section 2: Collected Session Terminology Bridge -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-sm">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                <i data-lucide="git-compare" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i> Session Term Comparison Matrix
+              </h3>
+              <span id="bridges-count-badge" class="text-[10px] font-mono text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">3 Mappings</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border border-slate-800 rounded-xl overflow-hidden">
+                <thead class="bg-slate-900 text-slate-300 text-[10px] uppercase font-mono">
+                  <tr>
+                    <th class="p-2.5 border-b border-slate-800 font-bold">Lecture Term / Symbol</th>
+                    <th class="p-2.5 border-b border-slate-800 font-bold">What Other Videos Call It</th>
+                    <th class="p-2.5 border-b border-slate-800 font-bold">How They Connect</th>
+                  </tr>
+                </thead>
+                <tbody id="cheatsheet-bridge-body" class="divide-y divide-slate-800/80 text-slate-200">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section 3: Targeted Revision: Missed Checkpoints -->
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-sm">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
+                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400" aria-hidden="true"></i> Targeted Revision: Questions to Review
+              </h3>
+              <span id="missed-count-badge" class="text-[10px] font-mono text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded font-bold">0 To Review</span>
+            </div>
+            <div id="cheatsheet-missed-mcqs-container" class="space-y-2.5" aria-live="polite">
+              <!-- Missed MCQs injected here, or empty celebratory card -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL 1: DROP PERSONAL PIN MODAL -->
+  <div id="pin-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 id="pin-modal-title" class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="bookmark-plus" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Save Timestamp Note
+        </h2>
+        <button id="close-pin-modal-btn" class="text-slate-400 hover:text-white p-1 rounded cursor-pointer" aria-label="Close Modal">
+          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label for="pin-time-input" class="block text-slate-200 font-semibold mb-1">Timestamp</label>
+          <div class="flex items-center gap-2">
+            <input type="text" id="pin-time-input" readonly class="w-24 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 font-mono text-indigo-300 font-bold" />
+            <span class="text-slate-300 text-[11px]">(Locked to current video playback time)</span>
+          </div>
+        </div>
+
+        <div>
+          <span class="block text-slate-200 font-semibold mb-1.5">Note Category</span>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="cursor-pointer border border-slate-700 rounded-xl p-2.5 text-center hover:bg-slate-800 has-[:checked]:border-rose-500 has-[:checked]:bg-rose-950/40 transition-all">
+              <input type="radio" name="pin-tag" value="exam_priority" checked class="hidden" />
+              <div class="text-rose-300 font-bold text-xs">★ Exam Important</div>
+            </label>
+            <label class="cursor-pointer border border-slate-700 rounded-xl p-2.5 text-center hover:bg-slate-800 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-950/40 transition-all">
+              <input type="radio" name="pin-tag" value="revisit" class="hidden" />
+              <div class="text-amber-300 font-bold text-xs">? Needs Review</div>
+            </label>
+            <label class="cursor-pointer border border-slate-700 rounded-xl p-2.5 text-center hover:bg-slate-800 has-[:checked]:border-cyan-500 has-[:checked]:bg-cyan-950/40 transition-all">
+              <input type="radio" name="pin-tag" value="key_formula" class="hidden" />
+              <div class="text-cyan-300 font-bold text-xs">∑ Key Formula</div>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label for="pin-title-input" class="block text-slate-200 font-semibold mb-1">Note Title</label>
+          <input type="text" id="pin-title-input" placeholder="e.g., Dispersity formula derivation" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 min-h-[44px]" />
+        </div>
+
+        <div>
+          <label for="pin-note-input" class="block text-slate-200 font-semibold mb-1">Personal Note / Formula Snippet (Optional)</label>
+          <textarea id="pin-note-input" rows="3" placeholder="Add study reminders, derivation cautions, or page references..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button id="cancel-pin-btn" class="min-h-[44px] px-4 py-2 text-xs text-slate-300 hover:text-white cursor-pointer font-medium">Cancel</button>
+        <button id="save-pin-btn" class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-colors flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i> Save Note
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: ADD SUBJECT FOLDER MODAL -->
+  <div id="folder-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="folder-modal-title">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-sm p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 id="folder-modal-title" class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="folder-plus" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> New Subject Folder
+        </h2>
+        <button id="close-folder-modal-btn" class="text-slate-400 hover:text-white p-1 rounded cursor-pointer" aria-label="Close Modal">
+          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label for="new-folder-name" class="block text-slate-200 font-semibold mb-1">Folder Name</label>
+          <input type="text" id="new-folder-name" placeholder="e.g., Thermodynamics & Heat Transfer" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 min-h-[44px]" />
+        </div>
+        <div>
+          <label for="new-folder-color" class="block text-slate-200 font-semibold mb-1">Color Theme</label>
+          <select id="new-folder-color" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none min-h-[44px]">
+            <option value="indigo">Indigo Violet</option>
+            <option value="cyan">Cyan Aqua</option>
+            <option value="emerald">Emerald Green</option>
+            <option value="amber">Amber Gold</option>
+            <option value="rose">Rose Red</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+        <button id="cancel-folder-btn" class="min-h-[44px] px-4 py-2 text-xs text-slate-300 hover:text-white cursor-pointer font-medium">Cancel</button>
+        <button id="save-folder-btn" class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-colors cursor-pointer">
+          Create Folder
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: EXPORT SAVED NOTES MODAL -->
+  <div id="export-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col p-5 shadow-2xl space-y-3.5 overflow-hidden">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 id="export-modal-title" class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4 text-amber-400" aria-hidden="true"></i> Saved Notes & Study Guide (Print & Export)
+        </h2>
+        <button id="close-export-modal-btn" class="text-slate-400 hover:text-white p-1 rounded cursor-pointer" aria-label="Close Export Modal">
+          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Mode Switcher -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+          <button id="export-tab-view" class="px-3.5 py-1.5 rounded-lg font-bold bg-indigo-600 text-white transition-all cursor-pointer">📄 Visual Preview</button>
+          <button id="export-tab-raw" class="px-3.5 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition-all cursor-pointer">📝 Raw Markdown</button>
+        </div>
+        <span class="text-[11px] text-slate-300">Ready for exam cramming</span>
+      </div>
+
+      <!-- Visual Preview Area -->
+      <div id="export-visual-preview" class="flex-1 overflow-y-auto p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-100 space-y-4 max-h-[50vh]">
+        <!-- Injected by JS -->
+      </div>
+
+      <!-- Raw Markdown Area -->
+      <textarea id="export-markdown-content" rows="12" readonly class="hidden flex-1 w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-slate-200 focus:outline-none max-h-[50vh]"></textarea>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+        <button id="print-sheet-btn" class="min-h-[44px] bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 border border-slate-700 shadow-sm cursor-pointer">
+          <i data-lucide="printer" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Print Friendly
+        </button>
+        <div class="flex items-center gap-2">
+          <button id="download-markdown-btn" class="min-h-[44px] bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 border border-slate-700 cursor-pointer">
+            <i data-lucide="download" class="w-4 h-4" aria-hidden="true"></i> Download .md
+          </button>
+          <button id="copy-markdown-btn" class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="copy" class="w-4 h-4" aria-hidden="true"></i> Copy to Clipboard
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: ALTERNATIVE VIDEO PREVIEW MODAL -->
+  <div id="alt-video-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="alt-modal-title">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col">
+      <div class="flex items-center justify-between p-3.5 border-b border-slate-800 bg-slate-950">
+        <div class="flex items-center gap-2">
+          <i data-lucide="youtube" class="w-4 h-4 text-rose-500" aria-hidden="true"></i>
+          <h2 id="alt-modal-title" class="text-xs sm:text-sm font-bold text-white truncate max-w-lg">Alternative Video Preview</h2>
+        </div>
+        <button id="close-alt-modal-btn" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Close Preview Modal">
+          <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="relative w-full aspect-video bg-black">
+        <iframe id="alt-modal-iframe" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNDO CONFIRMATION TOAST (FOR PIN DELETION) -->
+  <div id="undo-delete-toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900 border border-slate-700 text-slate-100 p-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-xs backdrop-blur-md" role="alert" aria-live="assertive">
+    <i data-lucide="info" class="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true"></i>
+    <span id="undo-delete-msg" class="font-medium">Saved note deleted.</span>
+    <button id="undo-delete-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl transition-colors cursor-pointer shadow">
+      Undo
+    </button>
+  </div>
+
+  <!-- SyncLearn Main JavaScript -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
