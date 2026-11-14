@@ -50,6 +50,21 @@ const state = {
 
 // Initialize Application on DOM Ready
 document.addEventListener("DOMContentLoaded", () => {
+  // Support deep-linking back from TopoRecall Lab or external URLs
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramVideoId = urlParams.get("videoId") || urlParams.get("v");
+  const paramTime = urlParams.get("t") || urlParams.get("time");
+  if (paramVideoId) {
+    state.currentVideoId = paramVideoId;
+    const urlInput = document.getElementById("youtube-url-input");
+    if (urlInput) {
+      urlInput.value = `https://www.youtube.com/watch?v=${paramVideoId}`;
+    }
+  }
+  if (paramTime) {
+    state.currentTimeSec = parseFloat(paramTime) || 0;
+  }
+
   initUIEventListeners();
   loadSubjectFolders();
   renderCheatSheetBridges();
@@ -136,6 +151,13 @@ function onPlayerReady(event) {
     state.durationSec = Math.round(duration);
     updateDurationBadge();
     if (state.heatmapData) renderHeatmap(state.heatmapData);
+  }
+
+  // If restoring previous timestamp from URL parameter
+  if (state.currentTimeSec > 0) {
+    try {
+      state.player.seekTo(state.currentTimeSec, true);
+    } catch (e) {}
   }
 
   // Start Scrubber Polling Ticker (runs every 200ms)
@@ -1561,16 +1583,82 @@ function isValidYouTubeUrl(input) {
   return ytRegex.test(clean);
 }
 
+function getActiveRecallRedirectUrl() {
+  const urlInput = document.getElementById("youtube-url-input");
+  const rawInput = urlInput ? urlInput.value.trim() : "";
+  const videoId = state.currentVideoId || "fnF67w6rDpg";
+  const videoUrl = rawInput.startsWith("http") ? rawInput : `https://www.youtube.com/watch?v=${videoId}`;
+  const currentTime = Math.floor(state.currentTimeSec || 0);
+
+  // Derive domain from active subject folder
+  let domain = "ece";
+  if (state.currentFolderId === 1) {
+    domain = "chem"; // Engineering Chemistry: Polymers
+  } else if (state.currentFolderId === 2 || state.currentFolderId === 3) {
+    domain = "ece";
+  }
+
+  const titleEl = document.getElementById("video-title");
+  const title = titleEl ? titleEl.textContent.trim() : "";
+
+  const params = new URLSearchParams({
+    videoUrl: videoUrl,
+    videoId: videoId,
+    t: currentTime.toString(),
+    domain: domain,
+    title: title
+  });
+
+  return `/active-learning?${params.toString()}`;
+}
+
+function redirectToActiveRecallLab() {
+  const targetUrl = getActiveRecallRedirectUrl();
+  window.location.href = targetUrl;
+}
+
 function initUIEventListeners() {
   initTimelineInteractions();
 
-  // Tab Header Click Events
+  // Tab Header Click Events (with Tab 4 redirect to Active Recall Lab)
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const target = btn.getAttribute("data-target");
+      if (target === "tab-content-active-recall") {
+        switchTab(target);
+
+        // Update preview metrics in Tab 4 panel
+        const videoId = state.currentVideoId || "fnF67w6rDpg";
+        const currentTime = Math.floor(state.currentTimeSec || 0);
+        const urlInput = document.getElementById("youtube-url-input");
+        const videoUrl = (urlInput && urlInput.value.startsWith("http")) ? urlInput.value.trim() : `https://www.youtube.com/watch?v=${videoId}`;
+        
+        const vidEl = document.getElementById("active-lab-video-id");
+        if (vidEl) vidEl.textContent = videoId;
+        const timeEl = document.getElementById("active-lab-timestamp");
+        if (timeEl) timeEl.textContent = formatTime(currentTime);
+        const urlDisp = document.getElementById("active-lab-url-display");
+        if (urlDisp) urlDisp.textContent = videoUrl;
+        const timeDisp = document.getElementById("active-lab-time-display");
+        if (timeDisp) timeDisp.textContent = `${formatTime(currentTime)} (${currentTime}s)`;
+        const domainDisp = document.getElementById("active-lab-domain-display");
+        if (domainDisp) domainDisp.textContent = state.currentFolderId === 1 ? "Engineering Chemistry" : "Electronics / Schematic";
+
+        // Redirect immediately to Active Recall webpage
+        redirectToActiveRecallLab();
+        return;
+      }
       switchTab(target);
     });
   });
+
+  // Action Button in Tab 4 pane (in case user returns or cancels auto-redirect)
+  const launchLabBtn = document.getElementById("btn-launch-active-lab");
+  if (launchLabBtn) {
+    launchLabBtn.addEventListener("click", () => {
+      redirectToActiveRecallLab();
+    });
+  }
 
   // Action Bar Button 1: Explain This Part Simply
   const confusedBtn = document.getElementById("btn-confused-rescue");

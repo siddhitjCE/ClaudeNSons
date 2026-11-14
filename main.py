@@ -661,7 +661,20 @@ static_dir = os.path.join(os.path.dirname(__file__), "static")
 if not os.path.exists(static_dir):
     os.makedirs(static_dir, exist_ok=True)
 
+# Mount Active Learning Lab if built
+active_learning_dir = os.path.join(static_dir, "active-learning")
+if os.path.exists(active_learning_dir):
+    app.mount("/active-learning", StaticFiles(directory=active_learning_dir, html=True), name="active_learning")
+
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+
+@app.get("/active-learning")
+def serve_active_learning():
+    index_path = os.path.join(active_learning_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return JSONResponse({"message": "Active Learning Lab is not yet built. Run 'npm run build' inside active_learning."})
 
 
 @app.get("/")
