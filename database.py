@@ -573,3 +573,10 @@ def seed_demo_data():
     conn.commit()
     conn.close()
     logger.info("Database initialized and demo data seeded successfully!")
+
+
+# Auto-initialize on import so tables always exist on serverless cold starts
+try:
+    init_db()
+except Exception as e:
+    logger.debug(f"Auto init notice: {e}")

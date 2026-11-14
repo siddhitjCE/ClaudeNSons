@@ -10,331 +10,1594 @@
 // ==========================================
 
 const STATIC_FALLBACK_DATA = {
-  folders: [
-    { id: 1, name: "Engineering Chemistry: Polymers", color: "violet", icon: "flask-conical", video_count: 3 },
-    { id: 2, name: "Intro to Mechatronics", color: "cyan", icon: "cpu", video_count: 0 },
-    { id: 3, name: "Digital Electronics", color: "emerald", icon: "binary", video_count: 1 }
-  ],
-  videos: [
+  "folders": [
     {
-      id: 3,
-      video_id: "fnF67w6rDpg",
-      title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-      author: "YouTube Studio",
-      folder_id: 1,
-      duration_sec: 2700,
-      thumbnail_url: "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
+      "id": 1,
+      "name": "Engineering Chemistry: Polymers",
+      "color": "violet",
+      "icon": "flask-conical",
+      "video_count": 3
     },
     {
-      id: 4,
-      video_id: "OSCKBmkrH_g",
-      title: "The Ultimate Component: OpAmp (ElectroBOOM101 – 013)",
-      author: "ElectroBOOM",
-      folder_id: 3,
-      duration_sec: 754,
-      thumbnail_url: "https://img.youtube.com/vi/OSCKBmkrH_g/hqdefault.jpg"
+      "id": 2,
+      "name": "Intro to Mechatronics",
+      "color": "cyan",
+      "icon": "cpu",
+      "video_count": 0
     },
     {
-      id: 1,
-      video_id: "KfODG5REyss",
-      title: "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
-      author: "Veritasium",
-      folder_id: null,
-      duration_sec: 3955,
-      thumbnail_url: "https://i.ytimg.com/vi/KfODG5REyss/hqdefault.jpg"
-    },
-    {
-      id: 2,
-      video_id: "Y-W-w8yNiKU",
-      title: "Why is there antimatter?",
-      author: "Veritasium",
-      folder_id: 1,
-      duration_sec: 2123,
-      thumbnail_url: "https://img.youtube.com/vi/Y-W-w8yNiKU/hqdefault.jpg"
-    },
-    {
-      id: 5,
-      video_id: "fEjvSbI_PT4",
-      title: "Dying Is Complicated",
-      author: "Kurzgesagt",
-      folder_id: 1,
-      duration_sec: 840,
-      thumbnail_url: "https://img.youtube.com/vi/fEjvSbI_PT4/hqdefault.jpg"
-    },
-    {
-      id: 6,
-      video_id: "lyfx8CL7AkI",
-      title: "This CHIP Changed the WORLD! MOSFET (ElectroBOOM101 - 012)",
-      author: "ElectroBOOM",
-      folder_id: 1,
-      duration_sec: 738,
-      thumbnail_url: "https://img.youtube.com/vi/lyfx8CL7AkI/hqdefault.jpg"
+      "id": 3,
+      "name": "Digital Electronics",
+      "color": "emerald",
+      "icon": "binary",
+      "video_count": 1
     }
   ],
-  pins: [
+  "videos": [
     {
-      id: 1,
-      video_id: "fnF67w6rDpg",
-      timestamp_sec: 580.0,
-      tag: "exam_priority",
-      title: "Polydispersity Index (PDI = Mw/Mn) Numerical Formula",
-      note: "Polydispersity Index formula: PDI = Mw / Mn. For monodisperse polymers (biological proteins) PDI = 1.0. For typical synthetic polymers, PDI > 1.5. Highly recurring Question 3 on midterms!",
-      created_at: "2026-11-13 22:49:06"
+      "id": 3,
+      "video_id": "fnF67w6rDpg",
+      "title": "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
+      "author": "YouTube Studio",
+      "folder_id": 1,
+      "duration_sec": 2700,
+      "thumbnail_url": "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
     },
     {
-      id: 2,
-      video_id: "fnF67w6rDpg",
-      timestamp_sec: 675.0,
-      tag: "key_formula",
-      title: "Number-Average (Mn) vs Weight-Average (Mw) Formulas",
-      note: "Mn = Σ(Ni·Mi) / ΣNi (osmometry). Mw = Σ(Ni·Mi²) / Σ(Ni·Mi) (light scattering). High-mass chains bias Mw upward, hence Mw >= Mn always.",
-      created_at: "2026-11-13 22:49:06"
+      "id": 4,
+      "video_id": "OSCKBmkrH_g",
+      "title": "The Ultimate Component: OpAmp (ElectroBOOM101 \u2013 013)",
+      "author": "ElectroBOOM",
+      "folder_id": 3,
+      "duration_sec": 754,
+      "thumbnail_url": "https://img.youtube.com/vi/OSCKBmkrH_g/hqdefault.jpg"
     },
     {
-      id: 3,
-      video_id: "fnF67w6rDpg",
-      timestamp_sec: 1360.0,
-      tag: "revisit",
-      title: "Ziegler-Natta Catalysis Monometallic Cossee-Arlman Mechanism",
-      note: "Titanium tetrachloride (TiCl4) coordinated with Triethylaluminium Al(C2H5)3 creates active stereospecific vacant orbital for syndiotactic / isotactic polypropylene.",
-      created_at: "2026-11-13 22:49:06"
+      "id": 1,
+      "video_id": "KfODG5REyss",
+      "title": "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
+      "author": "Veritasium",
+      "folder_id": null,
+      "duration_sec": 3955,
+      "thumbnail_url": "https://i.ytimg.com/vi/KfODG5REyss/hqdefault.jpg"
     },
     {
-      id: 4,
-      video_id: "fnF67w6rDpg",
-      timestamp_sec: 2260.0,
-      tag: "exam_priority",
-      title: "Vulcanization Sulfur Crosslink Density vs Glass Transition (Tg)",
-      note: "2-3% sulfur gives elastic soft rubber (tires); 25-35% sulfur crosslinks all conformational rotation, forming rigid ebonite.",
-      created_at: "2026-11-13 22:49:06"
+      "id": 2,
+      "video_id": "Y-W-w8yNiKU",
+      "title": "Why is there antimatter?",
+      "author": "Veritasium",
+      "folder_id": 1,
+      "duration_sec": 2123,
+      "thumbnail_url": "https://img.youtube.com/vi/Y-W-w8yNiKU/hqdefault.jpg"
     },
     {
-      id: 5,
-      video_id: "OSCKBmkrH_g",
-      timestamp_sec: 180.0,
-      tag: "exam_priority",
-      title: "Virtual Ground Assumption (V- ≈ V+ = 0V)",
-      note: "Because open-loop gain AOL is massive (~100,000), negative feedback drives differential input voltage (V+ - V-) towards zero. With V+ grounded, V- is a virtual ground!",
-      created_at: "2026-11-13 22:49:06"
+      "id": 5,
+      "video_id": "fEjvSbI_PT4",
+      "title": "Dying Is Complicated",
+      "author": "Kurzgesagt",
+      "folder_id": 1,
+      "duration_sec": 840,
+      "thumbnail_url": "https://img.youtube.com/vi/fEjvSbI_PT4/hqdefault.jpg"
     },
     {
-      id: 6,
-      video_id: "OSCKBmkrH_g",
-      timestamp_sec: 340.0,
-      tag: "key_formula",
-      title: "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
-      note: "Applying KCL at the inverting node: (Vin - 0)/Rin = (0 - Vout)/Rf => Vout = -(Rf/Rin) * Vin. Negative sign indicates 180° phase inversion.",
-      created_at: "2026-11-13 22:49:06"
-    },
-    {
-      id: 7,
-      video_id: "OSCKBmkrH_g",
-      timestamp_sec: 520.0,
-      tag: "revisit",
-      title: "Power Supply Rail Clipping Saturation",
-      note: "Output cannot swing beyond supply rails (VEE <= Vout <= VCC). If driven beyond rails, peaks get clipped flat.",
-      created_at: "2026-11-13 22:49:06"
+      "id": 6,
+      "video_id": "lyfx8CL7AkI",
+      "title": "This CHIP Changed the WORLD! MOSFET (ElectroBOOM101 - 012)",
+      "author": "ElectroBOOM",
+      "folder_id": 1,
+      "duration_sec": 738,
+      "thumbnail_url": "https://img.youtube.com/vi/lyfx8CL7AkI/hqdefault.jpg"
     }
   ],
-  heatmaps: {
+  "pins": [
+    {
+      "id": 1,
+      "video_id": "fnF67w6rDpg",
+      "timestamp_sec": 580.0,
+      "tag": "exam_priority",
+      "title": "Polydispersity Index (PDI = Mw/Mn) Numerical Formula",
+      "note": "Polydispersity Index formula: PDI = Mw / Mn. For monodisperse polymers (biological proteins) PDI = 1.0. For typical synthetic polymers, PDI > 1.5. Highly recurring Question 3 on midterms!",
+      "created_at": "2026-11-13 22:49:06"
+    },
+    {
+      "id": 2,
+      "video_id": "fnF67w6rDpg",
+      "timestamp_sec": 675.0,
+      "tag": "key_formula",
+      "title": "Number-Average (Mn) vs Weight-Average (Mw) Formulas",
+      "note": "Mn = \u03a3(Ni\u00b7Mi) / \u03a3Ni (osmometry). Mw = \u03a3(Ni\u00b7Mi\u00b2) / \u03a3(Ni\u00b7Mi) (light scattering). High-mass chains bias Mw upward, hence Mw >= Mn always.",
+      "created_at": "2026-11-13 22:49:06"
+    },
+    {
+      "id": 3,
+      "video_id": "fnF67w6rDpg",
+      "timestamp_sec": 1360.0,
+      "tag": "revisit",
+      "title": "Ziegler-Natta Catalysis Monometallic Cossee-Arlman Mechanism",
+      "note": "Titanium tetrachloride (TiCl4) coordinated with Triethylaluminium Al(C2H5)3 creates active stereospecific vacant orbital for syndiotactic / isotactic polypropylene.",
+      "created_at": "2026-11-13 22:49:06"
+    },
+    {
+      "id": 4,
+      "video_id": "fnF67w6rDpg",
+      "timestamp_sec": 2260.0,
+      "tag": "exam_priority",
+      "title": "Vulcanization Sulfur Crosslink Density vs Glass Transition (Tg)",
+      "note": "2-3% sulfur gives elastic soft rubber (tires); 25-35% sulfur crosslinks all conformational rotation, forming rigid ebonite.",
+      "created_at": "2026-11-13 22:49:06"
+    },
+    {
+      "id": 5,
+      "video_id": "OSCKBmkrH_g",
+      "timestamp_sec": 180.0,
+      "tag": "exam_priority",
+      "title": "Virtual Ground Assumption (V- \u2248 V+ = 0V)",
+      "note": "Because open-loop gain AOL is massive (~100,000), negative feedback drives differential input voltage (V+ - V-) towards zero. With V+ grounded, V- is a virtual ground!",
+      "created_at": "2026-11-13 22:49:06"
+    },
+    {
+      "id": 6,
+      "video_id": "OSCKBmkrH_g",
+      "timestamp_sec": 340.0,
+      "tag": "key_formula",
+      "title": "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
+      "note": "Applying KCL at the inverting node: (Vin - 0)/Rin = (0 - Vout)/Rf => Vout = -(Rf/Rin) * Vin. Negative sign indicates 180\u00b0 phase inversion.",
+      "created_at": "2026-11-13 22:49:06"
+    },
+    {
+      "id": 7,
+      "video_id": "OSCKBmkrH_g",
+      "timestamp_sec": 520.0,
+      "tag": "revisit",
+      "title": "Power Supply Rail Clipping Saturation",
+      "note": "Output cannot swing beyond supply rails (VEE <= Vout <= VCC). If driven beyond rails, peaks get clipped flat.",
+      "created_at": "2026-11-13 22:49:06"
+    }
+  ],
+  "heatmaps": {
     "fnF67w6rDpg": {
-      video_id: "fnF67w6rDpg",
-      title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-      duration_sec: 2700,
-      chapters: [
-        { start_time: 0, end_time: 720, title: "Polymers & Molecular Weight Distribution" },
-        { start_time: 720, end_time: 1800, title: "Ziegler-Natta Catalysis & Stereospecific Mechanism" },
-        { start_time: 1800, end_time: 2700, title: "Vulcanization & Viscoelastic Properties" }
-      ],
-      peaks: [
+      "video_id": "fnF67w6rDpg",
+      "title": "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
+      "duration_sec": 2700,
+      "chapters": [
         {
-          id: "peak-1",
-          start_sec: 480,
-          end_sec: 720,
-          peak_sec: 590,
-          intensity: 0.94,
-          label: "Degree of Polymerization & Molecular Weight Distribution (PDI)",
-          description: "High crowd replay peak: Derivations for Number-Average (Mn) vs Weight-Average (Mw) and Polydispersity Index (PDI = Mw/Mn)."
+          "start_time": 0,
+          "end_time": 720,
+          "title": "Polymers & Molecular Weight Distribution"
         },
         {
-          id: "peak-2",
-          start_sec: 1290,
-          end_sec: 1470,
-          peak_sec: 1360,
-          intensity: 0.89,
-          label: "Ziegler-Natta Catalysis & Stereospecific Mechanism",
-          description: "High replay cluster: Coordination polymerisation mechanism between TiCl4 and Al(C2H5)3."
+          "start_time": 720,
+          "end_time": 1800,
+          "title": "Ziegler-Natta Catalysis & Stereospecific Mechanism"
         },
         {
-          id: "peak-3",
-          start_sec: 2160,
-          end_sec: 2370,
-          peak_sec: 2260,
-          intensity: 0.82,
-          label: "Vulcanization, Cross-Linking & Viscoelastic Transition",
-          description: "Critical exam section: Sulfur bridge crosslinking percentage vs polymer chain mobility."
+          "start_time": 1800,
+          "end_time": 2700,
+          "title": "Vulcanization & Viscoelastic Properties"
         }
-      ]
+      ],
+      "intensity_points": [
+        {
+          "time_sec": 0.0,
+          "percentage": 0.0,
+          "intensity": 0.34
+        },
+        {
+          "time_sec": 22.7,
+          "percentage": 0.84,
+          "intensity": 0.3358
+        },
+        {
+          "time_sec": 45.4,
+          "percentage": 1.68,
+          "intensity": 0.3322
+        },
+        {
+          "time_sec": 68.1,
+          "percentage": 2.52,
+          "intensity": 0.3291
+        },
+        {
+          "time_sec": 90.8,
+          "percentage": 3.36,
+          "intensity": 0.3264
+        },
+        {
+          "time_sec": 113.4,
+          "percentage": 4.2,
+          "intensity": 0.3241
+        },
+        {
+          "time_sec": 136.1,
+          "percentage": 5.04,
+          "intensity": 0.3221
+        },
+        {
+          "time_sec": 158.8,
+          "percentage": 5.88,
+          "intensity": 0.3203
+        },
+        {
+          "time_sec": 181.5,
+          "percentage": 6.72,
+          "intensity": 0.3187
+        },
+        {
+          "time_sec": 204.2,
+          "percentage": 7.56,
+          "intensity": 0.3172
+        },
+        {
+          "time_sec": 226.9,
+          "percentage": 8.4,
+          "intensity": 0.3158
+        },
+        {
+          "time_sec": 249.6,
+          "percentage": 9.24,
+          "intensity": 0.3145
+        },
+        {
+          "time_sec": 272.3,
+          "percentage": 10.08,
+          "intensity": 0.3134
+        },
+        {
+          "time_sec": 295.0,
+          "percentage": 10.92,
+          "intensity": 0.3128
+        },
+        {
+          "time_sec": 317.6,
+          "percentage": 11.76,
+          "intensity": 0.3134
+        },
+        {
+          "time_sec": 340.3,
+          "percentage": 12.61,
+          "intensity": 0.3166
+        },
+        {
+          "time_sec": 363.0,
+          "percentage": 13.45,
+          "intensity": 0.3247
+        },
+        {
+          "time_sec": 385.7,
+          "percentage": 14.29,
+          "intensity": 0.341
+        },
+        {
+          "time_sec": 408.4,
+          "percentage": 15.13,
+          "intensity": 0.3701
+        },
+        {
+          "time_sec": 431.1,
+          "percentage": 15.97,
+          "intensity": 0.4164
+        },
+        {
+          "time_sec": 453.8,
+          "percentage": 16.81,
+          "intensity": 0.4832
+        },
+        {
+          "time_sec": 476.5,
+          "percentage": 17.65,
+          "intensity": 0.5704
+        },
+        {
+          "time_sec": 499.2,
+          "percentage": 18.49,
+          "intensity": 0.6724
+        },
+        {
+          "time_sec": 521.8,
+          "percentage": 19.33,
+          "intensity": 0.7776
+        },
+        {
+          "time_sec": 544.5,
+          "percentage": 20.17,
+          "intensity": 0.87
+        },
+        {
+          "time_sec": 567.2,
+          "percentage": 21.01,
+          "intensity": 0.9324
+        },
+        {
+          "time_sec": 589.9,
+          "percentage": 21.85,
+          "intensity": 0.952
+        },
+        {
+          "time_sec": 612.6,
+          "percentage": 22.69,
+          "intensity": 0.9238
+        },
+        {
+          "time_sec": 635.3,
+          "percentage": 23.53,
+          "intensity": 0.8527
+        },
+        {
+          "time_sec": 658.0,
+          "percentage": 24.37,
+          "intensity": 0.7516
+        },
+        {
+          "time_sec": 680.7,
+          "percentage": 25.21,
+          "intensity": 0.6377
+        },
+        {
+          "time_sec": 703.4,
+          "percentage": 26.05,
+          "intensity": 0.5271
+        },
+        {
+          "time_sec": 726.1,
+          "percentage": 26.89,
+          "intensity": 0.4313
+        },
+        {
+          "time_sec": 748.7,
+          "percentage": 27.73,
+          "intensity": 0.3561
+        },
+        {
+          "time_sec": 771.4,
+          "percentage": 28.57,
+          "intensity": 0.3017
+        },
+        {
+          "time_sec": 794.1,
+          "percentage": 29.41,
+          "intensity": 0.2648
+        },
+        {
+          "time_sec": 816.8,
+          "percentage": 30.25,
+          "intensity": 0.241
+        },
+        {
+          "time_sec": 839.5,
+          "percentage": 31.09,
+          "intensity": 0.2257
+        },
+        {
+          "time_sec": 862.2,
+          "percentage": 31.93,
+          "intensity": 0.2157
+        },
+        {
+          "time_sec": 884.9,
+          "percentage": 32.77,
+          "intensity": 0.2086
+        },
+        {
+          "time_sec": 907.6,
+          "percentage": 33.61,
+          "intensity": 0.203
+        },
+        {
+          "time_sec": 930.3,
+          "percentage": 34.45,
+          "intensity": 0.1983
+        },
+        {
+          "time_sec": 952.9,
+          "percentage": 35.29,
+          "intensity": 0.194
+        },
+        {
+          "time_sec": 975.6,
+          "percentage": 36.13,
+          "intensity": 0.1902
+        },
+        {
+          "time_sec": 998.3,
+          "percentage": 36.97,
+          "intensity": 0.1867
+        },
+        {
+          "time_sec": 1021.0,
+          "percentage": 37.82,
+          "intensity": 0.1836
+        },
+        {
+          "time_sec": 1043.7,
+          "percentage": 38.66,
+          "intensity": 0.1808
+        },
+        {
+          "time_sec": 1066.4,
+          "percentage": 39.5,
+          "intensity": 0.1786
+        },
+        {
+          "time_sec": 1089.1,
+          "percentage": 40.34,
+          "intensity": 0.1772
+        },
+        {
+          "time_sec": 1111.8,
+          "percentage": 41.18,
+          "intensity": 0.1773
+        },
+        {
+          "time_sec": 1134.5,
+          "percentage": 42.02,
+          "intensity": 0.1802
+        },
+        {
+          "time_sec": 1157.1,
+          "percentage": 42.86,
+          "intensity": 0.1887
+        },
+        {
+          "time_sec": 1179.8,
+          "percentage": 43.7,
+          "intensity": 0.207
+        },
+        {
+          "time_sec": 1202.5,
+          "percentage": 44.54,
+          "intensity": 0.2408
+        },
+        {
+          "time_sec": 1225.2,
+          "percentage": 45.38,
+          "intensity": 0.2962
+        },
+        {
+          "time_sec": 1247.9,
+          "percentage": 46.22,
+          "intensity": 0.3767
+        },
+        {
+          "time_sec": 1270.6,
+          "percentage": 47.06,
+          "intensity": 0.4798
+        },
+        {
+          "time_sec": 1293.3,
+          "percentage": 47.9,
+          "intensity": 0.5942
+        },
+        {
+          "time_sec": 1316.0,
+          "percentage": 48.74,
+          "intensity": 0.7007
+        },
+        {
+          "time_sec": 1338.7,
+          "percentage": 49.58,
+          "intensity": 0.7767
+        },
+        {
+          "time_sec": 1361.3,
+          "percentage": 50.42,
+          "intensity": 0.804
+        },
+        {
+          "time_sec": 1384.0,
+          "percentage": 51.26,
+          "intensity": 0.7762
+        },
+        {
+          "time_sec": 1406.7,
+          "percentage": 52.1,
+          "intensity": 0.7012
+        },
+        {
+          "time_sec": 1429.4,
+          "percentage": 52.94,
+          "intensity": 0.5982
+        },
+        {
+          "time_sec": 1452.1,
+          "percentage": 53.78,
+          "intensity": 0.4898
+        },
+        {
+          "time_sec": 1474.8,
+          "percentage": 54.62,
+          "intensity": 0.3943
+        },
+        {
+          "time_sec": 1497.5,
+          "percentage": 55.46,
+          "intensity": 0.3219
+        },
+        {
+          "time_sec": 1520.2,
+          "percentage": 56.3,
+          "intensity": 0.2741
+        },
+        {
+          "time_sec": 1542.9,
+          "percentage": 57.14,
+          "intensity": 0.2469
+        },
+        {
+          "time_sec": 1565.5,
+          "percentage": 57.98,
+          "intensity": 0.2341
+        },
+        {
+          "time_sec": 1588.2,
+          "percentage": 58.82,
+          "intensity": 0.2301
+        },
+        {
+          "time_sec": 1610.9,
+          "percentage": 59.66,
+          "intensity": 0.2309
+        },
+        {
+          "time_sec": 1633.6,
+          "percentage": 60.5,
+          "intensity": 0.2337
+        },
+        {
+          "time_sec": 1656.3,
+          "percentage": 61.34,
+          "intensity": 0.2375
+        },
+        {
+          "time_sec": 1679.0,
+          "percentage": 62.18,
+          "intensity": 0.2415
+        },
+        {
+          "time_sec": 1701.7,
+          "percentage": 63.03,
+          "intensity": 0.2454
+        },
+        {
+          "time_sec": 1724.4,
+          "percentage": 63.87,
+          "intensity": 0.2492
+        },
+        {
+          "time_sec": 1747.1,
+          "percentage": 64.71,
+          "intensity": 0.2528
+        },
+        {
+          "time_sec": 1769.7,
+          "percentage": 65.55,
+          "intensity": 0.2561
+        },
+        {
+          "time_sec": 1792.4,
+          "percentage": 66.39,
+          "intensity": 0.2591
+        },
+        {
+          "time_sec": 1815.1,
+          "percentage": 67.23,
+          "intensity": 0.2617
+        },
+        {
+          "time_sec": 1837.8,
+          "percentage": 68.07,
+          "intensity": 0.2641
+        },
+        {
+          "time_sec": 1860.5,
+          "percentage": 68.91,
+          "intensity": 0.2661
+        },
+        {
+          "time_sec": 1883.2,
+          "percentage": 69.75,
+          "intensity": 0.2677
+        },
+        {
+          "time_sec": 1905.9,
+          "percentage": 70.59,
+          "intensity": 0.2689
+        },
+        {
+          "time_sec": 1928.6,
+          "percentage": 71.43,
+          "intensity": 0.2698
+        },
+        {
+          "time_sec": 1951.3,
+          "percentage": 72.27,
+          "intensity": 0.2704
+        },
+        {
+          "time_sec": 1973.9,
+          "percentage": 73.11,
+          "intensity": 0.271
+        },
+        {
+          "time_sec": 1996.6,
+          "percentage": 73.95,
+          "intensity": 0.2722
+        },
+        {
+          "time_sec": 2019.3,
+          "percentage": 74.79,
+          "intensity": 0.2749
+        },
+        {
+          "time_sec": 2042.0,
+          "percentage": 75.63,
+          "intensity": 0.2811
+        },
+        {
+          "time_sec": 2064.7,
+          "percentage": 76.47,
+          "intensity": 0.294
+        },
+        {
+          "time_sec": 2087.4,
+          "percentage": 77.31,
+          "intensity": 0.3177
+        },
+        {
+          "time_sec": 2110.1,
+          "percentage": 78.15,
+          "intensity": 0.3568
+        },
+        {
+          "time_sec": 2132.8,
+          "percentage": 78.99,
+          "intensity": 0.4144
+        },
+        {
+          "time_sec": 2155.5,
+          "percentage": 79.83,
+          "intensity": 0.4903
+        },
+        {
+          "time_sec": 2178.2,
+          "percentage": 80.67,
+          "intensity": 0.5786
+        },
+        {
+          "time_sec": 2200.8,
+          "percentage": 81.51,
+          "intensity": 0.6676
+        },
+        {
+          "time_sec": 2223.5,
+          "percentage": 82.35,
+          "intensity": 0.7411
+        },
+        {
+          "time_sec": 2246.2,
+          "percentage": 83.19,
+          "intensity": 0.7833
+        },
+        {
+          "time_sec": 2268.9,
+          "percentage": 84.03,
+          "intensity": 0.7838
+        },
+        {
+          "time_sec": 2291.6,
+          "percentage": 84.87,
+          "intensity": 0.7416
+        },
+        {
+          "time_sec": 2314.3,
+          "percentage": 85.71,
+          "intensity": 0.6653
+        },
+        {
+          "time_sec": 2337.0,
+          "percentage": 86.55,
+          "intensity": 0.5701
+        },
+        {
+          "time_sec": 2359.7,
+          "percentage": 87.39,
+          "intensity": 0.4725
+        },
+        {
+          "time_sec": 2382.4,
+          "percentage": 88.24,
+          "intensity": 0.3856
+        },
+        {
+          "time_sec": 2405.0,
+          "percentage": 89.08,
+          "intensity": 0.3166
+        },
+        {
+          "time_sec": 2427.7,
+          "percentage": 89.92,
+          "intensity": 0.267
+        },
+        {
+          "time_sec": 2450.4,
+          "percentage": 90.76,
+          "intensity": 0.234
+        },
+        {
+          "time_sec": 2473.1,
+          "percentage": 91.6,
+          "intensity": 0.2133
+        },
+        {
+          "time_sec": 2495.8,
+          "percentage": 92.44,
+          "intensity": 0.2007
+        },
+        {
+          "time_sec": 2518.5,
+          "percentage": 93.28,
+          "intensity": 0.1928
+        },
+        {
+          "time_sec": 2541.2,
+          "percentage": 94.12,
+          "intensity": 0.1875
+        },
+        {
+          "time_sec": 2563.9,
+          "percentage": 94.96,
+          "intensity": 0.1835
+        },
+        {
+          "time_sec": 2586.6,
+          "percentage": 95.8,
+          "intensity": 0.1803
+        },
+        {
+          "time_sec": 2609.2,
+          "percentage": 96.64,
+          "intensity": 0.1777
+        },
+        {
+          "time_sec": 2631.9,
+          "percentage": 97.48,
+          "intensity": 0.1754
+        },
+        {
+          "time_sec": 2654.6,
+          "percentage": 98.32,
+          "intensity": 0.1735
+        },
+        {
+          "time_sec": 2677.3,
+          "percentage": 99.16,
+          "intensity": 0.1721
+        },
+        {
+          "time_sec": 2700.0,
+          "percentage": 100.0,
+          "intensity": 0.171
+        }
+      ],
+      "peaks": [
+        {
+          "id": "peak-1",
+          "start_sec": 480,
+          "end_sec": 720,
+          "peak_sec": 590,
+          "intensity": 0.94,
+          "label": "Degree of Polymerization & Molecular Weight Distribution (PDI)",
+          "description": "High crowd replay peak: Students repeatedly review derivations for Number-Average (Mn) vs Weight-Average (Mw) and Polydispersity Index (PDI = Mw/Mn)."
+        },
+        {
+          "id": "peak-2",
+          "start_sec": 1290,
+          "end_sec": 1470,
+          "peak_sec": 1360,
+          "intensity": 0.89,
+          "label": "Ziegler-Natta Catalysis & Stereospecific Mechanism",
+          "description": "High replay cluster: Coordination polymerisation mechanism between TiCl4 and Al(C2H5)3, focusing on monometallic vs bimetallic active sites."
+        },
+        {
+          "id": "peak-3",
+          "start_sec": 2160,
+          "end_sec": 2370,
+          "peak_sec": 2260,
+          "intensity": 0.82,
+          "label": "Vulcanization, Cross-Linking & Viscoelastic Transition",
+          "description": "Critical exam section: Sulfur bridge crosslinking percentage vs polymer chain mobility, contrasting soft tire elastomer with rigid ebonite."
+        }
+      ],
+      "source": "pre_seeded_curated"
     },
     "OSCKBmkrH_g": {
-      video_id: "OSCKBmkrH_g",
-      title: "The Ultimate Component: OpAmp (ElectroBOOM101 – 013)",
-      duration_sec: 754,
-      chapters: [
-        { start_time: 0, end_time: 240, title: "OpAmp Fundamentals & Virtual Ground" },
-        { start_time: 240, end_time: 440, title: "Inverting & Non-Inverting Amplifier Configurations" },
-        { start_time: 440, end_time: 754, title: "Saturation, Power Rails & Applications" }
-      ],
-      peaks: [
+      "video_id": "OSCKBmkrH_g",
+      "title": "The Ultimate Component: OpAmp (ElectroBOOM101 \u2013 013)",
+      "duration_sec": 754,
+      "chapters": [
         {
-          id: "peak-1",
-          start_sec: 60,
-          end_sec: 240,
-          peak_sec: 180,
-          intensity: 0.95,
-          label: "Virtual Ground Assumption (V- ≈ V+ = 0V)",
-          description: "Crowd replay peak: Why negative feedback forces inverting terminal to 0V without physical ground connection."
+          "start_time": 0,
+          "end_time": 240,
+          "title": "OpAmp Fundamentals & Virtual Ground"
         },
         {
-          id: "peak-2",
-          start_sec: 240,
-          end_sec: 420,
-          peak_sec: 340,
-          intensity: 0.88,
-          label: "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
-          description: "High replay cluster: Applying KCL at the inverting node to derive closed-loop gain."
+          "start_time": 240,
+          "end_time": 440,
+          "title": "Inverting & Non-Inverting Amplifier Configurations"
         },
         {
-          id: "peak-3",
-          start_sec: 440,
-          end_sec: 600,
-          peak_sec: 520,
-          intensity: 0.82,
-          label: "Power Supply Rail Clipping Saturation",
-          description: "Exam pitfall: Output voltage limits bounded by VEE and VCC, and clipping when driven beyond rails."
+          "start_time": 440,
+          "end_time": 754,
+          "title": "Saturation, Power Rails & Applications"
         }
-      ]
+      ],
+      "intensity_points": [
+        {
+          "time_sec": 0.0,
+          "percentage": 0.0,
+          "intensity": 0.2
+        },
+        {
+          "time_sec": 7.6,
+          "percentage": 1.01,
+          "intensity": 0.2057
+        },
+        {
+          "time_sec": 15.2,
+          "percentage": 2.02,
+          "intensity": 0.2114
+        },
+        {
+          "time_sec": 22.8,
+          "percentage": 3.03,
+          "intensity": 0.2169
+        },
+        {
+          "time_sec": 30.5,
+          "percentage": 4.04,
+          "intensity": 0.2224
+        },
+        {
+          "time_sec": 38.1,
+          "percentage": 5.05,
+          "intensity": 0.2277
+        },
+        {
+          "time_sec": 45.7,
+          "percentage": 6.06,
+          "intensity": 0.2329
+        },
+        {
+          "time_sec": 53.3,
+          "percentage": 7.07,
+          "intensity": 0.2382
+        },
+        {
+          "time_sec": 60.9,
+          "percentage": 8.08,
+          "intensity": 0.2437
+        },
+        {
+          "time_sec": 68.5,
+          "percentage": 9.09,
+          "intensity": 0.2501
+        },
+        {
+          "time_sec": 76.2,
+          "percentage": 10.1,
+          "intensity": 0.2581
+        },
+        {
+          "time_sec": 83.8,
+          "percentage": 11.11,
+          "intensity": 0.2691
+        },
+        {
+          "time_sec": 91.4,
+          "percentage": 12.12,
+          "intensity": 0.285
+        },
+        {
+          "time_sec": 99.0,
+          "percentage": 13.13,
+          "intensity": 0.3083
+        },
+        {
+          "time_sec": 106.6,
+          "percentage": 14.14,
+          "intensity": 0.3416
+        },
+        {
+          "time_sec": 114.2,
+          "percentage": 15.15,
+          "intensity": 0.3878
+        },
+        {
+          "time_sec": 121.9,
+          "percentage": 16.16,
+          "intensity": 0.4487
+        },
+        {
+          "time_sec": 129.5,
+          "percentage": 17.17,
+          "intensity": 0.5245
+        },
+        {
+          "time_sec": 137.1,
+          "percentage": 18.18,
+          "intensity": 0.6131
+        },
+        {
+          "time_sec": 144.7,
+          "percentage": 19.19,
+          "intensity": 0.7094
+        },
+        {
+          "time_sec": 152.3,
+          "percentage": 20.2,
+          "intensity": 0.8053
+        },
+        {
+          "time_sec": 159.9,
+          "percentage": 21.21,
+          "intensity": 0.891
+        },
+        {
+          "time_sec": 167.6,
+          "percentage": 22.22,
+          "intensity": 0.9561
+        },
+        {
+          "time_sec": 175.2,
+          "percentage": 23.23,
+          "intensity": 0.9919
+        },
+        {
+          "time_sec": 182.8,
+          "percentage": 24.24,
+          "intensity": 0.9933
+        },
+        {
+          "time_sec": 190.4,
+          "percentage": 25.25,
+          "intensity": 0.9596
+        },
+        {
+          "time_sec": 198.0,
+          "percentage": 26.26,
+          "intensity": 0.8952
+        },
+        {
+          "time_sec": 205.6,
+          "percentage": 27.27,
+          "intensity": 0.8084
+        },
+        {
+          "time_sec": 213.3,
+          "percentage": 28.28,
+          "intensity": 0.7096
+        },
+        {
+          "time_sec": 220.9,
+          "percentage": 29.29,
+          "intensity": 0.6097
+        },
+        {
+          "time_sec": 228.5,
+          "percentage": 30.3,
+          "intensity": 0.5182
+        },
+        {
+          "time_sec": 236.1,
+          "percentage": 31.31,
+          "intensity": 0.4422
+        },
+        {
+          "time_sec": 243.7,
+          "percentage": 32.32,
+          "intensity": 0.3862
+        },
+        {
+          "time_sec": 251.3,
+          "percentage": 33.33,
+          "intensity": 0.3523
+        },
+        {
+          "time_sec": 258.9,
+          "percentage": 34.34,
+          "intensity": 0.3405
+        },
+        {
+          "time_sec": 266.6,
+          "percentage": 35.35,
+          "intensity": 0.3499
+        },
+        {
+          "time_sec": 274.2,
+          "percentage": 36.36,
+          "intensity": 0.3788
+        },
+        {
+          "time_sec": 281.8,
+          "percentage": 37.37,
+          "intensity": 0.4245
+        },
+        {
+          "time_sec": 289.4,
+          "percentage": 38.38,
+          "intensity": 0.4838
+        },
+        {
+          "time_sec": 297.0,
+          "percentage": 39.39,
+          "intensity": 0.5522
+        },
+        {
+          "time_sec": 304.6,
+          "percentage": 40.4,
+          "intensity": 0.6244
+        },
+        {
+          "time_sec": 312.3,
+          "percentage": 41.41,
+          "intensity": 0.6939
+        },
+        {
+          "time_sec": 319.9,
+          "percentage": 42.42,
+          "intensity": 0.7541
+        },
+        {
+          "time_sec": 327.5,
+          "percentage": 43.43,
+          "intensity": 0.7989
+        },
+        {
+          "time_sec": 335.1,
+          "percentage": 44.44,
+          "intensity": 0.8232
+        },
+        {
+          "time_sec": 342.7,
+          "percentage": 45.45,
+          "intensity": 0.8241
+        },
+        {
+          "time_sec": 350.3,
+          "percentage": 46.46,
+          "intensity": 0.8015
+        },
+        {
+          "time_sec": 358.0,
+          "percentage": 47.47,
+          "intensity": 0.7574
+        },
+        {
+          "time_sec": 365.6,
+          "percentage": 48.48,
+          "intensity": 0.6966
+        },
+        {
+          "time_sec": 373.2,
+          "percentage": 49.49,
+          "intensity": 0.625
+        },
+        {
+          "time_sec": 380.8,
+          "percentage": 50.51,
+          "intensity": 0.5494
+        },
+        {
+          "time_sec": 388.4,
+          "percentage": 51.52,
+          "intensity": 0.476
+        },
+        {
+          "time_sec": 396.0,
+          "percentage": 52.53,
+          "intensity": 0.4105
+        },
+        {
+          "time_sec": 403.7,
+          "percentage": 53.54,
+          "intensity": 0.3569
+        },
+        {
+          "time_sec": 411.3,
+          "percentage": 54.55,
+          "intensity": 0.3179
+        },
+        {
+          "time_sec": 418.9,
+          "percentage": 55.56,
+          "intensity": 0.295
+        },
+        {
+          "time_sec": 426.5,
+          "percentage": 56.57,
+          "intensity": 0.2884
+        },
+        {
+          "time_sec": 434.1,
+          "percentage": 57.58,
+          "intensity": 0.2977
+        },
+        {
+          "time_sec": 441.7,
+          "percentage": 58.59,
+          "intensity": 0.322
+        },
+        {
+          "time_sec": 449.4,
+          "percentage": 59.6,
+          "intensity": 0.3599
+        },
+        {
+          "time_sec": 457.0,
+          "percentage": 60.61,
+          "intensity": 0.4095
+        },
+        {
+          "time_sec": 464.6,
+          "percentage": 61.62,
+          "intensity": 0.4683
+        },
+        {
+          "time_sec": 472.2,
+          "percentage": 62.63,
+          "intensity": 0.5333
+        },
+        {
+          "time_sec": 479.8,
+          "percentage": 63.64,
+          "intensity": 0.6008
+        },
+        {
+          "time_sec": 487.4,
+          "percentage": 64.65,
+          "intensity": 0.6666
+        },
+        {
+          "time_sec": 495.1,
+          "percentage": 65.66,
+          "intensity": 0.7263
+        },
+        {
+          "time_sec": 502.7,
+          "percentage": 66.67,
+          "intensity": 0.7759
+        },
+        {
+          "time_sec": 510.3,
+          "percentage": 67.68,
+          "intensity": 0.8115
+        },
+        {
+          "time_sec": 517.9,
+          "percentage": 68.69,
+          "intensity": 0.8307
+        },
+        {
+          "time_sec": 525.5,
+          "percentage": 69.7,
+          "intensity": 0.8323
+        },
+        {
+          "time_sec": 533.1,
+          "percentage": 70.71,
+          "intensity": 0.8165
+        },
+        {
+          "time_sec": 540.7,
+          "percentage": 71.72,
+          "intensity": 0.785
+        },
+        {
+          "time_sec": 548.4,
+          "percentage": 72.73,
+          "intensity": 0.7408
+        },
+        {
+          "time_sec": 556.0,
+          "percentage": 73.74,
+          "intensity": 0.6875
+        },
+        {
+          "time_sec": 563.6,
+          "percentage": 74.75,
+          "intensity": 0.6292
+        },
+        {
+          "time_sec": 571.2,
+          "percentage": 75.76,
+          "intensity": 0.5698
+        },
+        {
+          "time_sec": 578.8,
+          "percentage": 76.77,
+          "intensity": 0.5127
+        },
+        {
+          "time_sec": 586.4,
+          "percentage": 77.78,
+          "intensity": 0.4604
+        },
+        {
+          "time_sec": 594.1,
+          "percentage": 78.79,
+          "intensity": 0.4146
+        },
+        {
+          "time_sec": 601.7,
+          "percentage": 79.8,
+          "intensity": 0.3761
+        },
+        {
+          "time_sec": 609.3,
+          "percentage": 80.81,
+          "intensity": 0.3449
+        },
+        {
+          "time_sec": 616.9,
+          "percentage": 81.82,
+          "intensity": 0.3204
+        },
+        {
+          "time_sec": 624.5,
+          "percentage": 82.83,
+          "intensity": 0.3017
+        },
+        {
+          "time_sec": 632.1,
+          "percentage": 83.84,
+          "intensity": 0.2877
+        },
+        {
+          "time_sec": 639.8,
+          "percentage": 84.85,
+          "intensity": 0.2774
+        },
+        {
+          "time_sec": 647.4,
+          "percentage": 85.86,
+          "intensity": 0.2696
+        },
+        {
+          "time_sec": 655.0,
+          "percentage": 86.87,
+          "intensity": 0.2636
+        },
+        {
+          "time_sec": 662.6,
+          "percentage": 87.88,
+          "intensity": 0.2587
+        },
+        {
+          "time_sec": 670.2,
+          "percentage": 88.89,
+          "intensity": 0.2543
+        },
+        {
+          "time_sec": 677.8,
+          "percentage": 89.9,
+          "intensity": 0.2502
+        },
+        {
+          "time_sec": 685.5,
+          "percentage": 90.91,
+          "intensity": 0.2461
+        },
+        {
+          "time_sec": 693.1,
+          "percentage": 91.92,
+          "intensity": 0.2418
+        },
+        {
+          "time_sec": 700.7,
+          "percentage": 92.93,
+          "intensity": 0.2373
+        },
+        {
+          "time_sec": 708.3,
+          "percentage": 93.94,
+          "intensity": 0.2325
+        },
+        {
+          "time_sec": 715.9,
+          "percentage": 94.95,
+          "intensity": 0.2275
+        },
+        {
+          "time_sec": 723.5,
+          "percentage": 95.96,
+          "intensity": 0.2223
+        },
+        {
+          "time_sec": 731.2,
+          "percentage": 96.97,
+          "intensity": 0.2169
+        },
+        {
+          "time_sec": 738.8,
+          "percentage": 97.98,
+          "intensity": 0.2113
+        },
+        {
+          "time_sec": 746.4,
+          "percentage": 98.99,
+          "intensity": 0.2057
+        },
+        {
+          "time_sec": 754.0,
+          "percentage": 100.0,
+          "intensity": 0.2
+        }
+      ],
+      "peaks": [
+        {
+          "id": "peak-1",
+          "start_sec": 60,
+          "end_sec": 240,
+          "peak_sec": 180,
+          "intensity": 0.95,
+          "label": "Virtual Ground Assumption (V- \u2248 V+ = 0V)",
+          "description": "Crowd replay peak: Why negative feedback forces inverting terminal to 0V without physical ground connection."
+        },
+        {
+          "id": "peak-2",
+          "start_sec": 240,
+          "end_sec": 420,
+          "peak_sec": 340,
+          "intensity": 0.88,
+          "label": "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
+          "description": "High replay cluster: Applying KCL at the inverting node to derive closed-loop gain and 180\u00b0 phase inversion."
+        },
+        {
+          "id": "peak-3",
+          "start_sec": 440,
+          "end_sec": 600,
+          "peak_sec": 520,
+          "intensity": 0.82,
+          "label": "Power Supply Rail Clipping Saturation",
+          "description": "Exam pitfall: Output voltage limits bounded by VEE and VCC, and clipping when driven beyond rails."
+        }
+      ],
+      "source": "pre_seeded_curated"
     }
   },
-  analyses: {
+  "analyses": {
     "fnF67w6rDpg": [
       {
-        target_sec: 590,
-        data: {
-          core_concept_name: "Degree of Polymerization & Molecular Weight Distribution (PDI)",
-          why_students_struggle: "Students get overwhelmed by discrete summations and why high-mass chains skew the Weight-Average (Mw) much higher than the Number-Average (Mn).",
-          plain_language_analogy: "Think of an elevator with 10 people: if 9 are toddlers (10kg) and 1 is an elephant (5,000kg), the average weight by count is 509kg, but the elevator floor feels the sheer bulk of the elephant quadratically.",
-          step_by_step_breakdown: [
-            "Molar Mass Distribution: Synthetic polymers are intrinsically polydisperse because chains terminate at random lengths.",
-            "Number-Average Molar Mass (Mn): Total sample mass divided by total chain count: Mn = Σ(Ni·Mi) / ΣNi (measured by colligative osmometry).",
-            "Weight-Average Molar Mass (Mw): Mass-weighted average where heavier chains contribute quadratically: Mw = Σ(Ni·Mi²) / Σ(Ni·Mi) (measured by light scattering).",
-            "Polydispersity Index (PDI): PDI = Mw / Mn. For monodisperse biomacromolecules (like natural proteins) PDI = 1.0; commercial plastics range from 1.5 to 10+."
-          ],
-          key_formula_latex: "PDI = \\frac{\\bar{M}_w}{\\bar{M}_n} = \\frac{\\sum N_i M_i^2 \\cdot \\sum N_i}{\\left(\\sum N_i M_i\\right)^2} \\ge 1.0",
-          exam_pitfall_warning: "Never swap Mn and Mw in the ratio. Since high-mass chains bias the second moment, Mw is always >= Mn, which means PDI can NEVER be less than 1.0!",
-          active_recall_prompt: "Can a real-world synthetic polyethylene sample ever have a Polydispersity Index (PDI) of 0.85? Why or why not?",
-          difficulty_badge: "High Cognitive Load (88% Replay Spike)",
-          difficulty_score: 88,
-          difficulty_reason: "Derivation involves summations over discrete molecular fractions.",
-          context_locked_explanation: "The lecturer emphasizes that unlike small molecules which have a single discrete molar mass, synthetic polymers exist as a broad macromolecular statistical distribution.",
-          alternative_videos: [
+        "target_sec": 590,
+        "data": {
+          "segment_window": "07:50 - 11:50",
+          "section_classification": "Potentially Difficult Mathematical Derivation",
+          "why_students_struggle": "Students struggle with the discrete summation indices and fail to recognize why weight-average (Mw) squares individual chain masses while number-average (Mn) weights them linearly.",
+          "identified_concepts": [
             {
-              title: "Why Weight-Average (Mw) is Always Greater than Number-Average (Mn)",
-              channel: "Khan Academy MCAT Chemistry",
-              duration: "7:14",
-              thumbnail: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=80",
-              bridge_note: "Uses a 2-chain bowling ball vs ping-pong ball analogy to clarify why squaring Mi shifts the distribution mean rightward.",
-              url: "https://www.youtube.com/results?search_query=polymer+weight+average+vs+number+average",
-              timestamp_jump: 180
+              "name": "Number-Average Molar Mass ($M_n$)",
+              "difficulty": "Intermediate",
+              "modality": "Mathematical"
             },
             {
-              title: "MIT OCW: Polymer Molecular Weights & Polydispersity Index",
-              channel: "MIT 3.091 Introduction to Solid-State Chemistry",
-              duration: "9:42",
-              thumbnail: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=400&q=80",
-              bridge_note: "Matches professor's exact notation (Mn, Mw, PDI) and walks through a worked numerical calculating PDI from a discrete fraction table.",
-              url: "https://www.youtube.com/results?search_query=MIT+OCW+Polydispersity+Index",
-              timestamp_jump: 320
+              "name": "Weight-Average Molar Mass ($M_w$)",
+              "difficulty": "Intermediate",
+              "modality": "Mathematical"
+            },
+            {
+              "name": "Polydispersity Index ($PDI = M_w / M_n$)",
+              "difficulty": "Beginner",
+              "modality": "Theoretical"
+            },
+            {
+              "name": "Moment Inequality ($M_w \\ge M_n$)",
+              "difficulty": "Advanced",
+              "modality": "Visual"
             }
           ],
-          visual_diagram: {
-            title: "Polymer Molecular Weight Distribution Flow",
-            flow_type: "horizontal",
-            nodes: [
-              { id: "node-1", title: "Raw Polymer Population", content: "Chains {N1, M1}, {N2, M2} ... {Ni, Mi}", is_blank: false },
-              { id: "node-2", title: "Number-Average (Mn)", content: "Mn = Σ(Ni·Mi) / [ ? ]", is_blank: true, prompt: "Complete the denominator for Number-Average Mn:", options: ["ΣNi (Total Molecules)", "Σ(Ni·Mi²) (Mass Moments)", "PDI (Spread)"], correct_option_index: 0, revealed_text: "Mn = Σ(Ni·Mi) / ΣNi (Colligative Count)" },
-              { id: "node-3", title: "Weight-Average (Mw)", content: "Mw = Σ(Ni·Mi²) / [ ? ]", is_blank: true, prompt: "Complete the denominator for Weight-Average Mw:", options: ["Σ(Ni·Mi) (Total Sample Mass)", "Avogadro Number NA", "DP"], correct_option_index: 0, revealed_text: "Mw = Σ(Ni·Mi²) / Σ(Ni·Mi) (Mass-Weighted)" },
-              { id: "node-4", title: "Polydispersity Metric", content: "[ ? ] = Mw / Mn", is_blank: true, prompt: "Identify the ratio symbol used to quantify molecular weight spread:", options: ["PDI (Polydispersity Index)", "Tg (Glass Transition)", "DP (Degree of Poly)"], correct_option_index: 0, revealed_text: "PDI = Mw / Mn (Distribution Spread Ratio)" }
+          "context_locked_explanation": "In this segment around 09:50, the instructor derives the statistical moments governing polymer chain length distributions:\n\n$$\\bar{M}_n = \\frac{\\sum N_i M_i}{\\sum N_i} = \\sum x_i M_i \\quad \\text{(Colligative / Osmometry Count)}$$\n$$\\bar{M}_w = \\frac{\\sum N_i M_i^2}{\\sum N_i M_i} = \\sum w_i M_i \\quad \\text{(Static Light Scattering)}$$\n\n$$\\text{Polydispersity Index: } PDI = \\frac{\\bar{M}_w}{\\bar{M}_n} \\ge 1.0$$\n\n**Real-World Analogy:** Think of calculating average population wealth. $\\bar{M}_n$ is the simple per-capita arithmetic mean where every person counts as one vote ($N_i$). $\\bar{M}_w$ weights each category by total dollars ($w_i = N_i M_i$), which makes billionaires pull the average drastically higher!",
+          "terminology_bridge": [
+            {
+              "prof_term": "Polydispersity Index (PDI)",
+              "alt_video_term": "Dispersity ($\u0110$)",
+              "clarification": "Modern IUPAC nomenclature uses the symbol \u0110 (D-stroke), while Indian and US engineering midterms still write PDI = Mw/Mn."
+            },
+            {
+              "prof_term": "Number-Average ($M_n$)",
+              "alt_video_term": "Colligative Molar Mass",
+              "clarification": "Techniques that count particle numbers (membrane osmometry, freezing point depression) always yield Mn."
+            },
+            {
+              "prof_term": "Weight-Average ($M_w$)",
+              "alt_video_term": "Mass-Fraction Average",
+              "clarification": "Techniques sensitive to particle mass (static light scattering, ultracentrifugation) always yield Mw."
+            }
+          ],
+          "recommended_search_queries": [
+            "polydispersity index explained visually",
+            "why weight average molecular weight is greater than number average",
+            "polymer molecular weight distribution intuition"
+          ],
+          "visual_diagram": {
+            "title": "Molecular Weight Distribution & PDI Flow",
+            "nodes": [
+              {
+                "id": "1",
+                "label": "Polymer Chain Distribution Matrix {Ni, Mi}",
+                "is_hidden_quiz": false
+              },
+              {
+                "id": "2",
+                "label": "$M_n = \\sum(N_i M_i) / \\sum N_i$",
+                "is_hidden_quiz": true,
+                "options": [
+                  "$M_n = \\sum(N_i M_i) / \\sum N_i$",
+                  "$M_n = \\sum N_i M_i^2$",
+                  "$M_n = PDI \\cdot DP$"
+                ]
+              },
+              {
+                "id": "3",
+                "label": "$M_w = \\sum(N_i M_i^2) / \\sum(N_i M_i)$",
+                "is_hidden_quiz": false
+              },
+              {
+                "id": "4",
+                "label": "Dispersity Metric: $PDI = M_w / M_n$",
+                "is_hidden_quiz": true,
+                "options": [
+                  "$PDI = M_w / M_n$",
+                  "$PDI = M_n / M_w$",
+                  "$PDI = M_w \\cdot M_n$"
+                ]
+              }
             ]
           },
-          checkpoint_mcqs: [
+          "checkpoint_mcqs": [
             {
-              id: "mcq-1",
-              question: "For a monodisperse polymer sample where every individual chain has exactly 1,000 repeat units, what is the exact value of PDI?",
-              options: ["PDI = 0.0", "PDI = 1.0 (Mw equals Mn)", "PDI = 2.0", "PDI > 1.5"],
-              correct_index: 1,
-              explanation: "When all chains have identical length, Mw = Mn, yielding PDI = Mw / Mn = 1.0."
+              "question": "For a pure biological protein sample where every single macromolecular chain contains exactly 450 amino acid units, what is the exact value of PDI?",
+              "options": [
+                "PDI = 1.0 (Strict monodisperse boundary)",
+                "PDI = 0.0 (Zero spread)",
+                "PDI = 2.0 (Flory-Schulz distribution)",
+                "PDI > 1.5 (Industrial synthetic polymer)"
+              ],
+              "correct_index": 0,
+              "explanation": "When all chains have identical molecular weights, Mw = Mn, meaning PDI = Mw / Mn = 1.0.",
+              "review_timestamp_sec": 590
             },
             {
-              id: "mcq-2",
-              question: "Which measurement technique depends on colligative properties to determine Number-Average Molecular Weight (Mn)?",
-              options: ["Membrane Osmometry & Freezing Point Depression", "Static Laser Light Scattering", "Gel Permeation Chromatography", "Analytical Ultracentrifugation"],
-              correct_index: 0,
-              explanation: "Osmometry counts particle concentration regardless of individual chain mass, giving Mn."
+              "question": "Which analytical technique counts the number of dissolved polymer particles independent of size, directly yielding the Number-Average Molecular Weight (Mn)?",
+              "options": [
+                "Membrane Osmometry (Colligative pressure)",
+                "Static Laser Light Scattering",
+                "Analytical Ultracentrifugation",
+                "Differential Scanning Calorimetry"
+              ],
+              "correct_index": 0,
+              "explanation": "Membrane osmometry measures osmotic pressure, a colligative property proportional to the number density of polymer molecules in solution.",
+              "review_timestamp_sec": 590
             }
-          ]
+          ],
+          "source": "domain_chemistry_fallback",
+          "has_live_transcript": false
         }
       }
     ],
     "OSCKBmkrH_g": [
       {
-        target_sec: 180,
-        data: {
-          core_concept_name: "Virtual Ground Assumption in Operational Amplifiers",
-          why_students_struggle: "Students find it confusing why an inverting input terminal is at 0V (ground potential) even though it is not physically connected to the circuit ground wire.",
-          plain_language_analogy: "Imagine a high-speed seesaw: the fulcrum is at 0V. The op-amp output constantly adjusts up or down so furiously that it keeps the other end pinned right at 0V.",
-          step_by_step_breakdown: [
-            "Ideal Op-Amp Properties: Infinite input impedance (Rin = ∞) means zero input current flows into either terminal (I+ = I- = 0A).",
-            "Massive Open-Loop Gain: Open-loop gain AOL is huge (~100,000 to 1,000,000). Output equation is Vout = AOL * (V+ - V-).",
-            "Negative Feedback Action: Connecting an external feedback resistor Rf from Vout to V- creates negative feedback, driving (V+ - V-) towards 0V.",
-            "Virtual Ground Rule: When non-inverting terminal V+ is tied to 0V ground, negative feedback forces V- to equal V+ ≈ 0V. Thus, V- acts like a ground without sinking current!"
-          ],
-          key_formula_latex: "V_- \\approx V_+ = 0\\text{V} \\quad \\text{when } V_+ \\text{ is grounded and negative feedback is closed.}",
-          exam_pitfall_warning: "The virtual ground assumption ONLY holds when negative feedback is present! In open-loop comparator circuits, V- does NOT equal V+.",
-          active_recall_prompt: "If an op-amp has no feedback resistor (open-loop mode), is the inverting terminal still a virtual ground?",
-          difficulty_badge: "Core Circuit Analysis Concept",
-          difficulty_score: 85,
-          difficulty_reason: "Requires understanding negative feedback and differential open-loop amplification.",
-          context_locked_explanation: "ElectroBOOM explains that the op-amp continuously pushes Vout until the difference between its inputs is virtually zero.",
-          alternative_videos: [
+        "target_sec": 180,
+        "data": {
+          "segment_window": "01:00 - 05:00",
+          "section_classification": "Potentially Difficult Mathematical Derivation",
+          "why_students_struggle": "Students struggle with the virtual ground assumption, failing to understand how negative feedback dynamically forces the inverting terminal to 0V without drawing physical ground current.",
+          "identified_concepts": [
             {
-              title: "Op-Amp Virtual Ground & Inverting Amplifier Explained",
-              channel: "The Organic Chemistry Tutor",
-              duration: "11:20",
-              thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80",
-              bridge_note: "Provides step-by-step circuit analysis applying KCL at the virtual ground node.",
-              url: "https://www.youtube.com/results?search_query=op+amp+virtual+ground+explained",
-              timestamp_jump: 150
+              "name": "Virtual Ground Condition ($V_+ \\approx V_-$)",
+              "difficulty": "Intermediate",
+              "modality": "Mathematical"
+            },
+            {
+              "name": "Infinite Input Impedance ($I_{in} \\approx 0$)",
+              "difficulty": "Beginner",
+              "modality": "Theoretical"
+            },
+            {
+              "name": "Closed-Loop Gain ($A_v = -R_f / R_{in}$)",
+              "difficulty": "Intermediate",
+              "modality": "Mathematical"
+            },
+            {
+              "name": "Power Rail Saturation Limits ($V_{EE} \\le V_{out} \\le V_{CC}$)",
+              "difficulty": "Advanced",
+              "modality": "Visual"
             }
           ],
-          visual_diagram: {
-            title: "Op-Amp Virtual Ground Feedback Loop",
-            flow_type: "horizontal",
-            nodes: [
-              { id: "node-1", title: "Non-Inverting Input (V+)", content: "Tied to 0V Circuit Ground", is_blank: false },
-              { id: "node-2", title: "Negative Feedback Loop", content: "Feedback Resistor Rf connects Vout to [ ? ]", is_blank: true, prompt: "Where does Rf connect to form negative feedback?", options: ["Inverting Terminal (V-)", "Non-inverting (V+)", "Power Supply Vcc"], correct_option_index: 0, revealed_text: "Connected to Inverting Terminal (V-)" },
-              { id: "node-3", title: "Virtual Ground Result", content: "[ ? ] ≈ 0V without physical connection", is_blank: true, prompt: "What voltage does V- reach?", options: ["V- = 0V (Virtual Ground)", "V- = +15V", "V- = -15V"], correct_option_index: 0, revealed_text: "V- ≈ 0V (Virtual Ground Potential)" }
+          "context_locked_explanation": "In this segment around 03:00, the instructor applies the two Golden Rules of Operational Amplifiers with negative feedback:\n\n$$1) \\quad I_+ = I_- = 0 \\quad \\text{(Infinite Input Impedance)}$$\n$$2) \\quad V_+ - V_- \\approx 0 \\implies V_- = V_+ \\quad \\text{(Virtual Ground when $V_+$ is grounded)}$$\n\nApplying Kirchhoff's Current Law (KCL) at the inverting node summing point:\n\n$$\\frac{V_{in} - 0}{R_{in}} = \\frac{0 - V_{out}}{R_f} \\implies V_{out} = -\\left(\\frac{R_f}{R_{in}}\\right) V_{in}$$\n\n**Real-World Analogy:** Think of the op-amp as a high-speed seesaw pivot. The negative feedback instantly pushes the inverting node back down whenever the input pushes it up, keeping the midpoint balanced at 0V!",
+          "terminology_bridge": [
+            {
+              "prof_term": "Virtual Ground ($V_- = 0V$)",
+              "alt_video_term": "Virtual Earth / Summing Point",
+              "clarification": "Both refer to the inverting input being held at zero volts by negative feedback without a physical ground connection."
+            },
+            {
+              "prof_term": "Open-Loop Gain ($A_{OL} \\to \\infty$)",
+              "alt_video_term": "Internal Differential Gain",
+              "clarification": "The raw amplifier gain before connecting the external $R_f$ feedback loop."
+            },
+            {
+              "prof_term": "Rail Saturation ($V_{CC} / V_{EE}$)",
+              "alt_video_term": "Output Voltage Clipping",
+              "clarification": "The physical voltage limit of the op-amp supply rails beyond which waveforms get flat-topped."
+            }
+          ],
+          "recommended_search_queries": [
+            "Op-Amp virtual ground explained visually",
+            "inverting amplifier negative feedback intuition",
+            "why op-amps clip at power supply rails"
+          ],
+          "visual_diagram": {
+            "title": "Inverting Op-Amp Feedback Process Flow",
+            "nodes": [
+              {
+                "id": "1",
+                "label": "Differential Input Voltage $(V_+ - V_-)$",
+                "is_hidden_quiz": false
+              },
+              {
+                "id": "2",
+                "label": "Golden Rule 1: $I_{in} = 0A$",
+                "is_hidden_quiz": true,
+                "options": [
+                  "$I_{in} = 0A$ (Infinite Impedance)",
+                  "$I_{in} = 10mA$ (Load Current)",
+                  "$I_{in} \\to \\infty$ (Short)"
+                ]
+              },
+              {
+                "id": "3",
+                "label": "Virtual Ground Node ($V_- = 0V$)",
+                "is_hidden_quiz": false
+              },
+              {
+                "id": "4",
+                "label": "Closed Gain: $V_{out} = -(R_f/R_{in})V_{in}$",
+                "is_hidden_quiz": true,
+                "options": [
+                  "$V_{out} = -(R_f/R_{in})V_{in}$",
+                  "$V_{out} = (1 + R_f/R_{in})V_{in}$",
+                  "$V_{out} = A_{OL} V_{in}$"
+                ]
+              }
             ]
           },
-          checkpoint_mcqs: [
+          "checkpoint_mcqs": [
             {
-              id: "mcq-1",
-              question: "Under which condition does the virtual ground assumption hold true for an op-amp?",
-              options: ["Only when negative feedback is present", "In open loop mode", "Only when power is off", "Regardless of circuit topology"],
-              correct_index: 0,
-              explanation: "Negative feedback is what drives the differential input voltage (V+ - V-) toward zero."
+              "question": "What primary mechanism enforces the 'virtual ground' condition at the inverting input terminal of an Op-Amp?",
+              "options": [
+                "Negative feedback driving the differential input voltage (V+ - V-) towards zero",
+                "A permanent internal short circuit to the chassis ground plate",
+                "High capacitance between input pins bypassing DC voltages",
+                "Positive feedback causing the amplifier to self-oscillate"
+              ],
+              "correct_index": 0,
+              "explanation": "Because open-loop gain AOL is massive, negative feedback feeds output voltage back to drive (V+ - V-) to approximately zero.",
+              "review_timestamp_sec": 180
+            },
+            {
+              "question": "If an inverting Op-Amp has Rin = 5 k\u03a9 and Rf = 50 k\u03a9 with Vin = 1.0 V, what is the output voltage Vout (assuming \u00b115V supplies)?",
+              "options": [
+                "-10.0 V (Phase inverted 10x gain)",
+                "+10.0 V (Non-inverting gain)",
+                "-0.1 V (Attenuation)",
+                "+11.0 V (Non-inverting formula)"
+              ],
+              "correct_index": 0,
+              "explanation": "Vout = -(Rf / Rin) * Vin = -(50k / 5k) * 1.0V = -10.0V.",
+              "review_timestamp_sec": 180
             }
-          ]
+          ],
+          "source": "domain_opamp_fallback",
+          "has_live_transcript": false
         }
       }
     ]
@@ -875,6 +2138,8 @@ function updateDurationBadge() {
   if (badge) badge.textContent = durStr;
   const endMarker = document.getElementById("timeline-end-time");
   if (endMarker) endMarker.textContent = durStr;
+  const container = document.getElementById("timeline-container");
+  if (container) container.setAttribute("aria-valuemax", Math.round(state.durationSec));
 }
 
 // Renders dynamic timeline labels and quick peak buttons for any loaded video
@@ -937,6 +2202,7 @@ function renderHeatmap(heatmap) {
   const zonesGroup = document.getElementById("difficult-zones-group");
 
   if (!svg || !fillPath || !strokePath || !heatmap.intensity_points) return;
+  svg.setAttribute("viewBox", "0 0 1000 100");
 
   const points = heatmap.intensity_points;
   const numPoints = points.length;
@@ -1264,7 +2530,7 @@ async function executePermanentDelete(pinId) {
 // 5. TAB 1: SIMPLE EXPLANATION (STEP-BY-STEP PROGRESS & PLAIN LANGUAGE)
 // ==========================================
 
-async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
+async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFresh = false) {
   const skeleton = document.getElementById("rescue-loading-skeleton");
   const content = document.getElementById("rescue-real-content");
   const winBanner = document.getElementById("rescue-window-time");
@@ -1281,21 +2547,23 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
     winBanner.textContent = `${formatTime(startSec)} – ${formatTime(endSec)}`;
   }
 
-  // 1. Instant check in StorageManager (0ms latency!)
-  const cachedAnalysis = StorageManager.getAnalysis(state.currentVideoId, timestampSec);
-  if (cachedAnalysis && !studentDoubt) {
-    state.activeAnalysis = cachedAnalysis;
-    renderTab1AIRescue(cachedAnalysis, timestampSec);
-    if (cachedAnalysis.visual_diagram) {
-      renderVisualDiagram(cachedAnalysis.visual_diagram);
+  // 1. Instant check in StorageManager (0ms latency!) on initial load
+  if (!forceFresh && !studentDoubt) {
+    const cachedAnalysis = StorageManager.getAnalysis(state.currentVideoId, timestampSec);
+    if (cachedAnalysis) {
+      state.activeAnalysis = cachedAnalysis;
+      renderTab1AIRescue(cachedAnalysis, timestampSec);
+      if (cachedAnalysis.visual_diagram) {
+        renderVisualDiagram(cachedAnalysis.visual_diagram);
+      }
+      if (cachedAnalysis.checkpoint_mcqs) {
+        renderCheckpointMCQs(cachedAnalysis.checkpoint_mcqs);
+      }
+      if (skeleton) skeleton.classList.add("hidden");
+      if (content) content.classList.remove("hidden");
+      lucide.createIcons();
+      return;
     }
-    if (cachedAnalysis.checkpoint_mcqs) {
-      renderCheckpointMCQs(cachedAnalysis.checkpoint_mcqs);
-    }
-    if (skeleton) skeleton.classList.add("hidden");
-    if (content) content.classList.remove("hidden");
-    lucide.createIcons();
-    return;
   }
 
   // Show friendly step-by-step skeleton while AI analysis is running
@@ -1370,8 +2638,8 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
 }
 
 // Unified alias for callers
-async function fetchSegmentAnalysis(timestampSec, studentDoubt = null) {
-  return await runAiSegmentAnalysis(timestampSec, studentDoubt);
+async function fetchSegmentAnalysis(timestampSec, studentDoubt = null, forceFresh = false) {
+  return await runAiSegmentAnalysis(timestampSec, studentDoubt, forceFresh);
 }
 
 async function fetchSegmentQuiz(timestampSec) {
@@ -2087,7 +3355,7 @@ function initUIEventListeners() {
   const confusedBtn = document.getElementById("btn-confused-rescue");
   if (confusedBtn) {
     confusedBtn.addEventListener("click", () => {
-      fetchSegmentAnalysis(state.currentTimeSec);
+      fetchSegmentAnalysis(state.currentTimeSec, null, true);
       fetchSegmentQuiz(state.currentTimeSec);
       switchTab("tab-content-rescue");
     });
