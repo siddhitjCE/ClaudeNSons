@@ -131,6 +131,16 @@ function onPlayerReady(event) {
     setTimeout(() => loader.classList.add("hidden"), 300);
   }
 
+  // If landing page overlay is visible on initial load, ensure player starts paused
+  const landingOverlay = document.getElementById("landing-page-view");
+  if (landingOverlay && !landingOverlay.classList.contains("hidden")) {
+    try {
+      if (state.player && typeof state.player.pauseVideo === "function") {
+        state.player.pauseVideo();
+      }
+    } catch (_) {}
+  }
+
   const duration = state.player.getDuration();
   if (duration && duration > 0 && Math.abs(duration - state.durationSec) > 3) {
     state.durationSec = Math.round(duration);
@@ -169,6 +179,16 @@ function fallbackToDirectIframe() {
 }
 
 function onPlayerStateChange(event) {
+  // If landing page overlay is visible and video begins playing, immediately pause it
+  const landingOverlay = document.getElementById("landing-page-view");
+  if (landingOverlay && !landingOverlay.classList.contains("hidden") && event.data === YT.PlayerState.PLAYING) {
+    try {
+      if (state.player && typeof state.player.pauseVideo === "function") {
+        state.player.pauseVideo();
+      }
+    } catch (_) {}
+  }
+
   const playBtn = document.getElementById("ctrl-play-pause");
   if (playBtn) {
     if (event.data === YT.PlayerState.PLAYING) {
@@ -1797,6 +1817,104 @@ function initUIEventListeners() {
 
   // Modal Event Listeners
   initModalListeners();
+
+  // Landing Page Overlay Listeners
+  initLandingPageListeners();
+}
+
+// ------------------------------------------
+// Full-Screen Landing Page Interactions
+// ------------------------------------------
+function initLandingPageListeners() {
+  const landingView = document.getElementById("landing-page-view");
+  const landingForm = document.getElementById("landing-url-form");
+  const landingInput = document.getElementById("landing-url-input");
+  const landingError = document.getElementById("landing-url-error");
+  const landingBtn = document.getElementById("landing-submit-btn");
+  const backHomeBtn = document.getElementById("back-to-landing-btn");
+  const navbarInput = document.getElementById("youtube-url-input");
+  const navbarLoadBtn = document.getElementById("load-video-btn");
+
+  if (!landingView) return;
+
+  // Clear validation error when user types
+  if (landingInput && landingError) {
+    landingInput.addEventListener("input", () => {
+      landingError.classList.add("hidden");
+      landingInput.classList.remove("border-rose-500", "ring-1", "ring-rose-500");
+    });
+  }
+
+  // Handle Landing Form Submission
+  if (landingForm) {
+    landingForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!landingInput) return;
+
+      const val = landingInput.value.trim();
+
+      // Step A: Validate YouTube URL
+      if (!val || !isValidYouTubeUrl(val)) {
+        if (landingError) landingError.classList.remove("hidden");
+        landingInput.classList.add("border-rose-500", "ring-1", "ring-rose-500");
+        landingInput.focus();
+        return;
+      }
+
+      if (landingError) landingError.classList.add("hidden");
+      landingInput.classList.remove("border-rose-500", "ring-1", "ring-rose-500");
+
+      // Step B: Change button text to Loading Workspace...
+      if (landingBtn) {
+        landingBtn.disabled = true;
+        landingBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin" aria-hidden="true"></i><span>Loading Workspace...</span>`;
+        lucide.createIcons();
+      }
+
+      // Step C: Copy value directly to existing top navbar input
+      if (navbarInput) {
+        navbarInput.value = val;
+      }
+
+      // Step D: Smoothly hide landing page overlay
+      landingView.classList.add("opacity-0", "pointer-events-none");
+      setTimeout(() => {
+        landingView.classList.add("hidden");
+        if (landingBtn) {
+          landingBtn.disabled = false;
+          landingBtn.innerHTML = `<span>Start Studying This Video &rarr;</span>`;
+          lucide.createIcons();
+        }
+      }, 300);
+
+      // Trigger the existing navbar "Load" button handler to enter the study studio
+      if (navbarLoadBtn) {
+        navbarLoadBtn.click();
+      }
+    });
+  }
+
+  // Step 3: Handle "← Home" Button in Existing Top Navbar
+  if (backHomeBtn) {
+    backHomeBtn.addEventListener("click", () => {
+      // Pause YouTube player if active
+      if (state.player && typeof state.player.pauseVideo === "function") {
+        try {
+          state.player.pauseVideo();
+        } catch (_) {}
+      }
+
+      // Show landing page overlay again
+      landingView.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        landingView.classList.remove("opacity-0", "pointer-events-none");
+      });
+
+      if (landingInput) {
+        landingInput.focus();
+      }
+    });
+  }
 }
 
 // Modal Setup & Listeners
@@ -1889,6 +2007,30 @@ function initModalListeners() {
       } catch (err) {
         alert("Failed to create folder: " + err);
       }
+    });
+  }
+
+  // Folder Videos Explorer Drawer & Modal
+  const openFolderDrawerBtn = document.getElementById("btn-open-folder-drawer");
+  const folderVideosModal = document.getElementById("folder-videos-modal");
+  const closeFolderVideosBtn = document.getElementById("close-folder-videos-modal-btn");
+  const closeFolderVideosBottomBtn = document.getElementById("btn-close-folder-videos-bottom");
+
+  if (openFolderDrawerBtn) {
+    openFolderDrawerBtn.addEventListener("click", () => {
+      openFolderVideosModal(state.currentFolderId || 1);
+    });
+  }
+
+  if (closeFolderVideosBtn && folderVideosModal) {
+    closeFolderVideosBtn.addEventListener("click", () => folderVideosModal.classList.add("hidden"));
+  }
+  if (closeFolderVideosBottomBtn && folderVideosModal) {
+    closeFolderVideosBottomBtn.addEventListener("click", () => folderVideosModal.classList.add("hidden"));
+  }
+  if (folderVideosModal) {
+    folderVideosModal.addEventListener("click", (e) => {
+      if (e.target === folderVideosModal) folderVideosModal.classList.add("hidden");
     });
   }
 
@@ -1985,26 +2127,299 @@ function openPinModal() {
 
 async function loadSubjectFolders() {
   const select = document.getElementById("folder-select");
-  if (!select) return;
 
   try {
     const res = await fetch("/api/folders");
     const data = await res.json();
     if (data.folders) {
-      select.innerHTML = "";
-      data.folders.forEach(f => {
-        const opt = document.createElement("option");
-        opt.value = f.id;
-        opt.textContent = `${f.name} (${f.video_count || 0} vids)`;
-        select.appendChild(opt);
-      });
-      const addNewOpt = document.createElement("option");
-      addNewOpt.value = "add_new";
-      addNewOpt.textContent = "+ Add To Personal Library";
-      select.appendChild(addNewOpt);
+      state.folders = data.folders;
+
+      // 1. Populate Navbar Select with Dark Themed Options
+      if (select) {
+        select.innerHTML = "";
+        data.folders.forEach(f => {
+          const opt = document.createElement("option");
+          opt.value = f.id;
+          opt.textContent = `${f.name} (${f.video_count || 0} vids)`;
+          opt.style.backgroundColor = "#0f172a";
+          opt.style.color = "#f8fafc";
+          select.appendChild(opt);
+        });
+        const addNewOpt = document.createElement("option");
+        addNewOpt.value = "add_new";
+        addNewOpt.textContent = "+ Add To Personal Library";
+        addNewOpt.style.backgroundColor = "#0f172a";
+        addNewOpt.style.color = "#a5b4fc";
+        select.appendChild(addNewOpt);
+
+        if (state.currentFolderId) {
+          select.value = state.currentFolderId;
+        }
+      }
+
+      // 2. Render Folder Pills & Videos on Landing Page
+      renderLandingFolders(data.folders);
     }
   } catch (err) {
     console.error("Failed to load folders:", err);
+  }
+}
+
+// ------------------------------------------
+// Video Card HTML Generator
+// ------------------------------------------
+function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
+  const thumb = v.thumbnail_url || `https://img.youtube.com/vi/${v.video_id}/mqdefault.jpg`;
+  const durStr = formatTime(v.duration_sec || 2700);
+
+  if (isLanding) {
+    return `
+      <div class="landing-video-card group bg-slate-900/90 border border-slate-800 hover:border-indigo-500/70 rounded-2xl p-3.5 transition-all flex flex-col justify-between cursor-pointer shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-indigo-500/10" data-video-id="${v.video_id}">
+        <div class="space-y-2.5">
+          <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+            <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
+            <span class="absolute bottom-1.5 right-1.5 bg-slate-950/85 backdrop-blur-md text-[10px] font-mono px-2 py-0.5 rounded-md text-slate-200 font-semibold border border-slate-800">
+              ${durStr}
+            </span>
+          </div>
+          <h3 class="text-xs font-bold text-slate-100 group-hover:text-indigo-300 transition-colors line-clamp-2 leading-relaxed">
+            ${v.title}
+          </h3>
+        </div>
+        <div class="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between">
+          <span class="text-[10px] font-mono text-slate-400">ID: ${v.video_id}</span>
+          <button class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm transition-all pointer-events-none">
+            <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
+            <span>Study Video</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Inside Main Page Modal
+  return `
+    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded-xl border ${isActiveVideo ? 'bg-indigo-950/50 border-indigo-500/60 shadow-md shadow-indigo-500/10' : 'bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900'} transition-all cursor-pointer" data-video-id="${v.video_id}">
+      <div class="flex items-center space-x-3 overflow-hidden">
+        <div class="relative w-28 aspect-video rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-800">
+          <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
+          <span class="absolute bottom-1 right-1 bg-slate-950/90 font-mono text-[9px] px-1.5 py-0.5 rounded text-slate-300 font-semibold">${durStr}</span>
+        </div>
+        <div class="min-w-0 pr-3">
+          <h4 class="text-xs font-bold ${isActiveVideo ? 'text-indigo-200' : 'text-slate-100 group-hover:text-indigo-300'} truncate transition-colors">
+            ${v.title}
+          </h4>
+          <p class="text-[11px] text-slate-400 font-mono mt-1">ID: ${v.video_id}</p>
+        </div>
+      </div>
+      <div class="shrink-0 pl-2">
+        ${isActiveVideo ? `
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Active Now
+          </span>
+        ` : `
+          <button class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 shadow-sm">
+            <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
+            <span>Load Video</span>
+          </button>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+// ------------------------------------------
+// Landing Page Folder Pills & Video Cards
+// ------------------------------------------
+function renderLandingFolders(folders) {
+  const pillsContainer = document.getElementById("landing-folder-pills");
+  if (!pillsContainer || !folders || folders.length === 0) return;
+
+  pillsContainer.innerHTML = "";
+  let activeId = state.currentFolderId || folders[0].id;
+
+  folders.forEach(f => {
+    const btn = document.createElement("button");
+    const isActive = f.id === activeId;
+    btn.type = "button";
+    btn.className = `px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
+      isActive 
+        ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400/40 font-bold" 
+        : "bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800"
+    }`;
+    btn.innerHTML = `
+      <i data-lucide="folder" class="w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-indigo-400'}" aria-hidden="true"></i>
+      <span>${f.name}</span>
+      <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono ${isActive ? 'bg-indigo-800 text-indigo-100' : 'bg-slate-800 text-slate-400'}">${f.video_count || 0}</span>
+    `;
+
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#landing-folder-pills button").forEach(b => {
+        b.className = "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800";
+        const icon = b.querySelector("i");
+        if (icon) icon.className = "w-3.5 h-3.5 text-indigo-400";
+      });
+      btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400/40 font-bold";
+      const activeIcon = btn.querySelector("i");
+      if (activeIcon) activeIcon.className = "w-3.5 h-3.5 text-white";
+
+      state.currentFolderId = f.id;
+      loadLandingFolderVideos(f.id);
+    });
+
+    pillsContainer.appendChild(btn);
+  });
+
+  lucide.createIcons();
+  loadLandingFolderVideos(activeId);
+}
+
+async function loadLandingFolderVideos(folderId) {
+  const grid = document.getElementById("landing-folder-videos-grid");
+  if (!grid) return;
+
+  grid.innerHTML = `
+    <div class="col-span-full py-8 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+      <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-indigo-400" aria-hidden="true"></i>
+      <span>Loading saved lectures in this folder...</span>
+    </div>
+  `;
+  lucide.createIcons();
+
+  try {
+    const res = await fetch(`/api/videos?folder_id=${folderId}`);
+    const data = await res.json();
+    const videos = data.videos || [];
+
+    if (videos.length === 0) {
+      grid.innerHTML = `
+        <div class="col-span-full py-8 text-center text-xs text-slate-400 bg-slate-900/40 border border-dashed border-slate-800 rounded-2xl space-y-2 p-6">
+          <i data-lucide="folder-open" class="w-7 h-7 text-slate-600 mx-auto" aria-hidden="true"></i>
+          <p class="font-medium text-slate-300">No lectures saved in this folder yet.</p>
+          <p class="text-[11px] text-slate-400">Paste any YouTube lecture URL above to add a video into this folder!</p>
+        </div>
+      `;
+      lucide.createIcons();
+      return;
+    }
+
+    grid.innerHTML = "";
+    videos.forEach(v => {
+      const cardWrapper = document.createElement("div");
+      cardWrapper.innerHTML = createVideoCardHtml(v, v.video_id === state.currentVideoId, true);
+      const card = cardWrapper.firstElementChild;
+
+      card.addEventListener("click", async () => {
+        const landingView = document.getElementById("landing-page-view");
+        if (landingView) {
+          landingView.classList.add("opacity-0", "pointer-events-none");
+          setTimeout(() => landingView.classList.add("hidden"), 300);
+        }
+        state.currentFolderId = folderId;
+        const folderSelect = document.getElementById("folder-select");
+        if (folderSelect) folderSelect.value = folderId;
+        await loadVideoStudio(v.video_id);
+      });
+
+      grid.appendChild(card);
+    });
+
+    lucide.createIcons();
+  } catch (err) {
+    console.error("Failed to load folder videos on landing page:", err);
+    grid.innerHTML = `<div class="col-span-full py-4 text-xs text-rose-400">Failed to load lectures.</div>`;
+  }
+}
+
+// ------------------------------------------
+// Main Studio Folder Videos Modal Explorer
+// ------------------------------------------
+async function openFolderVideosModal(targetFolderId) {
+  const modal = document.getElementById("folder-videos-modal");
+  const titleEl = document.getElementById("folder-videos-modal-title");
+  const countEl = document.getElementById("folder-videos-modal-subtitle");
+  const tabsContainer = document.getElementById("modal-folder-tabs");
+  const listContainer = document.getElementById("folder-videos-list");
+
+  if (!modal || !listContainer) return;
+
+  const currentId = targetFolderId || state.currentFolderId || 1;
+  state.currentFolderId = currentId;
+
+  const currentFolder = (state.folders || []).find(f => f.id === currentId);
+  if (titleEl) titleEl.textContent = currentFolder ? currentFolder.name : "Study Folder Lectures";
+
+  // Render Folder Tabs inside Modal
+  if (tabsContainer && state.folders) {
+    tabsContainer.innerHTML = "";
+    state.folders.forEach(f => {
+      const tabBtn = document.createElement("button");
+      const isSel = f.id === currentId;
+      tabBtn.type = "button";
+      tabBtn.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+        isSel 
+          ? "bg-indigo-600 text-white font-bold shadow-sm" 
+          : "bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700"
+      }`;
+      tabBtn.innerHTML = `<span>${f.name}</span><span class="text-[10px] opacity-75 font-mono">(${f.video_count || 0})</span>`;
+      tabBtn.addEventListener("click", () => {
+        openFolderVideosModal(f.id);
+        const folderSelect = document.getElementById("folder-select");
+        if (folderSelect) folderSelect.value = f.id;
+      });
+      tabsContainer.appendChild(tabBtn);
+    });
+  }
+
+  // Load videos for this folder
+  listContainer.innerHTML = `
+    <div class="py-12 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+      <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-indigo-400" aria-hidden="true"></i>
+      <span>Loading folder lectures...</span>
+    </div>
+  `;
+  lucide.createIcons();
+  modal.classList.remove("hidden");
+
+  try {
+    const res = await fetch(`/api/videos?folder_id=${currentId}`);
+    const data = await res.json();
+    const videos = data.videos || [];
+
+    if (countEl) countEl.textContent = `${videos.length} lecture${videos.length === 1 ? '' : 's'} saved in this folder`;
+
+    if (videos.length === 0) {
+      listContainer.innerHTML = `
+        <div class="py-12 text-center text-xs text-slate-400 bg-slate-950/40 border border-dashed border-slate-800 rounded-xl space-y-2 p-6">
+          <i data-lucide="folder-open" class="w-8 h-8 text-slate-600 mx-auto" aria-hidden="true"></i>
+          <p class="font-medium text-slate-300">No lectures saved in this folder yet.</p>
+          <p class="text-[11px] text-slate-400">Use the top URL bar to paste any educational YouTube lecture and save it here!</p>
+        </div>
+      `;
+      lucide.createIcons();
+      return;
+    }
+
+    listContainer.innerHTML = "";
+    videos.forEach(v => {
+      const cardWrapper = document.createElement("div");
+      cardWrapper.innerHTML = createVideoCardHtml(v, v.video_id === state.currentVideoId, false);
+      const card = cardWrapper.firstElementChild;
+
+      card.addEventListener("click", async () => {
+        modal.classList.add("hidden");
+        const folderSelect = document.getElementById("folder-select");
+        if (folderSelect) folderSelect.value = currentId;
+        await loadVideoStudio(v.video_id);
+      });
+
+      listContainer.appendChild(card);
+    });
+
+    lucide.createIcons();
+  } catch (err) {
+    console.error("Failed to load folder videos:", err);
+    listContainer.innerHTML = `<div class="py-4 text-xs text-rose-400">Failed to load lectures: ${err}</div>`;
   }
 }
 

@@ -1,5 +1,40 @@
 /* static/styles.css - SyncLearn Custom Styles & Accessible Dark Mode Polish */
 
+/* 0. Color Scheme & Native Form Control Theming (Fixes White-on-White text) */
+:root {
+  color-scheme: dark;
+}
+
+select {
+  color-scheme: dark !important;
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+select option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+#folder-select {
+  color-scheme: dark !important;
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+#folder-select option {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  padding: 8px 12px;
+}
+
 /* 1. Global Focus Visibility & Accessibility */
 :focus-visible {
   outline: 2px solid #818cf8 !important;
@@ -147,12 +182,20 @@ details summary {
 }
 
 /* 11. Printable Cheat-Sheet */
+/* 12. Landing Page View Overlay */
+#landing-page-view {
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+}
+#landing-page-view.hidden {
+  display: none !important;
+}
+
 @media print {
   body {
     background: #ffffff !important;
     color: #0f172a !important;
   }
-  header, #youtube-player, #timeline-container, .tab-pane:not(#tab-content-cheatsheet), #pin-modal, #folder-modal, #alt-video-modal, .tab-btn {
+  #landing-page-view, header, #youtube-player, #timeline-container, .tab-pane:not(#tab-content-cheatsheet), #pin-modal, #folder-modal, #alt-video-modal, .tab-btn {
     display: none !important;
   }
   #tab-content-cheatsheet {
