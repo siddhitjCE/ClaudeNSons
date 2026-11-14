@@ -1,8 +1,14 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/api/index.py"
+      "src": "main.py",
+      "use": "@vercel/python",
+      "config": { "includeFiles": ["static/**", "*.html", "*.js", "*.css"] }
     }
+  ],
+  "routes": [
+    { "src": "/static/(.*)", "dest": "/static/$1" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }

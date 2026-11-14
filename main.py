@@ -726,7 +726,27 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 @app.get("/")
+@app.get("/main.py")
+@app.get("/api/index.py")
 def serve_index():
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return JSONResponse({"message": "SyncLearn backend is running."})
+
+
+@app.get("/{full_path:path}")
+def serve_fallback(full_path: str):
+    # Handle Vercel rewrite paths
+    if full_path in ("", "main.py", "index.html", "api/index.py"):
+        index_path = os.path.join(static_dir, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+    # Check if a static file matches (e.g. styles.css, app.js, favicon.ico)
+    candidate = os.path.join(static_dir, full_path)
+    if os.path.exists(candidate) and os.path.isfile(candidate):
+        return FileResponse(candidate)
+    # Default SPA fallback
     index_path = os.path.join(static_dir, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
