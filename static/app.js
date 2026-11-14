@@ -7,6 +7,7 @@
 // Global Application State
 const state = {
   currentVideoId: "fnF67w6rDpg", // Default Engineering Chemistry lecture
+  currentVideoTitle: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
   durationSec: 2700,
   currentTimeSec: 0,
   previousTimeSec: 0,
@@ -47,6 +48,32 @@ const state = {
   missedQuizQuestions: [],
   conceptMastery: { total: 0, unlocked: 0 }
 };
+
+// ==========================================
+// CLIENT-SIDE EXTRACTION (oEmbed & YouTube Player API)
+// Bypasses cloud datacenter IP restrictions by querying directly from student Wi-Fi
+// ==========================================
+async function fetchVideoOEmbed(videoId) {
+  if (!videoId || videoId.length < 11) return null;
+  const cleanId = videoId.trim().substring(0, 11);
+  try {
+    const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${cleanId}&format=json`;
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.title) {
+        return {
+          title: data.title,
+          author: data.author_name || "YouTube Creator",
+          thumbnail_url: data.thumbnail_url || `https://img.youtube.com/vi/${cleanId}/hqdefault.jpg`
+        };
+      }
+    }
+  } catch (err) {
+    console.debug("oEmbed client extraction note:", err);
+  }
+  return null;
+}
 
 // Initialize Application on DOM Ready
 document.addEventListener("DOMContentLoaded", () => {
@@ -131,6 +158,18 @@ function onPlayerReady(event) {
     setTimeout(() => loader.classList.add("hidden"), 300);
   }
 
+  // Client-Side Extraction: Grab real title from YouTube player session
+  try {
+    if (state.player && typeof state.player.getVideoData === "function") {
+      const vData = state.player.getVideoData();
+      if (vData && vData.title && !vData.title.startsWith("Curated Lecture")) {
+        state.currentVideoTitle = vData.title;
+        const titleEl = document.getElementById("video-title");
+        if (titleEl) titleEl.textContent = vData.title;
+      }
+    }
+  } catch (_) {}
+
   // If landing page overlay is visible on initial load, ensure player starts paused
   const landingOverlay = document.getElementById("landing-page-view");
   if (landingOverlay && !landingOverlay.classList.contains("hidden")) {
@@ -199,8 +238,21 @@ function onPlayerStateChange(event) {
     lucide.createIcons();
   }
 
-  // Synchronize duration if video changed
+  // Synchronize duration and title if video changed
   if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.CUED) {
+    try {
+      if (state.player && typeof state.player.getVideoData === "function") {
+        const vData = state.player.getVideoData();
+        if (vData && vData.title && !vData.title.startsWith("Curated Lecture")) {
+          state.currentVideoTitle = vData.title;
+          const titleEl = document.getElementById("video-title");
+          if (titleEl && (!titleEl.textContent || titleEl.textContent.startsWith("Curated Lecture"))) {
+            titleEl.textContent = vData.title;
+          }
+        }
+      }
+    } catch (_) {}
+
     if (state.player && typeof state.player.getDuration === "function") {
       const dur = state.player.getDuration();
       if (dur && dur > 10 && Math.abs(dur - state.durationSec) > 5) {
@@ -352,11 +404,25 @@ function jumpToTime(seconds, triggerAnalysis = true) {
 // 2. VIDEO STUDIO LOADING & DYNAMIC SWITCHING
 // ==========================================
 
-async function loadVideoStudio(videoId) {
+async function loadVideoStudio(videoId, customTitle = null) {
   try {
     state.currentVideoId = videoId;
     state.triggeredAutoPauses.clear();
     state.previousTimeSec = 0;
+
+    // Client-Side Extraction: Resolve real video title immediately via oEmbed or player
+    let resolvedTitle = customTitle;
+    if (!resolvedTitle && videoId !== "fnF67w6rDpg") {
+      const oembed = await fetchVideoOEmbed(videoId);
+      if (oembed && oembed.title) {
+        resolvedTitle = oembed.title;
+      }
+    }
+    if (resolvedTitle) {
+      state.currentVideoTitle = resolvedTitle;
+      const titleEl = document.getElementById("video-title");
+      if (titleEl) titleEl.textContent = resolvedTitle;
+    }
 
     // Reset session bridges and missed questions for a new video
     if (videoId !== "fnF67w6rDpg") {
@@ -366,11 +432,17 @@ async function loadVideoStudio(videoId) {
     renderCheatSheetBridges();
     renderCheatSheetMissedMCQs();
 
-    const res = await fetch(`/api/video/${videoId}`);
+    const titleParam = encodeURIComponent(state.currentVideoTitle || "");
+    const res = await fetch(`/api/video/${videoId}?client_title=${titleParam}`);
     const data = await res.json();
 
     if (data.video) {
-      document.getElementById("video-title").textContent = data.video.title;
+      if (data.video.title && !data.video.title.startsWith("Curated Lecture")) {
+        state.currentVideoTitle = data.video.title;
+        document.getElementById("video-title").textContent = data.video.title;
+      } else if (state.currentVideoTitle) {
+        document.getElementById("video-title").textContent = state.currentVideoTitle;
+      }
       if (data.video.duration_sec) {
         state.durationSec = data.video.duration_sec;
       }
@@ -838,6 +910,7 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
   }, 1400);
 
   try {
+    const currentTitle = state.currentVideoTitle || document.getElementById("video-title")?.textContent || null;
     const res = await fetch("/api/analyze-segment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -845,7 +918,8 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
         video_id: state.currentVideoId,
         center_timestamp_sec: timestampSec,
         window_seconds: windowSec,
-        student_doubt: studentDoubt
+        student_doubt: studentDoubt,
+        client_title: currentTitle
       })
     });
 
@@ -1745,17 +1819,33 @@ function initUIEventListeners() {
       lucide.createIcons();
 
       try {
+        // Client-side extraction: resolve real video ID & oEmbed title directly from student Wi-Fi
+        let extractedTitle = null;
+        let candidateId = null;
+        try {
+          const m = val.match(/(?:v=|\/embed\/|\/shorts\/|youtu\.be\/|^)([a-zA-Z0-9_-]{11})/);
+          if (m && m[1]) candidateId = m[1];
+        } catch (_) {}
+
+        if (candidateId) {
+          const oembed = await fetchVideoOEmbed(candidateId);
+          if (oembed && oembed.title) {
+            extractedTitle = oembed.title;
+          }
+        }
+
         const res = await fetch("/api/videos", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             url_or_id: val,
-            folder_id: state.currentFolderId
+            folder_id: state.currentFolderId,
+            custom_title: extractedTitle
           })
         });
         const data = await res.json();
         if (data.video) {
-          await loadVideoStudio(data.video.video_id);
+          await loadVideoStudio(data.video.video_id, extractedTitle || data.video.title);
         }
       } catch (err) {
         alert("Failed to load YouTube video: " + err);
@@ -2318,7 +2408,7 @@ async function loadLandingFolderVideos(folderId) {
         state.currentFolderId = folderId;
         const folderSelect = document.getElementById("folder-select");
         if (folderSelect) folderSelect.value = folderId;
-        await loadVideoStudio(v.video_id);
+        await loadVideoStudio(v.video_id, v.title);
       });
 
       grid.appendChild(card);
@@ -2410,7 +2500,7 @@ async function openFolderVideosModal(targetFolderId) {
         modal.classList.add("hidden");
         const folderSelect = document.getElementById("folder-select");
         if (folderSelect) folderSelect.value = currentId;
-        await loadVideoStudio(v.video_id);
+        await loadVideoStudio(v.video_id, v.title);
       });
 
       listContainer.appendChild(card);

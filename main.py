@@ -84,6 +84,8 @@ class SegmentAnalysisRequest(BaseModel):
     center_timestamp_sec: float
     window_seconds: Optional[float] = 240.0
     student_doubt: Optional[str] = None
+    client_title: Optional[str] = None
+    client_transcript: Optional[str] = None
 
 
 # === HELPER FUNCTIONS ===
@@ -202,10 +204,10 @@ def load_video(req: VideoLoadRequest):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Extract real metadata and heatmap via yt-dlp
-    heatmap_data = get_video_heatmap(vid)
+    # Extract real metadata and heatmap via yt-dlp (with client_title fallback)
+    heatmap_data = get_video_heatmap(vid, client_title=req.custom_title)
     duration = heatmap_data.get("duration_sec", 2400)
-    title = heatmap_data.get("title") or req.custom_title or f"Curated Lecture: {vid}"
+    title = req.custom_title or heatmap_data.get("title") or f"Curated Lecture: {vid}"
 
     cursor.execute("SELECT * FROM videos WHERE video_id = ?", (vid,))
     existing = cursor.fetchone()
@@ -240,16 +242,19 @@ def load_video(req: VideoLoadRequest):
 
 
 @app.get("/api/video/{video_id}")
-def get_video_details(video_id: str):
+def get_video_details(
+    video_id: str,
+    client_title: Optional[str] = Query(default=None)
+):
     """Returns video metadata along with full heatmap curve and detected peak zones."""
     clean_id = extract_youtube_id(video_id)
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Extract live heatmap & metadata
-    heatmap = get_video_heatmap(clean_id)
+    # Extract live heatmap & metadata (with client_title support)
+    heatmap = get_video_heatmap(clean_id, client_title=client_title)
     duration = heatmap.get("duration_sec", 2400)
-    title = heatmap.get("title") or f"Curated Lecture ({clean_id})"
+    title = heatmap.get("title") or client_title or f"Curated Lecture ({clean_id})"
     thumb = f"https://img.youtube.com/vi/{clean_id}/hqdefault.jpg"
 
     cursor.execute("SELECT * FROM videos WHERE video_id = ?", (clean_id,))
@@ -257,8 +262,13 @@ def get_video_details(video_id: str):
 
     if row:
         video_record = dict(row)
-        # Keep duration and title in sync with heatmap extraction
-        if video_record.get("duration_sec") != duration or video_record.get("title") != title:
+        # Keep duration and title in sync with heatmap/client extraction
+        if client_title and video_record.get("title", "").startswith("Curated Lecture"):
+            title = client_title
+            cursor.execute("UPDATE videos SET title = ? WHERE video_id = ?", (title, clean_id))
+            conn.commit()
+            video_record["title"] = title
+        elif video_record.get("duration_sec") != duration or (video_record.get("title") != title and not title.startswith("Curated Lecture")):
             cursor.execute("UPDATE videos SET title = ?, duration_sec = ? WHERE video_id = ?", (title, duration, clean_id))
             conn.commit()
             video_record["title"] = title
@@ -326,7 +336,8 @@ def delete_pin(pin_id: int):
 @app.get("/api/analysis/{video_id}")
 def get_segment_analysis(
     video_id: str,
-    timestamp_sec: float = Query(..., description="Current playback timestamp in seconds")
+    timestamp_sec: float = Query(..., description="Current playback timestamp in seconds"),
+    client_title: Optional[str] = Query(default=None)
 ):
     """
     Returns AI Confusion Rescue breakdown for the ±2 min window around timestamp_sec.
@@ -339,7 +350,10 @@ def get_segment_analysis(
     # Retrieve video title
     cursor.execute("SELECT title FROM videos WHERE video_id = ?", (clean_id,))
     v_row = cursor.fetchone()
-    title = v_row["title"] if v_row else "Engineering Lecture"
+    title = client_title or (v_row["title"] if v_row else "Engineering Lecture")
+    if client_title and v_row and (v_row["title"].startswith("Curated Lecture") or v_row["title"] != client_title):
+        cursor.execute("UPDATE videos SET title = ? WHERE video_id = ?", (client_title, clean_id))
+        conn.commit()
 
     # Check if this timestamp falls into any pre-seeded analysis window for THIS video
     cursor.execute("""
@@ -408,19 +422,24 @@ def get_segment_analysis(
 def analyze_segment_endpoint(req: SegmentAnalysisRequest):
     """
     Core Step B requirement:
-    Fetches transcript window with youtube-transcript-api and runs strict schema
-    Gemini 2.5 Flash analysis with resilient domain fallback.
+    Fetches transcript window with client pass-through or youtube-transcript-api
+    and runs strict schema Gemini Flash analysis with resilient domain fallback.
     """
     clean_id = extract_youtube_id(req.video_id)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT title FROM videos WHERE video_id = ?", (clean_id,))
     v_row = cursor.fetchone()
-    title = v_row["title"] if v_row else f"College Lecture ({clean_id})"
+    
+    # Prioritize client extracted title if passed
+    title = req.client_title or (v_row["title"] if v_row else f"College Lecture ({clean_id})")
+    if req.client_title and v_row and (v_row["title"].startswith("Curated Lecture") or v_row["title"] != req.client_title):
+        cursor.execute("UPDATE videos SET title = ? WHERE video_id = ?", (req.client_title, clean_id))
+        conn.commit()
     conn.close()
 
     # Retrieve chapters if available
-    heatmap = get_video_heatmap(clean_id)
+    heatmap = get_video_heatmap(clean_id, client_title=title)
     chapters = heatmap.get("chapters", [])
 
     analysis = analyze_segment_ai(
@@ -429,7 +448,8 @@ def analyze_segment_endpoint(req: SegmentAnalysisRequest):
         window_seconds=req.window_seconds or 240.0,
         student_doubt=req.student_doubt,
         video_title=title,
-        chapters=chapters
+        chapters=chapters,
+        client_transcript=req.client_transcript
     )
     return analysis
 

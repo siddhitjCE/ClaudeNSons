@@ -249,7 +249,7 @@ def _generate_synthetic_points(duration_sec: int, num_points: int = 100) -> List
     return points
 
 
-def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None) -> Dict[str, Any]:
+def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None, client_title: Optional[str] = None) -> Dict[str, Any]:
     """
     Main public API hook required by specification:
     Returns normalized replay intensity points, detected peak windows, and video metadata.
@@ -261,7 +261,10 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None) -> Dict
 
     # Check cache
     if clean_id in _HEATMAP_CACHE:
-        return _HEATMAP_CACHE[clean_id]
+        cached = _HEATMAP_CACHE[clean_id]
+        if client_title and cached.get("title", "").startswith("Curated Lecture"):
+            cached["title"] = client_title
+        return cached
 
     # 1. Default seeded lecture
     if clean_id in (DEFAULT_VIDEO_ID, "default", "", "chemistry_polymers"):
@@ -286,6 +289,8 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None) -> Dict
     logger.info(f"Extracting live YouTube heatmap for {clean_id} via yt-dlp...")
     extracted = _extract_via_yt_dlp(clean_id)
     if extracted:
+        if client_title and (not extracted.get("title") or extracted.get("title").startswith("Lecture (")):
+            extracted["title"] = client_title
         _HEATMAP_CACHE[clean_id] = extracted
         return extracted
 
@@ -293,9 +298,10 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None) -> Dict
     duration = duration_sec or 1800
     points = _generate_synthetic_points(duration, num_points=100)
     peaks = _detect_peaks_from_points(points, duration)
+    effective_title = client_title or f"Curated Lecture ({clean_id})"
     result = {
         "video_id": clean_id,
-        "title": f"Curated Lecture ({clean_id})",
+        "title": effective_title,
         "duration_sec": duration,
         "chapters": [],
         "intensity_points": points,

@@ -49,12 +49,14 @@ def is_gemini_available() -> bool:
 # ==========================================
 # Preferred Gemini Flash models in priority order:
 # 1. gemini-3.1-flash-lite: Ultra-fast (~700ms), highest rate limits, lowest token footprint
-# 2. gemini-3.5-flash-lite: High efficiency secondary model
-# 3. gemini-2.5-flash: Legacy fallback
+# 2. gemini-3.8-flash: State-of-the-art fast reasoning Flash model
+# 3. gemini-2.0-flash: Resilient high-speed fallback
+# 4. gemini-1.5-flash: Standard multimodal fallback
 PREFERRED_GEMINI_MODELS = [
     "gemini-3.1-flash-lite",
-    "gemini-3.5-flash-lite",
-    "gemini-2.5-flash"
+    "gemini-3.8-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash"
 ]
 
 # In-memory segment cache to prevent redundant API calls and protect RPM/TPM quota
@@ -111,7 +113,8 @@ def format_timestamp(seconds: float) -> str:
 def fetch_transcript_segment(
     video_id: str,
     center_timestamp_sec: float,
-    window_seconds: float = 240.0
+    window_seconds: float = 240.0,
+    video_title: str = "College Lecture"
 ) -> Tuple[str, bool]:
     """
     Fetches the video transcript for (center_timestamp_sec - window/2) to (center_timestamp_sec + window/2)
@@ -147,15 +150,19 @@ def fetch_transcript_segment(
     except Exception as e:
         logger.debug(f"youtube-transcript-api extraction note for {video_id}: {e}")
 
-    # Graceful fallback context based on standard college lecture windows
+    # Graceful fallback context based on standard college lecture windows and video topic
     start_str = format_timestamp(start_sec)
     end_str = format_timestamp(end_sec)
     center_str = format_timestamp(center_timestamp_sec)
     
+    clean_title = (video_title or "").replace("Curated Lecture", "").strip(" ():")
+    if not clean_title or len(clean_title) < 3:
+        clean_title = "College Engineering Lecture"
+
     fallback_text = (
-        f"[{start_str}] Instructor introduces the primary mathematical derivation and initial conditions. "
-        f"[{center_str}] Core breakthrough step: substituting variables, algebraic expansion, and applying boundary constraints. "
-        f"[{end_str}] Final governing relationship established with practical engineering and exam applications."
+        f"[{start_str}] Lecture topic: '{clean_title}'. Instructor introduces the core principles, prerequisites, and foundational framework. "
+        f"[{center_str}] Core conceptual breakthrough step: In-depth derivation, physical mechanisms, and theoretical formulation of {clean_title}. "
+        f"[{end_str}] Synthesis: Critical governing equations, common student misconceptions, and exam-critical implications."
     )
     return (fallback_text, False)
 
@@ -221,12 +228,13 @@ def analyze_segment_ai(
     window_seconds: float = 240.0,
     student_doubt: Optional[str] = None,
     video_title: str = "College Lecture",
-    chapters: Optional[List[Dict[str, Any]]] = None
+    chapters: Optional[List[Dict[str, Any]]] = None,
+    client_transcript: Optional[str] = None
 ) -> Dict[str, Any]:
     """
     Main endpoint logic:
-    Step A: Fetches transcript for (center_timestamp_sec - 120s) to (center_timestamp_sec + 120s).
-    Step B: Calls Gemini 2.5 Flash via google-genai SDK for STRICT JSON schema output.
+    Step A: Uses client-provided transcript or fetches transcript for (center_timestamp_sec - 120s) to (center_timestamp_sec + 120s).
+    Step B: Calls preferred Gemini Flash models via google-genai SDK for STRICT JSON schema output.
     Step C: Graceful fallback adhering 100% to the exact schema if no API key or network error.
     """
     half_win = window_seconds / 2.0
@@ -242,12 +250,18 @@ def analyze_segment_ai(
     if cached_result:
         return cached_result
 
-    # Step A: Fetch transcript
-    transcript_text, has_live_transcript = fetch_transcript_segment(
-        video_id=video_id,
-        center_timestamp_sec=center_timestamp_sec,
-        window_seconds=window_seconds
-    )
+    # Step A: Fetch or use client-extracted transcript
+    if client_transcript and client_transcript.strip():
+        transcript_text = client_transcript.strip()
+        has_live_transcript = True
+        logger.info(f"Using client-extracted transcript for {video_id} ({len(transcript_text)} chars)")
+    else:
+        transcript_text, has_live_transcript = fetch_transcript_segment(
+            video_id=video_id,
+            center_timestamp_sec=center_timestamp_sec,
+            window_seconds=window_seconds,
+            video_title=video_title
+        )
 
     doubt_snippet = f"Student's Specific Doubt: \"{student_doubt}\"" if student_doubt else ""
 
