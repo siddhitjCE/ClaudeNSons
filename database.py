@@ -6,9 +6,16 @@ Part of SyncLearn (by Team ClaudeNSons)
 import sqlite3
 import json
 import logging
+import os
+import tempfile
 from typing import Dict, List, Any, Optional
 
-DB_FILE = "synclearn.db"
+# On Vercel / serverless environments, root is read-only so use /tmp
+if os.environ.get("VERCEL"):
+    DB_FILE = os.path.join(tempfile.gettempdir(), "synclearn.db")
+else:
+    DB_FILE = "synclearn.db"
+
 logger = logging.getLogger("synclearn.db")
 
 
