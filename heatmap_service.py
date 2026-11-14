@@ -54,6 +54,36 @@ SEEDED_PEAKS = [
     }
 ]
 
+SEEDED_PEAKS_OSCKBMKRH_G = [
+    {
+        "id": "peak-1",
+        "start_sec": 60,
+        "end_sec": 240,
+        "peak_sec": 180,
+        "intensity": 0.95,
+        "label": "Virtual Ground Assumption (V- ≈ V+ = 0V)",
+        "description": "Crowd replay peak: Why negative feedback forces inverting terminal to 0V without physical ground connection."
+    },
+    {
+        "id": "peak-2",
+        "start_sec": 240,
+        "end_sec": 420,
+        "peak_sec": 340,
+        "intensity": 0.88,
+        "label": "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
+        "description": "High replay cluster: Applying KCL at the inverting node to derive closed-loop gain and 180° phase inversion."
+    },
+    {
+        "id": "peak-3",
+        "start_sec": 440,
+        "end_sec": 600,
+        "peak_sec": 520,
+        "intensity": 0.82,
+        "label": "Power Supply Rail Clipping Saturation",
+        "description": "Exam pitfall: Output voltage limits bounded by VEE and VCC, and clipping when driven beyond rails."
+    }
+]
+
 
 def _generate_seeded_intensity_points(duration_sec: int = 2700, num_points: int = 120) -> List[Dict[str, Any]]:
     """Generates smooth normalized points matching the pre-seeded Chemistry lecture peaks."""
@@ -68,6 +98,28 @@ def _generate_seeded_intensity_points(duration_sec: int = 2700, num_points: int 
         p1 = gaussian(t, 590, 85, 0.68)
         p2 = gaussian(t, 1360, 75, 0.62)
         p3 = gaussian(t, 2260, 80, 0.55)
+        intensity = min(1.0, max(0.08, base + p1 + p2 + p3))
+        points.append({
+            "time_sec": round(t, 1),
+            "percentage": pct,
+            "intensity": round(intensity, 4)
+        })
+    return points
+
+
+def _generate_seeded_intensity_points_opamp(duration_sec: int = 754, num_points: int = 100) -> List[Dict[str, Any]]:
+    """Generates smooth normalized points matching the OpAmp lecture peaks."""
+    points = []
+    def gaussian(t, mean, std, amp):
+        return amp * math.exp(-0.5 * ((t - mean) / std) ** 2)
+
+    for i in range(num_points):
+        t = (i / (num_points - 1)) * duration_sec
+        pct = round((t / duration_sec) * 100, 2)
+        base = 0.20 + 0.06 * math.sin(t / 80)
+        p1 = gaussian(t, 180, 35, 0.75)
+        p2 = gaussian(t, 340, 40, 0.68)
+        p3 = gaussian(t, 520, 45, 0.62)
         intensity = min(1.0, max(0.08, base + p1 + p2 + p3))
         points.append({
             "time_sec": round(t, 1),
@@ -277,6 +329,25 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None) -> Dict
             ],
             "intensity_points": _generate_seeded_intensity_points(duration, num_points=120),
             "peaks": SEEDED_PEAKS,
+            "source": "pre_seeded_curated"
+        }
+        _HEATMAP_CACHE[clean_id] = result
+        return result
+
+    # 1b. Seeded OpAmp lecture
+    if clean_id == "OSCKBmkrH_g":
+        duration = 754
+        result = {
+            "video_id": "OSCKBmkrH_g",
+            "title": "The Ultimate Component: OpAmp (ElectroBOOM101 – 013)",
+            "duration_sec": duration,
+            "chapters": [
+                {"start_time": 0, "end_time": 240, "title": "OpAmp Fundamentals & Virtual Ground"},
+                {"start_time": 240, "end_time": 440, "title": "Inverting & Non-Inverting Amplifier Configurations"},
+                {"start_time": 440, "end_time": 754, "title": "Saturation, Power Rails & Applications"}
+            ],
+            "intensity_points": _generate_seeded_intensity_points_opamp(duration, num_points=100),
+            "peaks": SEEDED_PEAKS_OSCKBMKRH_G,
             "source": "pre_seeded_curated"
         }
         _HEATMAP_CACHE[clean_id] = result

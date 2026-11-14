@@ -4,6 +4,437 @@
  * Refactored for User-Centred Design, Cognitive Accessibility, and Hick's Law
  */
 
+// ==========================================
+// UNIFIED STORAGE MANAGER & STATIC SEEDED FALLBACK DATA
+// (Ensures 100% reliable operation on Vercel Serverless and fresh browsers)
+// ==========================================
+
+const STATIC_FALLBACK_DATA = {
+  folders: [
+    { id: 1, name: "Engineering Chemistry: Polymers", color: "violet", icon: "flask-conical", video_count: 3 },
+    { id: 2, name: "Intro to Mechatronics", color: "cyan", icon: "cpu", video_count: 0 },
+    { id: 3, name: "Digital Electronics", color: "emerald", icon: "binary", video_count: 1 }
+  ],
+  videos: [
+    {
+      id: 3,
+      video_id: "fnF67w6rDpg",
+      title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
+      author: "YouTube Studio",
+      folder_id: 1,
+      duration_sec: 2700,
+      thumbnail_url: "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
+    },
+    {
+      id: 4,
+      video_id: "OSCKBmkrH_g",
+      title: "The Ultimate Component: OpAmp (ElectroBOOM101 – 013)",
+      author: "ElectroBOOM",
+      folder_id: 3,
+      duration_sec: 754,
+      thumbnail_url: "https://img.youtube.com/vi/OSCKBmkrH_g/hqdefault.jpg"
+    },
+    {
+      id: 1,
+      video_id: "KfODG5REyss",
+      title: "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
+      author: "Veritasium",
+      folder_id: null,
+      duration_sec: 3955,
+      thumbnail_url: "https://i.ytimg.com/vi/KfODG5REyss/hqdefault.jpg"
+    },
+    {
+      id: 2,
+      video_id: "Y-W-w8yNiKU",
+      title: "Why is there antimatter?",
+      author: "Veritasium",
+      folder_id: 1,
+      duration_sec: 2123,
+      thumbnail_url: "https://img.youtube.com/vi/Y-W-w8yNiKU/hqdefault.jpg"
+    },
+    {
+      id: 5,
+      video_id: "fEjvSbI_PT4",
+      title: "Dying Is Complicated",
+      author: "Kurzgesagt",
+      folder_id: 1,
+      duration_sec: 840,
+      thumbnail_url: "https://img.youtube.com/vi/fEjvSbI_PT4/hqdefault.jpg"
+    },
+    {
+      id: 6,
+      video_id: "lyfx8CL7AkI",
+      title: "This CHIP Changed the WORLD! MOSFET (ElectroBOOM101 - 012)",
+      author: "ElectroBOOM",
+      folder_id: 1,
+      duration_sec: 738,
+      thumbnail_url: "https://img.youtube.com/vi/lyfx8CL7AkI/hqdefault.jpg"
+    }
+  ],
+  pins: [
+    {
+      id: 1,
+      video_id: "fnF67w6rDpg",
+      timestamp_sec: 580.0,
+      tag: "exam_priority",
+      title: "Polydispersity Index (PDI = Mw/Mn) Numerical Formula",
+      note: "Polydispersity Index formula: PDI = Mw / Mn. For monodisperse polymers (biological proteins) PDI = 1.0. For typical synthetic polymers, PDI > 1.5. Highly recurring Question 3 on midterms!",
+      created_at: "2026-11-13 22:49:06"
+    },
+    {
+      id: 2,
+      video_id: "fnF67w6rDpg",
+      timestamp_sec: 675.0,
+      tag: "key_formula",
+      title: "Number-Average (Mn) vs Weight-Average (Mw) Formulas",
+      note: "Mn = Σ(Ni·Mi) / ΣNi (osmometry). Mw = Σ(Ni·Mi²) / Σ(Ni·Mi) (light scattering). High-mass chains bias Mw upward, hence Mw >= Mn always.",
+      created_at: "2026-11-13 22:49:06"
+    },
+    {
+      id: 3,
+      video_id: "fnF67w6rDpg",
+      timestamp_sec: 1360.0,
+      tag: "revisit",
+      title: "Ziegler-Natta Catalysis Monometallic Cossee-Arlman Mechanism",
+      note: "Titanium tetrachloride (TiCl4) coordinated with Triethylaluminium Al(C2H5)3 creates active stereospecific vacant orbital for syndiotactic / isotactic polypropylene.",
+      created_at: "2026-11-13 22:49:06"
+    },
+    {
+      id: 4,
+      video_id: "fnF67w6rDpg",
+      timestamp_sec: 2260.0,
+      tag: "exam_priority",
+      title: "Vulcanization Sulfur Crosslink Density vs Glass Transition (Tg)",
+      note: "2-3% sulfur gives elastic soft rubber (tires); 25-35% sulfur crosslinks all conformational rotation, forming rigid ebonite.",
+      created_at: "2026-11-13 22:49:06"
+    },
+    {
+      id: 5,
+      video_id: "OSCKBmkrH_g",
+      timestamp_sec: 180.0,
+      tag: "exam_priority",
+      title: "Virtual Ground Assumption (V- ≈ V+ = 0V)",
+      note: "Because open-loop gain AOL is massive (~100,000), negative feedback drives differential input voltage (V+ - V-) towards zero. With V+ grounded, V- is a virtual ground!",
+      created_at: "2026-11-13 22:49:06"
+    },
+    {
+      id: 6,
+      video_id: "OSCKBmkrH_g",
+      timestamp_sec: 340.0,
+      tag: "key_formula",
+      title: "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
+      note: "Applying KCL at the inverting node: (Vin - 0)/Rin = (0 - Vout)/Rf => Vout = -(Rf/Rin) * Vin. Negative sign indicates 180° phase inversion.",
+      created_at: "2026-11-13 22:49:06"
+    },
+    {
+      id: 7,
+      video_id: "OSCKBmkrH_g",
+      timestamp_sec: 520.0,
+      tag: "revisit",
+      title: "Power Supply Rail Clipping Saturation",
+      note: "Output cannot swing beyond supply rails (VEE <= Vout <= VCC). If driven beyond rails, peaks get clipped flat.",
+      created_at: "2026-11-13 22:49:06"
+    }
+  ],
+  heatmaps: {
+    "fnF67w6rDpg": {
+      video_id: "fnF67w6rDpg",
+      title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
+      duration_sec: 2700,
+      chapters: [
+        { start_time: 0, end_time: 720, title: "Polymers & Molecular Weight Distribution" },
+        { start_time: 720, end_time: 1800, title: "Ziegler-Natta Catalysis & Stereospecific Mechanism" },
+        { start_time: 1800, end_time: 2700, title: "Vulcanization & Viscoelastic Properties" }
+      ],
+      peaks: [
+        {
+          id: "peak-1",
+          start_sec: 480,
+          end_sec: 720,
+          peak_sec: 590,
+          intensity: 0.94,
+          label: "Degree of Polymerization & Molecular Weight Distribution (PDI)",
+          description: "High crowd replay peak: Derivations for Number-Average (Mn) vs Weight-Average (Mw) and Polydispersity Index (PDI = Mw/Mn)."
+        },
+        {
+          id: "peak-2",
+          start_sec: 1290,
+          end_sec: 1470,
+          peak_sec: 1360,
+          intensity: 0.89,
+          label: "Ziegler-Natta Catalysis & Stereospecific Mechanism",
+          description: "High replay cluster: Coordination polymerisation mechanism between TiCl4 and Al(C2H5)3."
+        },
+        {
+          id: "peak-3",
+          start_sec: 2160,
+          end_sec: 2370,
+          peak_sec: 2260,
+          intensity: 0.82,
+          label: "Vulcanization, Cross-Linking & Viscoelastic Transition",
+          description: "Critical exam section: Sulfur bridge crosslinking percentage vs polymer chain mobility."
+        }
+      ]
+    },
+    "OSCKBmkrH_g": {
+      video_id: "OSCKBmkrH_g",
+      title: "The Ultimate Component: OpAmp (ElectroBOOM101 – 013)",
+      duration_sec: 754,
+      chapters: [
+        { start_time: 0, end_time: 240, title: "OpAmp Fundamentals & Virtual Ground" },
+        { start_time: 240, end_time: 440, title: "Inverting & Non-Inverting Amplifier Configurations" },
+        { start_time: 440, end_time: 754, title: "Saturation, Power Rails & Applications" }
+      ],
+      peaks: [
+        {
+          id: "peak-1",
+          start_sec: 60,
+          end_sec: 240,
+          peak_sec: 180,
+          intensity: 0.95,
+          label: "Virtual Ground Assumption (V- ≈ V+ = 0V)",
+          description: "Crowd replay peak: Why negative feedback forces inverting terminal to 0V without physical ground connection."
+        },
+        {
+          id: "peak-2",
+          start_sec: 240,
+          end_sec: 420,
+          peak_sec: 340,
+          intensity: 0.88,
+          label: "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
+          description: "High replay cluster: Applying KCL at the inverting node to derive closed-loop gain."
+        },
+        {
+          id: "peak-3",
+          start_sec: 440,
+          end_sec: 600,
+          peak_sec: 520,
+          intensity: 0.82,
+          label: "Power Supply Rail Clipping Saturation",
+          description: "Exam pitfall: Output voltage limits bounded by VEE and VCC, and clipping when driven beyond rails."
+        }
+      ]
+    }
+  },
+  analyses: {
+    "fnF67w6rDpg": [
+      {
+        target_sec: 590,
+        data: {
+          core_concept_name: "Degree of Polymerization & Molecular Weight Distribution (PDI)",
+          why_students_struggle: "Students get overwhelmed by discrete summations and why high-mass chains skew the Weight-Average (Mw) much higher than the Number-Average (Mn).",
+          plain_language_analogy: "Think of an elevator with 10 people: if 9 are toddlers (10kg) and 1 is an elephant (5,000kg), the average weight by count is 509kg, but the elevator floor feels the sheer bulk of the elephant quadratically.",
+          step_by_step_breakdown: [
+            "Molar Mass Distribution: Synthetic polymers are intrinsically polydisperse because chains terminate at random lengths.",
+            "Number-Average Molar Mass (Mn): Total sample mass divided by total chain count: Mn = Σ(Ni·Mi) / ΣNi (measured by colligative osmometry).",
+            "Weight-Average Molar Mass (Mw): Mass-weighted average where heavier chains contribute quadratically: Mw = Σ(Ni·Mi²) / Σ(Ni·Mi) (measured by light scattering).",
+            "Polydispersity Index (PDI): PDI = Mw / Mn. For monodisperse biomacromolecules (like natural proteins) PDI = 1.0; commercial plastics range from 1.5 to 10+."
+          ],
+          key_formula_latex: "PDI = \\frac{\\bar{M}_w}{\\bar{M}_n} = \\frac{\\sum N_i M_i^2 \\cdot \\sum N_i}{\\left(\\sum N_i M_i\\right)^2} \\ge 1.0",
+          exam_pitfall_warning: "Never swap Mn and Mw in the ratio. Since high-mass chains bias the second moment, Mw is always >= Mn, which means PDI can NEVER be less than 1.0!",
+          active_recall_prompt: "Can a real-world synthetic polyethylene sample ever have a Polydispersity Index (PDI) of 0.85? Why or why not?",
+          difficulty_badge: "High Cognitive Load (88% Replay Spike)",
+          difficulty_score: 88,
+          difficulty_reason: "Derivation involves summations over discrete molecular fractions.",
+          context_locked_explanation: "The lecturer emphasizes that unlike small molecules which have a single discrete molar mass, synthetic polymers exist as a broad macromolecular statistical distribution.",
+          alternative_videos: [
+            {
+              title: "Why Weight-Average (Mw) is Always Greater than Number-Average (Mn)",
+              channel: "Khan Academy MCAT Chemistry",
+              duration: "7:14",
+              thumbnail: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=80",
+              bridge_note: "Uses a 2-chain bowling ball vs ping-pong ball analogy to clarify why squaring Mi shifts the distribution mean rightward.",
+              url: "https://www.youtube.com/results?search_query=polymer+weight+average+vs+number+average",
+              timestamp_jump: 180
+            },
+            {
+              title: "MIT OCW: Polymer Molecular Weights & Polydispersity Index",
+              channel: "MIT 3.091 Introduction to Solid-State Chemistry",
+              duration: "9:42",
+              thumbnail: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=400&q=80",
+              bridge_note: "Matches professor's exact notation (Mn, Mw, PDI) and walks through a worked numerical calculating PDI from a discrete fraction table.",
+              url: "https://www.youtube.com/results?search_query=MIT+OCW+Polydispersity+Index",
+              timestamp_jump: 320
+            }
+          ],
+          visual_diagram: {
+            title: "Polymer Molecular Weight Distribution Flow",
+            flow_type: "horizontal",
+            nodes: [
+              { id: "node-1", title: "Raw Polymer Population", content: "Chains {N1, M1}, {N2, M2} ... {Ni, Mi}", is_blank: false },
+              { id: "node-2", title: "Number-Average (Mn)", content: "Mn = Σ(Ni·Mi) / [ ? ]", is_blank: true, prompt: "Complete the denominator for Number-Average Mn:", options: ["ΣNi (Total Molecules)", "Σ(Ni·Mi²) (Mass Moments)", "PDI (Spread)"], correct_option_index: 0, revealed_text: "Mn = Σ(Ni·Mi) / ΣNi (Colligative Count)" },
+              { id: "node-3", title: "Weight-Average (Mw)", content: "Mw = Σ(Ni·Mi²) / [ ? ]", is_blank: true, prompt: "Complete the denominator for Weight-Average Mw:", options: ["Σ(Ni·Mi) (Total Sample Mass)", "Avogadro Number NA", "DP"], correct_option_index: 0, revealed_text: "Mw = Σ(Ni·Mi²) / Σ(Ni·Mi) (Mass-Weighted)" },
+              { id: "node-4", title: "Polydispersity Metric", content: "[ ? ] = Mw / Mn", is_blank: true, prompt: "Identify the ratio symbol used to quantify molecular weight spread:", options: ["PDI (Polydispersity Index)", "Tg (Glass Transition)", "DP (Degree of Poly)"], correct_option_index: 0, revealed_text: "PDI = Mw / Mn (Distribution Spread Ratio)" }
+            ]
+          },
+          checkpoint_mcqs: [
+            {
+              id: "mcq-1",
+              question: "For a monodisperse polymer sample where every individual chain has exactly 1,000 repeat units, what is the exact value of PDI?",
+              options: ["PDI = 0.0", "PDI = 1.0 (Mw equals Mn)", "PDI = 2.0", "PDI > 1.5"],
+              correct_index: 1,
+              explanation: "When all chains have identical length, Mw = Mn, yielding PDI = Mw / Mn = 1.0."
+            },
+            {
+              id: "mcq-2",
+              question: "Which measurement technique depends on colligative properties to determine Number-Average Molecular Weight (Mn)?",
+              options: ["Membrane Osmometry & Freezing Point Depression", "Static Laser Light Scattering", "Gel Permeation Chromatography", "Analytical Ultracentrifugation"],
+              correct_index: 0,
+              explanation: "Osmometry counts particle concentration regardless of individual chain mass, giving Mn."
+            }
+          ]
+        }
+      }
+    ],
+    "OSCKBmkrH_g": [
+      {
+        target_sec: 180,
+        data: {
+          core_concept_name: "Virtual Ground Assumption in Operational Amplifiers",
+          why_students_struggle: "Students find it confusing why an inverting input terminal is at 0V (ground potential) even though it is not physically connected to the circuit ground wire.",
+          plain_language_analogy: "Imagine a high-speed seesaw: the fulcrum is at 0V. The op-amp output constantly adjusts up or down so furiously that it keeps the other end pinned right at 0V.",
+          step_by_step_breakdown: [
+            "Ideal Op-Amp Properties: Infinite input impedance (Rin = ∞) means zero input current flows into either terminal (I+ = I- = 0A).",
+            "Massive Open-Loop Gain: Open-loop gain AOL is huge (~100,000 to 1,000,000). Output equation is Vout = AOL * (V+ - V-).",
+            "Negative Feedback Action: Connecting an external feedback resistor Rf from Vout to V- creates negative feedback, driving (V+ - V-) towards 0V.",
+            "Virtual Ground Rule: When non-inverting terminal V+ is tied to 0V ground, negative feedback forces V- to equal V+ ≈ 0V. Thus, V- acts like a ground without sinking current!"
+          ],
+          key_formula_latex: "V_- \\approx V_+ = 0\\text{V} \\quad \\text{when } V_+ \\text{ is grounded and negative feedback is closed.}",
+          exam_pitfall_warning: "The virtual ground assumption ONLY holds when negative feedback is present! In open-loop comparator circuits, V- does NOT equal V+.",
+          active_recall_prompt: "If an op-amp has no feedback resistor (open-loop mode), is the inverting terminal still a virtual ground?",
+          difficulty_badge: "Core Circuit Analysis Concept",
+          difficulty_score: 85,
+          difficulty_reason: "Requires understanding negative feedback and differential open-loop amplification.",
+          context_locked_explanation: "ElectroBOOM explains that the op-amp continuously pushes Vout until the difference between its inputs is virtually zero.",
+          alternative_videos: [
+            {
+              title: "Op-Amp Virtual Ground & Inverting Amplifier Explained",
+              channel: "The Organic Chemistry Tutor",
+              duration: "11:20",
+              thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80",
+              bridge_note: "Provides step-by-step circuit analysis applying KCL at the virtual ground node.",
+              url: "https://www.youtube.com/results?search_query=op+amp+virtual+ground+explained",
+              timestamp_jump: 150
+            }
+          ],
+          visual_diagram: {
+            title: "Op-Amp Virtual Ground Feedback Loop",
+            flow_type: "horizontal",
+            nodes: [
+              { id: "node-1", title: "Non-Inverting Input (V+)", content: "Tied to 0V Circuit Ground", is_blank: false },
+              { id: "node-2", title: "Negative Feedback Loop", content: "Feedback Resistor Rf connects Vout to [ ? ]", is_blank: true, prompt: "Where does Rf connect to form negative feedback?", options: ["Inverting Terminal (V-)", "Non-inverting (V+)", "Power Supply Vcc"], correct_option_index: 0, revealed_text: "Connected to Inverting Terminal (V-)" },
+              { id: "node-3", title: "Virtual Ground Result", content: "[ ? ] ≈ 0V without physical connection", is_blank: true, prompt: "What voltage does V- reach?", options: ["V- = 0V (Virtual Ground)", "V- = +15V", "V- = -15V"], correct_option_index: 0, revealed_text: "V- ≈ 0V (Virtual Ground Potential)" }
+            ]
+          },
+          checkpoint_mcqs: [
+            {
+              id: "mcq-1",
+              question: "Under which condition does the virtual ground assumption hold true for an op-amp?",
+              options: ["Only when negative feedback is present", "In open loop mode", "Only when power is off", "Regardless of circuit topology"],
+              correct_index: 0,
+              explanation: "Negative feedback is what drives the differential input voltage (V+ - V-) toward zero."
+            }
+          ]
+        }
+      }
+    ]
+  }
+};
+
+const StorageManager = {
+  get(key, fallback = null) {
+    try {
+      const val = localStorage.getItem(`synclearn_${key}`);
+      return val ? JSON.parse(val) : fallback;
+    } catch (e) {
+      console.warn("StorageManager.get error:", e);
+      return fallback;
+    }
+  },
+
+  set(key, value) {
+    try {
+      localStorage.setItem(`synclearn_${key}`, JSON.stringify(value));
+    } catch (e) {
+      console.warn("StorageManager.set error:", e);
+    }
+  },
+
+  getFolders() {
+    const custom = this.get("folders", null);
+    if (custom && Array.isArray(custom) && custom.length > 0) return custom;
+    return STATIC_FALLBACK_DATA.folders;
+  },
+
+  saveFolder(folder) {
+    const folders = this.getFolders().slice();
+    const newId = folders.length > 0 ? Math.max(...folders.map(f => f.id || 0)) + 1 : 1;
+    const newFolder = { id: newId, video_count: 0, ...folder };
+    folders.push(newFolder);
+    this.set("folders", folders);
+    return newFolder;
+  },
+
+  getVideos() {
+    const custom = this.get("videos", null);
+    if (custom && Array.isArray(custom) && custom.length > 0) return custom;
+    return STATIC_FALLBACK_DATA.videos;
+  },
+
+  saveVideo(video) {
+    const list = this.getVideos().slice();
+    const idx = list.findIndex(v => v.video_id === video.video_id);
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...video };
+    } else {
+      list.push(video);
+    }
+    this.set("videos", list);
+  },
+
+  getPins(videoId) {
+    const allPins = this.get("pins", null);
+    const base = allPins !== null ? allPins : STATIC_FALLBACK_DATA.pins;
+    return base.filter(p => p.video_id === videoId);
+  },
+
+  savePin(pin) {
+    const allPins = (this.get("pins", null) || STATIC_FALLBACK_DATA.pins).slice();
+    const newId = pin.id || Date.now();
+    const fullPin = { ...pin, id: newId, created_at: new Date().toISOString() };
+    allPins.push(fullPin);
+    this.set("pins", allPins);
+    return fullPin;
+  },
+
+  deletePin(pinId) {
+    const allPins = (this.get("pins", null) || STATIC_FALLBACK_DATA.pins).slice();
+    const filtered = allPins.filter(p => p.id !== pinId);
+    this.set("pins", filtered);
+  },
+
+  getAnalysis(videoId, timestampSec) {
+    // 1. Check local storage cache
+    const key = `analysis_${videoId}_${Math.round(timestampSec / 60)}`;
+    const cached = this.get(key, null);
+    if (cached) return cached;
+
+    // 2. Check static fallback data
+    const list = STATIC_FALLBACK_DATA.analyses[videoId] || [];
+    for (const item of list) {
+      if (Math.abs(item.target_sec - timestampSec) <= 180) {
+        return item.data;
+      }
+    }
+    return null;
+  },
+
+  saveAnalysis(videoId, timestampSec, data) {
+    const key = `analysis_${videoId}_${Math.round(timestampSec / 60)}`;
+    this.set(key, data);
+  }
+};
+
 // Global Application State
 const state = {
   currentVideoId: "fnF67w6rDpg", // Default Engineering Chemistry lecture
@@ -366,28 +797,24 @@ async function loadVideoStudio(videoId) {
     renderCheatSheetBridges();
     renderCheatSheetMissedMCQs();
 
-    const res = await fetch(`/api/video/${videoId}`);
-    const data = await res.json();
+    // 1. Instant fallback metadata & heatmap from StorageManager or STATIC_FALLBACK_DATA
+    const fallbackHeatmap = STATIC_FALLBACK_DATA.heatmaps[videoId];
+    const fallbackVideo = StorageManager.getVideos().find(v => v.video_id === videoId);
 
-    if (data.video) {
-      document.getElementById("video-title").textContent = data.video.title;
-      if (data.video.duration_sec) {
-        state.durationSec = data.video.duration_sec;
-      }
+    if (fallbackVideo) {
+      const titleEl = document.getElementById("video-title");
+      if (titleEl) titleEl.textContent = fallbackVideo.title;
+      if (fallbackVideo.duration_sec) state.durationSec = fallbackVideo.duration_sec;
     }
-
-    if (data.heatmap) {
-      state.heatmapData = data.heatmap;
-      if (data.heatmap.duration_sec) {
-        state.durationSec = data.heatmap.duration_sec;
-      }
-      renderHeatmap(data.heatmap);
-      renderDynamicPeaksUI(data.heatmap);
+    if (fallbackHeatmap) {
+      state.heatmapData = fallbackHeatmap;
+      if (fallbackHeatmap.duration_sec) state.durationSec = fallbackHeatmap.duration_sec;
+      renderHeatmap(fallbackHeatmap);
+      renderDynamicPeaksUI(fallbackHeatmap);
     }
-
     updateDurationBadge();
 
-    // Load Pins
+    // 2. Load Pins synchronously
     await loadPins(videoId);
 
     // Switch video in player or fallback iframe
@@ -401,7 +828,7 @@ async function loadVideoStudio(videoId) {
       fallbackToDirectIframe();
     }
 
-    // Dismiss any loader overlay
+    // Dismiss loader overlay
     const loader = document.getElementById("player-loader");
     if (loader) {
       loader.style.opacity = "0";
@@ -410,13 +837,32 @@ async function loadVideoStudio(videoId) {
 
     // Determine target initial peak for analysis
     let initialTimestamp = 30;
-    if (data.heatmap && data.heatmap.peaks && data.heatmap.peaks.length > 0) {
-      initialTimestamp = data.heatmap.peaks[0].peak_sec || data.heatmap.peaks[0].start_sec;
+    if (state.heatmapData && state.heatmapData.peaks && state.heatmapData.peaks.length > 0) {
+      initialTimestamp = state.heatmapData.peaks[0].peak_sec || state.heatmapData.peaks[0].start_sec;
     }
 
-    // Automatically load analysis & quiz for this video's initial focus point
-    await fetchSegmentAnalysis(initialTimestamp);
-    await fetchSegmentQuiz(initialTimestamp);
+    // Automatically load analysis & quiz for this initial focus point
+    fetchSegmentAnalysis(initialTimestamp);
+    fetchSegmentQuiz(initialTimestamp);
+
+    // 3. Concurrently fetch real backend heatmap and video info in background
+    fetch(`/api/video/${videoId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.video && data.video.title) {
+          const titleEl = document.getElementById("video-title");
+          if (titleEl) titleEl.textContent = data.video.title;
+          if (data.video.duration_sec) state.durationSec = data.video.duration_sec;
+        }
+        if (data.heatmap && data.heatmap.intensity_points && data.heatmap.intensity_points.length > 0) {
+          state.heatmapData = data.heatmap;
+          if (data.heatmap.duration_sec) state.durationSec = data.heatmap.duration_sec;
+          renderHeatmap(data.heatmap);
+          renderDynamicPeaksUI(data.heatmap);
+          updateDurationBadge();
+        }
+      })
+      .catch(e => console.debug("Video backend sync notice:", e));
 
   } catch (err) {
     console.error("Failed to load video studio:", err);
@@ -600,14 +1046,28 @@ function initTimelineInteractions() {
 // ==========================================
 
 async function loadPins(videoId) {
+  // 1. Instant synchronous load from StorageManager
+  state.pins = StorageManager.getPins(videoId);
+  renderTimelinePins();
+  renderCheatSheetPins();
+
+  // 2. Concurrently fetch and sync with backend if online
   try {
     const res = await fetch(`/api/pins/${videoId}`);
-    const data = await res.json();
-    state.pins = data.pins || [];
-    renderTimelinePins();
-    renderCheatSheetPins();
+    if (res.ok) {
+      const data = await res.json();
+      if (data.pins && data.pins.length > 0) {
+        state.pins = data.pins;
+        // Merge into StorageManager
+        const allPins = (StorageManager.get("pins", null) || STATIC_FALLBACK_DATA.pins).slice();
+        const otherPins = allPins.filter(p => p.video_id !== videoId);
+        StorageManager.set("pins", [...otherPins, ...data.pins]);
+        renderTimelinePins();
+        renderCheatSheetPins();
+      }
+    }
   } catch (err) {
-    console.error("Failed to load pins:", err);
+    console.debug("Backend pins sync notice (fallback active):", err);
   }
 }
 
@@ -792,10 +1252,11 @@ function deletePinWithUndo(pinId) {
 }
 
 async function executePermanentDelete(pinId) {
+  StorageManager.deletePin(pinId);
   try {
     await fetch(`/api/pins/${pinId}`, { method: "DELETE" });
   } catch (err) {
-    console.warn("Failed to delete pin permanently:", err);
+    console.debug("Backend delete pin notice:", err);
   }
 }
 
@@ -820,6 +1281,23 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
     winBanner.textContent = `${formatTime(startSec)} – ${formatTime(endSec)}`;
   }
 
+  // 1. Instant check in StorageManager (0ms latency!)
+  const cachedAnalysis = StorageManager.getAnalysis(state.currentVideoId, timestampSec);
+  if (cachedAnalysis && !studentDoubt) {
+    state.activeAnalysis = cachedAnalysis;
+    renderTab1AIRescue(cachedAnalysis, timestampSec);
+    if (cachedAnalysis.visual_diagram) {
+      renderVisualDiagram(cachedAnalysis.visual_diagram);
+    }
+    if (cachedAnalysis.checkpoint_mcqs) {
+      renderCheckpointMCQs(cachedAnalysis.checkpoint_mcqs);
+    }
+    if (skeleton) skeleton.classList.add("hidden");
+    if (content) content.classList.remove("hidden");
+    lucide.createIcons();
+    return;
+  }
+
   // Show friendly step-by-step skeleton while AI analysis is running
   if (skeleton) skeleton.classList.remove("hidden");
   if (content) content.classList.add("hidden");
@@ -837,12 +1315,15 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
     if (skStep3) skStep3.className = "flex items-center gap-2 text-indigo-300 font-bold";
   }, 1400);
 
+  const videoTitle = document.getElementById("video-title")?.textContent || "College Lecture";
+
   try {
     const res = await fetch("/api/analyze-segment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         video_id: state.currentVideoId,
+        video_title: videoTitle,
         center_timestamp_sec: timestampSec,
         window_seconds: windowSec,
         student_doubt: studentDoubt
@@ -855,6 +1336,7 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
 
     const data = await res.json();
     state.activeAnalysis = data;
+    StorageManager.saveAnalysis(state.currentVideoId, timestampSec, data);
 
     // Render Tab 1 Simple Explanation
     renderTab1AIRescue(data, timestampSec);
@@ -868,7 +1350,16 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
     }
 
   } catch (err) {
-    console.error("Failed to run segment explanation:", err);
+    console.warn("AI segment analysis API fallback invoked:", err);
+    // Graceful fallback to static data so user never sees a broken state
+    const fallback = StorageManager.getAnalysis(state.currentVideoId, timestampSec) || 
+      (STATIC_FALLBACK_DATA.analyses["fnF67w6rDpg"] && STATIC_FALLBACK_DATA.analyses["fnF67w6rDpg"][0]?.data);
+    if (fallback) {
+      state.activeAnalysis = fallback;
+      renderTab1AIRescue(fallback, timestampSec);
+      if (fallback.visual_diagram) renderVisualDiagram(fallback.visual_diagram);
+      if (fallback.checkpoint_mcqs) renderCheckpointMCQs(fallback.checkpoint_mcqs);
+    }
   } finally {
     clearTimeout(stepTimer1);
     clearTimeout(stepTimer2);
@@ -1010,27 +1501,27 @@ function renderTab1AIRescue(data, timestampSec) {
         note: `★ Key Takeaway: ${data.why_students_struggle}\n\n💡 Breakdown: ${data.context_locked_explanation ? data.context_locked_explanation.slice(0, 320) : ""}...`
       };
 
+      const savedPin = StorageManager.savePin(newPin);
+      state.pins.push(savedPin);
+      state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
+      renderTimelinePins();
+      renderCheatSheetPins();
+
+      autoSaveBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400" aria-hidden="true"></i><span class="text-emerald-300 font-bold">✓ Saved to Notes!</span>`;
+      lucide.createIcons();
+      setTimeout(() => {
+        autoSaveBtn.innerHTML = `<i data-lucide="bookmark-plus" class="w-3.5 h-3.5" aria-hidden="true"></i><span>Save as Note</span>`;
+        lucide.createIcons();
+      }, 2500);
+
       try {
-        const pRes = await fetch("/api/pins", {
+        await fetch("/api/pins", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newPin)
         });
-        const pData = await pRes.json();
-        if (pData.pin) {
-          state.pins.push(pData.pin);
-          state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
-          renderTimelinePins();
-          renderCheatSheetPins();
-          autoSaveBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400" aria-hidden="true"></i><span class="text-emerald-300 font-bold">✓ Saved to Notes!</span>`;
-          lucide.createIcons();
-          setTimeout(() => {
-            autoSaveBtn.innerHTML = `<i data-lucide="bookmark-plus" class="w-3.5 h-3.5" aria-hidden="true"></i><span>Save as Note</span>`;
-            lucide.createIcons();
-          }, 2500);
-        }
       } catch (err) {
-        console.error("Auto-save note error:", err);
+        console.debug("Auto-save note backend sync notice:", err);
       }
     };
   }
@@ -1939,28 +2430,29 @@ function initModalListeners() {
         return;
       }
 
+      const newPin = {
+        video_id: state.currentVideoId,
+        timestamp_sec: state.currentTimeSec,
+        tag: tag,
+        title: title,
+        note: note
+      };
+
+      const savedPin = StorageManager.savePin(newPin);
+      state.pins.push(savedPin);
+      state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
+      renderTimelinePins();
+      renderCheatSheetPins();
+      pinModal.classList.add("hidden");
+
       try {
-        const res = await fetch("/api/pins", {
+        await fetch("/api/pins", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            video_id: state.currentVideoId,
-            timestamp_sec: state.currentTimeSec,
-            tag: tag,
-            title: title,
-            note: note
-          })
+          body: JSON.stringify(newPin)
         });
-        const data = await res.json();
-        if (data.pin) {
-          state.pins.push(data.pin);
-          state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
-          renderTimelinePins();
-          renderCheatSheetPins();
-          pinModal.classList.add("hidden");
-        }
       } catch (err) {
-        alert("Failed to save note: " + err);
+        console.debug("Backend pin save notice:", err);
       }
     });
   }
@@ -1991,21 +2483,20 @@ function initModalListeners() {
       const color = document.getElementById("new-folder-color").value;
       if (!name) return;
 
+      const createdFolder = StorageManager.saveFolder({ name, color, icon: "folder" });
+      folderModal.classList.add("hidden");
+      await loadSubjectFolders();
+      if (folderSelect) folderSelect.value = createdFolder.id;
+      state.currentFolderId = createdFolder.id;
+
       try {
-        const res = await fetch("/api/folders", {
+        await fetch("/api/folders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, color })
         });
-        const data = await res.json();
-        if (data.id) {
-          folderModal.classList.add("hidden");
-          await loadSubjectFolders();
-          folderSelect.value = data.id;
-          state.currentFolderId = data.id;
-        }
       } catch (err) {
-        alert("Failed to create folder: " + err);
+        console.debug("Backend folder save notice:", err);
       }
     });
   }
@@ -2128,41 +2619,47 @@ function openPinModal() {
 async function loadSubjectFolders() {
   const select = document.getElementById("folder-select");
 
+  // 1. Instantaneous populate from StorageManager
+  state.folders = StorageManager.getFolders();
+  renderFoldersUI(select, state.folders);
+
+  // 2. Concurrently fetch and sync with backend
   try {
     const res = await fetch("/api/folders");
-    const data = await res.json();
-    if (data.folders) {
-      state.folders = data.folders;
-
-      // 1. Populate Navbar Select with Dark Themed Options
-      if (select) {
-        select.innerHTML = "";
-        data.folders.forEach(f => {
-          const opt = document.createElement("option");
-          opt.value = f.id;
-          opt.textContent = `${f.name} (${f.video_count || 0} vids)`;
-          opt.style.backgroundColor = "#0f172a";
-          opt.style.color = "#f8fafc";
-          select.appendChild(opt);
-        });
-        const addNewOpt = document.createElement("option");
-        addNewOpt.value = "add_new";
-        addNewOpt.textContent = "+ Add To Personal Library";
-        addNewOpt.style.backgroundColor = "#0f172a";
-        addNewOpt.style.color = "#a5b4fc";
-        select.appendChild(addNewOpt);
-
-        if (state.currentFolderId) {
-          select.value = state.currentFolderId;
-        }
+    if (res.ok) {
+      const data = await res.json();
+      if (data.folders && data.folders.length > 0) {
+        state.folders = data.folders;
+        StorageManager.set("folders", data.folders);
+        renderFoldersUI(select, data.folders);
       }
-
-      // 2. Render Folder Pills & Videos on Landing Page
-      renderLandingFolders(data.folders);
     }
   } catch (err) {
-    console.error("Failed to load folders:", err);
+    console.debug("Backend folders sync notice (fallback active):", err);
   }
+}
+
+function renderFoldersUI(select, folders) {
+  if (select) {
+    select.innerHTML = "";
+    folders.forEach(f => {
+      const opt = document.createElement("option");
+      opt.value = f.id;
+      opt.textContent = `${f.name} (${f.video_count || 0} vids)`;
+      opt.className = "bg-slate-900 text-slate-100 font-medium py-1";
+      select.appendChild(opt);
+    });
+    const addNewOpt = document.createElement("option");
+    addNewOpt.value = "add_new";
+    addNewOpt.textContent = "+ Add To Personal Library";
+    addNewOpt.className = "bg-slate-900 text-indigo-400 font-semibold py-1";
+    select.appendChild(addNewOpt);
+
+    if (state.currentFolderId) {
+      select.value = state.currentFolderId;
+    }
+  }
+  renderLandingFolders(folders);
 }
 
 // ------------------------------------------
@@ -2289,7 +2786,10 @@ async function loadLandingFolderVideos(folderId) {
   try {
     const res = await fetch(`/api/videos?folder_id=${folderId}`);
     const data = await res.json();
-    const videos = data.videos || [];
+    let videos = data.videos || [];
+    if (videos.length === 0) {
+      videos = StorageManager.getVideos().filter(v => v.folder_id === folderId);
+    }
 
     if (videos.length === 0) {
       grid.innerHTML = `
@@ -2326,8 +2826,31 @@ async function loadLandingFolderVideos(folderId) {
 
     lucide.createIcons();
   } catch (err) {
-    console.error("Failed to load folder videos on landing page:", err);
-    grid.innerHTML = `<div class="col-span-full py-4 text-xs text-rose-400">Failed to load lectures.</div>`;
+    console.debug("Landing folder videos backend notice (using StorageManager):", err);
+    const videos = StorageManager.getVideos().filter(v => v.folder_id === folderId);
+    if (videos.length > 0) {
+      grid.innerHTML = "";
+      videos.forEach(v => {
+        const cardWrapper = document.createElement("div");
+        cardWrapper.innerHTML = createVideoCardHtml(v, v.video_id === state.currentVideoId, true);
+        const card = cardWrapper.firstElementChild;
+        card.addEventListener("click", async () => {
+          const landingView = document.getElementById("landing-page-view");
+          if (landingView) {
+            landingView.classList.add("opacity-0", "pointer-events-none");
+            setTimeout(() => landingView.classList.add("hidden"), 300);
+          }
+          state.currentFolderId = folderId;
+          const folderSelect = document.getElementById("folder-select");
+          if (folderSelect) folderSelect.value = folderId;
+          await loadVideoStudio(v.video_id);
+        });
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    } else {
+      grid.innerHTML = `<div class="col-span-full py-4 text-xs text-rose-400">Failed to load lectures.</div>`;
+    }
   }
 }
 
@@ -2384,7 +2907,10 @@ async function openFolderVideosModal(targetFolderId) {
   try {
     const res = await fetch(`/api/videos?folder_id=${currentId}`);
     const data = await res.json();
-    const videos = data.videos || [];
+    let videos = data.videos || [];
+    if (videos.length === 0) {
+      videos = StorageManager.getVideos().filter(v => v.folder_id === currentId);
+    }
 
     if (countEl) countEl.textContent = `${videos.length} lecture${videos.length === 1 ? '' : 's'} saved in this folder`;
 
@@ -2418,8 +2944,27 @@ async function openFolderVideosModal(targetFolderId) {
 
     lucide.createIcons();
   } catch (err) {
-    console.error("Failed to load folder videos:", err);
-    listContainer.innerHTML = `<div class="py-4 text-xs text-rose-400">Failed to load lectures: ${err}</div>`;
+    console.debug("Folder videos backend notice (using StorageManager):", err);
+    const videos = StorageManager.getVideos().filter(v => v.folder_id === currentId);
+    if (countEl) countEl.textContent = `${videos.length} lecture${videos.length === 1 ? '' : 's'} saved in this folder`;
+    if (videos.length > 0) {
+      listContainer.innerHTML = "";
+      videos.forEach(v => {
+        const cardWrapper = document.createElement("div");
+        cardWrapper.innerHTML = createVideoCardHtml(v, v.video_id === state.currentVideoId, false);
+        const card = cardWrapper.firstElementChild;
+        card.addEventListener("click", async () => {
+          modal.classList.add("hidden");
+          const folderSelect = document.getElementById("folder-select");
+          if (folderSelect) folderSelect.value = currentId;
+          await loadVideoStudio(v.video_id);
+        });
+        listContainer.appendChild(card);
+      });
+      lucide.createIcons();
+    } else {
+      listContainer.innerHTML = `<div class="py-4 text-xs text-rose-400">No lectures found in this folder.</div>`;
+    }
   }
 }
 

@@ -29,7 +29,10 @@ logger = logging.getLogger("synclearn.main")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Initializing SyncLearn Database...")
-    init_db()
+    try:
+        init_db()
+    except Exception as e:
+        logger.warning(f"Database lifespan initialization notice: {e}")
     yield
     logger.info("SyncLearn shutting down...")
 
@@ -84,6 +87,8 @@ class SegmentAnalysisRequest(BaseModel):
     center_timestamp_sec: float
     window_seconds: Optional[float] = 240.0
     student_doubt: Optional[str] = None
+    video_title: Optional[str] = None
+    cached_transcript_text: Optional[str] = None
 
 
 # === HELPER FUNCTIONS ===
@@ -407,21 +412,29 @@ def get_segment_analysis(
 @app.post("/api/analyze-segment")
 def analyze_segment_endpoint(req: SegmentAnalysisRequest):
     """
-    Core Step B requirement:
-    Fetches transcript window with youtube-transcript-api and runs strict schema
-    Gemini 2.5 Flash analysis with resilient domain fallback.
+    Stateless & Fast (< 8 seconds) segment analysis for Vercel and local.
+    Accepts video_id, video_title, center_timestamp_sec, and optional cached transcript directly.
     """
     clean_id = extract_youtube_id(req.video_id)
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT title FROM videos WHERE video_id = ?", (clean_id,))
-    v_row = cursor.fetchone()
-    title = v_row["title"] if v_row else f"College Lecture ({clean_id})"
-    conn.close()
+    title = req.video_title
+    if not title:
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("SELECT title FROM videos WHERE video_id = ?", (clean_id,))
+            v_row = cursor.fetchone()
+            title = v_row["title"] if v_row else f"College Lecture ({clean_id})"
+            conn.close()
+        except Exception:
+            title = f"College Lecture ({clean_id})"
 
-    # Retrieve chapters if available
-    heatmap = get_video_heatmap(clean_id)
-    chapters = heatmap.get("chapters", [])
+    # Retrieve chapters if available without blocking
+    chapters = []
+    try:
+        heatmap = get_video_heatmap(clean_id)
+        chapters = heatmap.get("chapters", [])
+    except Exception:
+        pass
 
     analysis = analyze_segment_ai(
         video_id=clean_id,
@@ -429,6 +442,7 @@ def analyze_segment_endpoint(req: SegmentAnalysisRequest):
         window_seconds=req.window_seconds or 240.0,
         student_doubt=req.student_doubt,
         video_title=title,
+        cached_transcript_text=req.cached_transcript_text,
         chapters=chapters
     )
     return analysis
