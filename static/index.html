@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="dark" />
   <title>SyncLearn | Interactive YouTube Study Studio</title>
   
   <!-- Tailwind CSS CDN -->
@@ -222,10 +221,10 @@
           style="color-scheme: dark;"
           class="bg-slate-900 text-xs text-slate-100 font-semibold focus:outline-none cursor-pointer pr-3 focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
         >
-          <option value="1" class="bg-slate-900 text-slate-100">Engineering Chemistry: Polymers</option>
-          <option value="2" class="bg-slate-900 text-slate-100">Intro to Mechatronics</option>
-          <option value="3" class="bg-slate-900 text-slate-100">Digital Electronics</option>
-          <option value="add_new" class="bg-slate-900 text-indigo-400 font-semibold">+ Add To Personal Library</option>
+          <option value="1">Engineering Chemistry: Polymers</option>
+          <option value="2">Intro to Mechatronics</option>
+          <option value="3">Digital Electronics</option>
+          <option value="add_new">+ Add To Personal Library</option>
         </select>
         <button 
           id="btn-open-folder-drawer"
@@ -382,7 +381,7 @@
           >
             
             <!-- SVG Heatmap Curve Background -->
-            <svg id="heatmap-svg" class="w-full h-full absolute inset-0 preserve-3d" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">
+            <svg id="heatmap-svg" class="w-full h-full absolute inset-0 preserve-3d" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="heat-grad" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stop-color="#818cf8" stop-opacity="0.85" />

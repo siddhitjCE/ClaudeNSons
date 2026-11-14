@@ -14,7 +14,6 @@ import os
 import json
 import logging
 import urllib.parse
-import concurrent.futures
 from typing import Dict, List, Any, Optional, Tuple
 import requests
 from dotenv import load_dotenv
@@ -49,15 +48,13 @@ def is_gemini_available() -> bool:
 # SMART RATE LIMITING & QUOTA PRESERVATION
 # ==========================================
 # Preferred Gemini Flash models in priority order:
-# 1. gemini-3.1-flash-lite: Ultra-fast (<1s), active on all API tiers
-# 2. gemini-3.5-flash-lite: Secondary high-throughput model
-# 3. gemini-3.5-flash: Advanced reasoning model
-# 4. gemini-3.6-flash: Next-gen preview fallback
+# 1. gemini-3.1-flash-lite: Ultra-fast (~700ms), highest rate limits, lowest token footprint
+# 2. gemini-3.5-flash-lite: High efficiency secondary model
+# 3. gemini-2.5-flash: Legacy fallback
 PREFERRED_GEMINI_MODELS = [
     "gemini-3.1-flash-lite",
     "gemini-3.5-flash-lite",
-    "gemini-3.5-flash",
-    "gemini-3.6-flash"
+    "gemini-2.5-flash"
 ]
 
 # In-memory segment cache to prevent redundant API calls and protect RPM/TPM quota
@@ -218,34 +215,19 @@ Output valid JSON only. Do not wrap in markdown quotes if possible, or use stand
 """
 
 
-def _call_gemini_raw(client, model_name: str, prompt: str) -> str:
-    from google.genai import types
-    response = client.models.generate_content(
-        model=model_name,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            max_output_tokens=1500,
-            temperature=0.25
-        )
-    )
-    return response.text
-
-
 def analyze_segment_ai(
     video_id: str,
     center_timestamp_sec: float,
     window_seconds: float = 240.0,
     student_doubt: Optional[str] = None,
     video_title: str = "College Lecture",
-    cached_transcript_text: Optional[str] = None,
     chapters: Optional[List[Dict[str, Any]]] = None
 ) -> Dict[str, Any]:
     """
-    Main endpoint logic (< 8s for Vercel Serverless):
-    Step A: Uses cached transcript or fetches with youtube-transcript-api.
-    Step B: Calls gemini-2.5-flash with a strict 6.5-second timeout for Vercel.
-    Step C: Graceful structured JSON fallback adhering 100% to schema if timeout/error.
+    Main endpoint logic:
+    Step A: Fetches transcript for (center_timestamp_sec - 120s) to (center_timestamp_sec + 120s).
+    Step B: Calls Gemini 2.5 Flash via google-genai SDK for STRICT JSON schema output.
+    Step C: Graceful fallback adhering 100% to the exact schema if no API key or network error.
     """
     half_win = window_seconds / 2.0
     start_sec = max(0.0, center_timestamp_sec - half_win)
@@ -260,24 +242,21 @@ def analyze_segment_ai(
     if cached_result:
         return cached_result
 
-    # Step A: Use cached transcript if sent by frontend, otherwise fetch
-    if cached_transcript_text and cached_transcript_text.strip():
-        transcript_text = cached_transcript_text.strip()
-        has_live_transcript = True
-    else:
-        transcript_text, has_live_transcript = fetch_transcript_segment(
-            video_id=video_id,
-            center_timestamp_sec=center_timestamp_sec,
-            window_seconds=window_seconds
-        )
+    # Step A: Fetch transcript
+    transcript_text, has_live_transcript = fetch_transcript_segment(
+        video_id=video_id,
+        center_timestamp_sec=center_timestamp_sec,
+        window_seconds=window_seconds
+    )
 
     doubt_snippet = f"Student's Specific Doubt: \"{student_doubt}\"" if student_doubt else ""
 
-    # Step B: Call Gemini with strict 6.5s timeout for Vercel
+    # Step B: Call Gemini if key is provided
     if is_gemini_available():
         api_key = get_gemini_api_key()
         try:
             from google import genai
+            from google.genai import types
 
             client = genai.Client(api_key=api_key)
             prompt = STRICT_ANALYSIS_PROMPT.format(
@@ -290,36 +269,40 @@ def analyze_segment_ai(
                 center_sec_int=int(center_timestamp_sec)
             )
 
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                for model_name in PREFERRED_GEMINI_MODELS:
-                    try:
-                        future = executor.submit(_call_gemini_raw, client, model_name, prompt)
-                        # Strict 8.5s timeout to guarantee response stays under Vercel serverless limit
-                        raw_text = future.result(timeout=8.5)
+            for model_name in PREFERRED_GEMINI_MODELS:
+                try:
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                        config=types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            max_output_tokens=1500,  # Cap output tokens to save quota & prevent run-on text
+                            temperature=0.3          # Low temperature for strict scientific accuracy
+                        )
+                    )
 
-                        raw_text = raw_text.strip()
-                        if raw_text.startswith("```json"):
-                            raw_text = raw_text[7:]
-                        if raw_text.endswith("```"):
-                            raw_text = raw_text[:-3]
+                    raw_text = response.text.strip()
+                    # Clean possible markdown ticks
+                    if raw_text.startswith("```json"):
+                        raw_text = raw_text[7:]
+                    if raw_text.endswith("```"):
+                        raw_text = raw_text[:-3]
 
-                        parsed_data = json.loads(raw_text.strip())
-                        parsed_data["source"] = model_name
-                        parsed_data["has_live_transcript"] = has_live_transcript
-                        _store_cached_analysis(video_id, center_timestamp_sec, window_seconds, parsed_data, student_doubt)
-                        return parsed_data
-                    except concurrent.futures.TimeoutError:
-                        logger.warning(f"Gemini {model_name} timed out (>6.5s). Falling back instantly to keep Vercel under 10s.")
-                        break
-                    except Exception as model_err:
-                        err_msg = str(model_err)
-                        if "getaddrinfo" in err_msg or "11001" in err_msg or "NameResolutionError" in err_msg:
-                            logger.warning(f"Network DNS unreachable ({model_name}): {err_msg[:100]}")
-                            break
-                        if "404" in err_msg or "not found" in err_msg.lower():
-                            logger.debug(f"Model {model_name} not found, trying next...")
-                            continue
-                        logger.warning(f"Gemini {model_name} note: {err_msg[:120]}")
+                    parsed_data = json.loads(raw_text.strip())
+                    parsed_data["source"] = model_name
+                    parsed_data["has_live_transcript"] = has_live_transcript
+                    _store_cached_analysis(video_id, center_timestamp_sec, window_seconds, parsed_data, student_doubt)
+                    return parsed_data
+                except Exception as model_err:
+                    err_msg = str(model_err)
+                    if "404" in err_msg or "not found" in err_msg.lower():
+                        logger.debug(f"Model {model_name} unavailable, trying next...")
+                        continue
+                    elif "429" in err_msg or "quota" in err_msg.lower() or "resource_exhausted" in err_msg.lower():
+                        logger.warning(f"Quota / Rate-limit reached on {model_name}: {err_msg[:120]}. Trying next model or analytical fallback.")
+                        continue
+                    else:
+                        logger.warning(f"Error on {model_name}: {err_msg[:120]}. Trying next candidate...")
                         continue
         except Exception as e:
             logger.warning(f"Gemini analysis setup failed: {e}. Falling back to analytical engine.")

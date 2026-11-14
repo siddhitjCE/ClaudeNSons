@@ -29,10 +29,7 @@ logger = logging.getLogger("synclearn.main")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Initializing SyncLearn Database...")
-    try:
-        init_db()
-    except Exception as e:
-        logger.warning(f"Database lifespan initialization notice: {e}")
+    init_db()
     yield
     logger.info("SyncLearn shutting down...")
 
@@ -87,8 +84,6 @@ class SegmentAnalysisRequest(BaseModel):
     center_timestamp_sec: float
     window_seconds: Optional[float] = 240.0
     student_doubt: Optional[str] = None
-    video_title: Optional[str] = None
-    cached_transcript_text: Optional[str] = None
 
 
 # === HELPER FUNCTIONS ===
@@ -144,32 +139,20 @@ def health_check():
 @app.get("/api/folders")
 def get_folders():
     """Returns all user-curated personal subject folders."""
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-        SELECT f.id, f.name, f.color, f.icon, f.created_at,
-               COUNT(v.id) as video_count
-        FROM folders f
-        LEFT JOIN videos v ON v.folder_id = f.id
-        GROUP BY f.id
-        ORDER BY f.id ASC
-        """)
-        rows = cursor.fetchall()
-        folders = [dict(row) for row in rows]
-        conn.close()
-        if folders:
-            return {"folders": folders}
-    except Exception as e:
-        logger.warning(f"get_folders database notice: {e}")
-
-    return {
-        "folders": [
-            {"id": 1, "name": "Engineering Chemistry: Polymers", "color": "violet", "icon": "flask-conical", "video_count": 3},
-            {"id": 2, "name": "Intro to Mechatronics", "color": "cyan", "icon": "cpu", "video_count": 0},
-            {"id": 3, "name": "Digital Electronics", "color": "emerald", "icon": "binary", "video_count": 1}
-        ]
-    }
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT f.id, f.name, f.color, f.icon, f.created_at,
+           COUNT(v.id) as video_count
+    FROM folders f
+    LEFT JOIN videos v ON v.folder_id = f.id
+    GROUP BY f.id
+    ORDER BY f.id ASC
+    """)
+    rows = cursor.fetchall()
+    folders = [dict(row) for row in rows]
+    conn.close()
+    return {"folders": folders}
 
 
 @app.post("/api/folders")
@@ -260,46 +243,36 @@ def load_video(req: VideoLoadRequest):
 def get_video_details(video_id: str):
     """Returns video metadata along with full heatmap curve and detected peak zones."""
     clean_id = extract_youtube_id(video_id)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Extract live heatmap & metadata
     heatmap = get_video_heatmap(clean_id)
     duration = heatmap.get("duration_sec", 2400)
     title = heatmap.get("title") or f"Curated Lecture ({clean_id})"
     thumb = f"https://img.youtube.com/vi/{clean_id}/hqdefault.jpg"
 
-    video_record = {
-        "video_id": clean_id,
-        "title": title,
-        "folder_id": 1,
-        "duration_sec": duration,
-        "thumbnail_url": thumb
-    }
+    cursor.execute("SELECT * FROM videos WHERE video_id = ?", (clean_id,))
+    row = cursor.fetchone()
 
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM videos WHERE video_id = ?", (clean_id,))
-        row = cursor.fetchone()
-
-        if row:
-            video_record = dict(row)
-            if video_record.get("duration_sec") != duration or video_record.get("title") != title:
-                cursor.execute("UPDATE videos SET title = ?, duration_sec = ? WHERE video_id = ?", (title, duration, clean_id))
-                conn.commit()
-                video_record["title"] = title
-                video_record["duration_sec"] = duration
-        else:
-            cursor.execute("""
-            INSERT INTO videos (video_id, title, folder_id, duration_sec, thumbnail_url)
-            VALUES (?, ?, ?, ?, ?)
-            """, (clean_id, title, 1, duration, thumb))
+    if row:
+        video_record = dict(row)
+        # Keep duration and title in sync with heatmap extraction
+        if video_record.get("duration_sec") != duration or video_record.get("title") != title:
+            cursor.execute("UPDATE videos SET title = ?, duration_sec = ? WHERE video_id = ?", (title, duration, clean_id))
             conn.commit()
-            cursor.execute("SELECT * FROM videos WHERE video_id = ?", (clean_id,))
-            r = cursor.fetchone()
-            if r:
-                video_record = dict(r)
+            video_record["title"] = title
+            video_record["duration_sec"] = duration
+    else:
+        cursor.execute("""
+        INSERT INTO videos (video_id, title, folder_id, duration_sec, thumbnail_url)
+        VALUES (?, ?, ?, ?, ?)
+        """, (clean_id, title, 1, duration, thumb))
+        conn.commit()
+        cursor.execute("SELECT * FROM videos WHERE video_id = ?", (clean_id,))
+        video_record = dict(cursor.fetchone())
 
-        conn.close()
-    except Exception as e:
-        logger.warning(f"get_video_details database notice: {e}")
+    conn.close()
 
     return {
         "video": video_record,
@@ -311,39 +284,14 @@ def get_video_details(video_id: str):
 def get_pins(video_id: str):
     """Returns all Personal Study Pins for the specified video."""
     clean_id = extract_youtube_id(video_id)
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-        SELECT * FROM pins WHERE video_id = ? ORDER BY timestamp_sec ASC
-        """, (clean_id,))
-        rows = cursor.fetchall()
-        conn.close()
-        pins = [dict(r) for r in rows]
-        if pins:
-            return {"pins": pins}
-    except Exception as e:
-        logger.warning(f"get_pins database notice: {e}")
-
-    # Fallback pins for demo lectures
-    if clean_id in ("fnF67w6rDpg", "default", "", "chemistry_polymers"):
-        return {
-            "pins": [
-                {"id": 1, "video_id": "fnF67w6rDpg", "timestamp_sec": 580.0, "tag": "exam_priority", "title": "Polydispersity Index (PDI = Mw/Mn) Numerical Formula", "note": "Polydispersity Index formula: PDI = Mw / Mn. For monodisperse polymers PDI = 1.0. Highly recurring Question 3 on midterms!"},
-                {"id": 2, "video_id": "fnF67w6rDpg", "timestamp_sec": 675.0, "tag": "key_formula", "title": "Number-Average (Mn) vs Weight-Average (Mw) Formulas", "note": "Mn = Σ(Ni·Mi) / ΣNi (osmometry). Mw = Σ(Ni·Mi²) / Σ(Ni·Mi) (light scattering). High-mass chains bias Mw upward, hence Mw >= Mn always."},
-                {"id": 3, "video_id": "fnF67w6rDpg", "timestamp_sec": 1360.0, "tag": "revisit", "title": "Ziegler-Natta Catalysis Monometallic Cossee-Arlman Mechanism", "note": "Titanium tetrachloride (TiCl4) coordinated with Triethylaluminium Al(C2H5)3 creates active stereospecific vacant orbital."},
-                {"id": 4, "video_id": "fnF67w6rDpg", "timestamp_sec": 2260.0, "tag": "exam_priority", "title": "Vulcanization Sulfur Crosslink Density vs Glass Transition (Tg)", "note": "2-3% sulfur gives elastic soft rubber (tires); 25-35% sulfur crosslinks all conformational rotation, forming rigid ebonite."}
-            ]
-        }
-    elif clean_id == "OSCKBmkrH_g":
-        return {
-            "pins": [
-                {"id": 5, "video_id": "OSCKBmkrH_g", "timestamp_sec": 180.0, "tag": "exam_priority", "title": "Virtual Ground Assumption (V- ≈ V+ = 0V)", "note": "Because open-loop gain AOL is massive (~100,000), negative feedback drives differential input voltage towards zero."},
-                {"id": 6, "video_id": "OSCKBmkrH_g", "timestamp_sec": 340.0, "tag": "key_formula", "title": "Inverting Amplifier Closed Gain (Av = -Rf / Rin)", "note": "Applying KCL at inverting node: Vout = -(Rf/Rin) * Vin. Negative sign indicates 180° phase inversion."},
-                {"id": 7, "video_id": "OSCKBmkrH_g", "timestamp_sec": 520.0, "tag": "revisit", "title": "Power Supply Rail Clipping Saturation", "note": "Output cannot swing beyond supply rails (VEE <= Vout <= VCC). If driven beyond rails, peaks get clipped flat."}
-            ]
-        }
-    return {"pins": []}
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT * FROM pins WHERE video_id = ? ORDER BY timestamp_sec ASC
+    """, (clean_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return {"pins": [dict(r) for r in rows]}
 
 
 @app.post("/api/pins")
@@ -459,29 +407,21 @@ def get_segment_analysis(
 @app.post("/api/analyze-segment")
 def analyze_segment_endpoint(req: SegmentAnalysisRequest):
     """
-    Stateless & Fast (< 8 seconds) segment analysis for Vercel and local.
-    Accepts video_id, video_title, center_timestamp_sec, and optional cached transcript directly.
+    Core Step B requirement:
+    Fetches transcript window with youtube-transcript-api and runs strict schema
+    Gemini 2.5 Flash analysis with resilient domain fallback.
     """
     clean_id = extract_youtube_id(req.video_id)
-    title = req.video_title
-    if not title:
-        try:
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            cursor.execute("SELECT title FROM videos WHERE video_id = ?", (clean_id,))
-            v_row = cursor.fetchone()
-            title = v_row["title"] if v_row else f"College Lecture ({clean_id})"
-            conn.close()
-        except Exception:
-            title = f"College Lecture ({clean_id})"
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT title FROM videos WHERE video_id = ?", (clean_id,))
+    v_row = cursor.fetchone()
+    title = v_row["title"] if v_row else f"College Lecture ({clean_id})"
+    conn.close()
 
-    # Retrieve chapters if available without blocking
-    chapters = []
-    try:
-        heatmap = get_video_heatmap(clean_id)
-        chapters = heatmap.get("chapters", [])
-    except Exception:
-        pass
+    # Retrieve chapters if available
+    heatmap = get_video_heatmap(clean_id)
+    chapters = heatmap.get("chapters", [])
 
     analysis = analyze_segment_ai(
         video_id=clean_id,
@@ -489,7 +429,6 @@ def analyze_segment_endpoint(req: SegmentAnalysisRequest):
         window_seconds=req.window_seconds or 240.0,
         student_doubt=req.student_doubt,
         video_title=title,
-        cached_transcript_text=req.cached_transcript_text,
         chapters=chapters
     )
     return analysis
@@ -726,26 +665,8 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 @app.get("/")
-@app.get("/main.py")
 def serve_index():
-    index_path = os.path.join(os.path.dirname(__file__), "static", "index.html")
-    if os.path.exists(index_path):
-        return FileResponse(index_path)
-    return JSONResponse({"message": "SyncLearn backend is running."})
-
-
-@app.get("/{full_path:path}")
-def serve_fallback(full_path: str):
-    index_path = os.path.join(os.path.dirname(__file__), "static", "index.html")
-    # Handle root or Vercel rewrite paths
-    if full_path in ("", "main.py", "index.html"):
-        if os.path.exists(index_path):
-            return FileResponse(index_path)
-    # Check if a static file matches (e.g. styles.css, app.js, favicon.ico)
-    candidate = os.path.join(static_dir, full_path)
-    if os.path.exists(candidate) and os.path.isfile(candidate):
-        return FileResponse(candidate)
-    # Default SPA fallback
+    index_path = os.path.join(static_dir, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
     return JSONResponse({"message": "SyncLearn backend is running."})

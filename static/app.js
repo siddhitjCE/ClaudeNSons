@@ -4,1735 +4,6 @@
  * Refactored for User-Centred Design, Cognitive Accessibility, and Hick's Law
  */
 
-// ==========================================
-// UNIFIED STORAGE MANAGER & STATIC SEEDED FALLBACK DATA
-// (Ensures 100% reliable operation on Vercel Serverless and fresh browsers)
-// ==========================================
-
-const STATIC_FALLBACK_DATA = {
-  "folders": [
-    {
-      "id": 1,
-      "name": "Engineering Chemistry: Polymers",
-      "color": "violet",
-      "icon": "flask-conical",
-      "video_count": 3
-    },
-    {
-      "id": 2,
-      "name": "Intro to Mechatronics",
-      "color": "cyan",
-      "icon": "cpu",
-      "video_count": 0
-    },
-    {
-      "id": 3,
-      "name": "Digital Electronics",
-      "color": "emerald",
-      "icon": "binary",
-      "video_count": 1
-    }
-  ],
-  "videos": [
-    {
-      "id": 3,
-      "video_id": "fnF67w6rDpg",
-      "title": "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-      "author": "YouTube Studio",
-      "folder_id": 1,
-      "duration_sec": 2700,
-      "thumbnail_url": "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
-    },
-    {
-      "id": 4,
-      "video_id": "OSCKBmkrH_g",
-      "title": "The Ultimate Component: OpAmp (ElectroBOOM101 \u2013 013)",
-      "author": "ElectroBOOM",
-      "folder_id": 3,
-      "duration_sec": 754,
-      "thumbnail_url": "https://img.youtube.com/vi/OSCKBmkrH_g/hqdefault.jpg"
-    },
-    {
-      "id": 1,
-      "video_id": "KfODG5REyss",
-      "title": "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
-      "author": "Veritasium",
-      "folder_id": null,
-      "duration_sec": 3955,
-      "thumbnail_url": "https://i.ytimg.com/vi/KfODG5REyss/hqdefault.jpg"
-    },
-    {
-      "id": 2,
-      "video_id": "Y-W-w8yNiKU",
-      "title": "Why is there antimatter?",
-      "author": "Veritasium",
-      "folder_id": 1,
-      "duration_sec": 2123,
-      "thumbnail_url": "https://img.youtube.com/vi/Y-W-w8yNiKU/hqdefault.jpg"
-    },
-    {
-      "id": 5,
-      "video_id": "fEjvSbI_PT4",
-      "title": "Dying Is Complicated",
-      "author": "Kurzgesagt",
-      "folder_id": 1,
-      "duration_sec": 840,
-      "thumbnail_url": "https://img.youtube.com/vi/fEjvSbI_PT4/hqdefault.jpg"
-    },
-    {
-      "id": 6,
-      "video_id": "lyfx8CL7AkI",
-      "title": "This CHIP Changed the WORLD! MOSFET (ElectroBOOM101 - 012)",
-      "author": "ElectroBOOM",
-      "folder_id": 1,
-      "duration_sec": 738,
-      "thumbnail_url": "https://img.youtube.com/vi/lyfx8CL7AkI/hqdefault.jpg"
-    }
-  ],
-  "pins": [
-    {
-      "id": 1,
-      "video_id": "fnF67w6rDpg",
-      "timestamp_sec": 580.0,
-      "tag": "exam_priority",
-      "title": "Polydispersity Index (PDI = Mw/Mn) Numerical Formula",
-      "note": "Polydispersity Index formula: PDI = Mw / Mn. For monodisperse polymers (biological proteins) PDI = 1.0. For typical synthetic polymers, PDI > 1.5. Highly recurring Question 3 on midterms!",
-      "created_at": "2026-11-13 22:49:06"
-    },
-    {
-      "id": 2,
-      "video_id": "fnF67w6rDpg",
-      "timestamp_sec": 675.0,
-      "tag": "key_formula",
-      "title": "Number-Average (Mn) vs Weight-Average (Mw) Formulas",
-      "note": "Mn = \u03a3(Ni\u00b7Mi) / \u03a3Ni (osmometry). Mw = \u03a3(Ni\u00b7Mi\u00b2) / \u03a3(Ni\u00b7Mi) (light scattering). High-mass chains bias Mw upward, hence Mw >= Mn always.",
-      "created_at": "2026-11-13 22:49:06"
-    },
-    {
-      "id": 3,
-      "video_id": "fnF67w6rDpg",
-      "timestamp_sec": 1360.0,
-      "tag": "revisit",
-      "title": "Ziegler-Natta Catalysis Monometallic Cossee-Arlman Mechanism",
-      "note": "Titanium tetrachloride (TiCl4) coordinated with Triethylaluminium Al(C2H5)3 creates active stereospecific vacant orbital for syndiotactic / isotactic polypropylene.",
-      "created_at": "2026-11-13 22:49:06"
-    },
-    {
-      "id": 4,
-      "video_id": "fnF67w6rDpg",
-      "timestamp_sec": 2260.0,
-      "tag": "exam_priority",
-      "title": "Vulcanization Sulfur Crosslink Density vs Glass Transition (Tg)",
-      "note": "2-3% sulfur gives elastic soft rubber (tires); 25-35% sulfur crosslinks all conformational rotation, forming rigid ebonite.",
-      "created_at": "2026-11-13 22:49:06"
-    },
-    {
-      "id": 5,
-      "video_id": "OSCKBmkrH_g",
-      "timestamp_sec": 180.0,
-      "tag": "exam_priority",
-      "title": "Virtual Ground Assumption (V- \u2248 V+ = 0V)",
-      "note": "Because open-loop gain AOL is massive (~100,000), negative feedback drives differential input voltage (V+ - V-) towards zero. With V+ grounded, V- is a virtual ground!",
-      "created_at": "2026-11-13 22:49:06"
-    },
-    {
-      "id": 6,
-      "video_id": "OSCKBmkrH_g",
-      "timestamp_sec": 340.0,
-      "tag": "key_formula",
-      "title": "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
-      "note": "Applying KCL at the inverting node: (Vin - 0)/Rin = (0 - Vout)/Rf => Vout = -(Rf/Rin) * Vin. Negative sign indicates 180\u00b0 phase inversion.",
-      "created_at": "2026-11-13 22:49:06"
-    },
-    {
-      "id": 7,
-      "video_id": "OSCKBmkrH_g",
-      "timestamp_sec": 520.0,
-      "tag": "revisit",
-      "title": "Power Supply Rail Clipping Saturation",
-      "note": "Output cannot swing beyond supply rails (VEE <= Vout <= VCC). If driven beyond rails, peaks get clipped flat.",
-      "created_at": "2026-11-13 22:49:06"
-    }
-  ],
-  "heatmaps": {
-    "fnF67w6rDpg": {
-      "video_id": "fnF67w6rDpg",
-      "title": "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-      "duration_sec": 2700,
-      "chapters": [
-        {
-          "start_time": 0,
-          "end_time": 720,
-          "title": "Polymers & Molecular Weight Distribution"
-        },
-        {
-          "start_time": 720,
-          "end_time": 1800,
-          "title": "Ziegler-Natta Catalysis & Stereospecific Mechanism"
-        },
-        {
-          "start_time": 1800,
-          "end_time": 2700,
-          "title": "Vulcanization & Viscoelastic Properties"
-        }
-      ],
-      "intensity_points": [
-        {
-          "time_sec": 0.0,
-          "percentage": 0.0,
-          "intensity": 0.34
-        },
-        {
-          "time_sec": 22.7,
-          "percentage": 0.84,
-          "intensity": 0.3358
-        },
-        {
-          "time_sec": 45.4,
-          "percentage": 1.68,
-          "intensity": 0.3322
-        },
-        {
-          "time_sec": 68.1,
-          "percentage": 2.52,
-          "intensity": 0.3291
-        },
-        {
-          "time_sec": 90.8,
-          "percentage": 3.36,
-          "intensity": 0.3264
-        },
-        {
-          "time_sec": 113.4,
-          "percentage": 4.2,
-          "intensity": 0.3241
-        },
-        {
-          "time_sec": 136.1,
-          "percentage": 5.04,
-          "intensity": 0.3221
-        },
-        {
-          "time_sec": 158.8,
-          "percentage": 5.88,
-          "intensity": 0.3203
-        },
-        {
-          "time_sec": 181.5,
-          "percentage": 6.72,
-          "intensity": 0.3187
-        },
-        {
-          "time_sec": 204.2,
-          "percentage": 7.56,
-          "intensity": 0.3172
-        },
-        {
-          "time_sec": 226.9,
-          "percentage": 8.4,
-          "intensity": 0.3158
-        },
-        {
-          "time_sec": 249.6,
-          "percentage": 9.24,
-          "intensity": 0.3145
-        },
-        {
-          "time_sec": 272.3,
-          "percentage": 10.08,
-          "intensity": 0.3134
-        },
-        {
-          "time_sec": 295.0,
-          "percentage": 10.92,
-          "intensity": 0.3128
-        },
-        {
-          "time_sec": 317.6,
-          "percentage": 11.76,
-          "intensity": 0.3134
-        },
-        {
-          "time_sec": 340.3,
-          "percentage": 12.61,
-          "intensity": 0.3166
-        },
-        {
-          "time_sec": 363.0,
-          "percentage": 13.45,
-          "intensity": 0.3247
-        },
-        {
-          "time_sec": 385.7,
-          "percentage": 14.29,
-          "intensity": 0.341
-        },
-        {
-          "time_sec": 408.4,
-          "percentage": 15.13,
-          "intensity": 0.3701
-        },
-        {
-          "time_sec": 431.1,
-          "percentage": 15.97,
-          "intensity": 0.4164
-        },
-        {
-          "time_sec": 453.8,
-          "percentage": 16.81,
-          "intensity": 0.4832
-        },
-        {
-          "time_sec": 476.5,
-          "percentage": 17.65,
-          "intensity": 0.5704
-        },
-        {
-          "time_sec": 499.2,
-          "percentage": 18.49,
-          "intensity": 0.6724
-        },
-        {
-          "time_sec": 521.8,
-          "percentage": 19.33,
-          "intensity": 0.7776
-        },
-        {
-          "time_sec": 544.5,
-          "percentage": 20.17,
-          "intensity": 0.87
-        },
-        {
-          "time_sec": 567.2,
-          "percentage": 21.01,
-          "intensity": 0.9324
-        },
-        {
-          "time_sec": 589.9,
-          "percentage": 21.85,
-          "intensity": 0.952
-        },
-        {
-          "time_sec": 612.6,
-          "percentage": 22.69,
-          "intensity": 0.9238
-        },
-        {
-          "time_sec": 635.3,
-          "percentage": 23.53,
-          "intensity": 0.8527
-        },
-        {
-          "time_sec": 658.0,
-          "percentage": 24.37,
-          "intensity": 0.7516
-        },
-        {
-          "time_sec": 680.7,
-          "percentage": 25.21,
-          "intensity": 0.6377
-        },
-        {
-          "time_sec": 703.4,
-          "percentage": 26.05,
-          "intensity": 0.5271
-        },
-        {
-          "time_sec": 726.1,
-          "percentage": 26.89,
-          "intensity": 0.4313
-        },
-        {
-          "time_sec": 748.7,
-          "percentage": 27.73,
-          "intensity": 0.3561
-        },
-        {
-          "time_sec": 771.4,
-          "percentage": 28.57,
-          "intensity": 0.3017
-        },
-        {
-          "time_sec": 794.1,
-          "percentage": 29.41,
-          "intensity": 0.2648
-        },
-        {
-          "time_sec": 816.8,
-          "percentage": 30.25,
-          "intensity": 0.241
-        },
-        {
-          "time_sec": 839.5,
-          "percentage": 31.09,
-          "intensity": 0.2257
-        },
-        {
-          "time_sec": 862.2,
-          "percentage": 31.93,
-          "intensity": 0.2157
-        },
-        {
-          "time_sec": 884.9,
-          "percentage": 32.77,
-          "intensity": 0.2086
-        },
-        {
-          "time_sec": 907.6,
-          "percentage": 33.61,
-          "intensity": 0.203
-        },
-        {
-          "time_sec": 930.3,
-          "percentage": 34.45,
-          "intensity": 0.1983
-        },
-        {
-          "time_sec": 952.9,
-          "percentage": 35.29,
-          "intensity": 0.194
-        },
-        {
-          "time_sec": 975.6,
-          "percentage": 36.13,
-          "intensity": 0.1902
-        },
-        {
-          "time_sec": 998.3,
-          "percentage": 36.97,
-          "intensity": 0.1867
-        },
-        {
-          "time_sec": 1021.0,
-          "percentage": 37.82,
-          "intensity": 0.1836
-        },
-        {
-          "time_sec": 1043.7,
-          "percentage": 38.66,
-          "intensity": 0.1808
-        },
-        {
-          "time_sec": 1066.4,
-          "percentage": 39.5,
-          "intensity": 0.1786
-        },
-        {
-          "time_sec": 1089.1,
-          "percentage": 40.34,
-          "intensity": 0.1772
-        },
-        {
-          "time_sec": 1111.8,
-          "percentage": 41.18,
-          "intensity": 0.1773
-        },
-        {
-          "time_sec": 1134.5,
-          "percentage": 42.02,
-          "intensity": 0.1802
-        },
-        {
-          "time_sec": 1157.1,
-          "percentage": 42.86,
-          "intensity": 0.1887
-        },
-        {
-          "time_sec": 1179.8,
-          "percentage": 43.7,
-          "intensity": 0.207
-        },
-        {
-          "time_sec": 1202.5,
-          "percentage": 44.54,
-          "intensity": 0.2408
-        },
-        {
-          "time_sec": 1225.2,
-          "percentage": 45.38,
-          "intensity": 0.2962
-        },
-        {
-          "time_sec": 1247.9,
-          "percentage": 46.22,
-          "intensity": 0.3767
-        },
-        {
-          "time_sec": 1270.6,
-          "percentage": 47.06,
-          "intensity": 0.4798
-        },
-        {
-          "time_sec": 1293.3,
-          "percentage": 47.9,
-          "intensity": 0.5942
-        },
-        {
-          "time_sec": 1316.0,
-          "percentage": 48.74,
-          "intensity": 0.7007
-        },
-        {
-          "time_sec": 1338.7,
-          "percentage": 49.58,
-          "intensity": 0.7767
-        },
-        {
-          "time_sec": 1361.3,
-          "percentage": 50.42,
-          "intensity": 0.804
-        },
-        {
-          "time_sec": 1384.0,
-          "percentage": 51.26,
-          "intensity": 0.7762
-        },
-        {
-          "time_sec": 1406.7,
-          "percentage": 52.1,
-          "intensity": 0.7012
-        },
-        {
-          "time_sec": 1429.4,
-          "percentage": 52.94,
-          "intensity": 0.5982
-        },
-        {
-          "time_sec": 1452.1,
-          "percentage": 53.78,
-          "intensity": 0.4898
-        },
-        {
-          "time_sec": 1474.8,
-          "percentage": 54.62,
-          "intensity": 0.3943
-        },
-        {
-          "time_sec": 1497.5,
-          "percentage": 55.46,
-          "intensity": 0.3219
-        },
-        {
-          "time_sec": 1520.2,
-          "percentage": 56.3,
-          "intensity": 0.2741
-        },
-        {
-          "time_sec": 1542.9,
-          "percentage": 57.14,
-          "intensity": 0.2469
-        },
-        {
-          "time_sec": 1565.5,
-          "percentage": 57.98,
-          "intensity": 0.2341
-        },
-        {
-          "time_sec": 1588.2,
-          "percentage": 58.82,
-          "intensity": 0.2301
-        },
-        {
-          "time_sec": 1610.9,
-          "percentage": 59.66,
-          "intensity": 0.2309
-        },
-        {
-          "time_sec": 1633.6,
-          "percentage": 60.5,
-          "intensity": 0.2337
-        },
-        {
-          "time_sec": 1656.3,
-          "percentage": 61.34,
-          "intensity": 0.2375
-        },
-        {
-          "time_sec": 1679.0,
-          "percentage": 62.18,
-          "intensity": 0.2415
-        },
-        {
-          "time_sec": 1701.7,
-          "percentage": 63.03,
-          "intensity": 0.2454
-        },
-        {
-          "time_sec": 1724.4,
-          "percentage": 63.87,
-          "intensity": 0.2492
-        },
-        {
-          "time_sec": 1747.1,
-          "percentage": 64.71,
-          "intensity": 0.2528
-        },
-        {
-          "time_sec": 1769.7,
-          "percentage": 65.55,
-          "intensity": 0.2561
-        },
-        {
-          "time_sec": 1792.4,
-          "percentage": 66.39,
-          "intensity": 0.2591
-        },
-        {
-          "time_sec": 1815.1,
-          "percentage": 67.23,
-          "intensity": 0.2617
-        },
-        {
-          "time_sec": 1837.8,
-          "percentage": 68.07,
-          "intensity": 0.2641
-        },
-        {
-          "time_sec": 1860.5,
-          "percentage": 68.91,
-          "intensity": 0.2661
-        },
-        {
-          "time_sec": 1883.2,
-          "percentage": 69.75,
-          "intensity": 0.2677
-        },
-        {
-          "time_sec": 1905.9,
-          "percentage": 70.59,
-          "intensity": 0.2689
-        },
-        {
-          "time_sec": 1928.6,
-          "percentage": 71.43,
-          "intensity": 0.2698
-        },
-        {
-          "time_sec": 1951.3,
-          "percentage": 72.27,
-          "intensity": 0.2704
-        },
-        {
-          "time_sec": 1973.9,
-          "percentage": 73.11,
-          "intensity": 0.271
-        },
-        {
-          "time_sec": 1996.6,
-          "percentage": 73.95,
-          "intensity": 0.2722
-        },
-        {
-          "time_sec": 2019.3,
-          "percentage": 74.79,
-          "intensity": 0.2749
-        },
-        {
-          "time_sec": 2042.0,
-          "percentage": 75.63,
-          "intensity": 0.2811
-        },
-        {
-          "time_sec": 2064.7,
-          "percentage": 76.47,
-          "intensity": 0.294
-        },
-        {
-          "time_sec": 2087.4,
-          "percentage": 77.31,
-          "intensity": 0.3177
-        },
-        {
-          "time_sec": 2110.1,
-          "percentage": 78.15,
-          "intensity": 0.3568
-        },
-        {
-          "time_sec": 2132.8,
-          "percentage": 78.99,
-          "intensity": 0.4144
-        },
-        {
-          "time_sec": 2155.5,
-          "percentage": 79.83,
-          "intensity": 0.4903
-        },
-        {
-          "time_sec": 2178.2,
-          "percentage": 80.67,
-          "intensity": 0.5786
-        },
-        {
-          "time_sec": 2200.8,
-          "percentage": 81.51,
-          "intensity": 0.6676
-        },
-        {
-          "time_sec": 2223.5,
-          "percentage": 82.35,
-          "intensity": 0.7411
-        },
-        {
-          "time_sec": 2246.2,
-          "percentage": 83.19,
-          "intensity": 0.7833
-        },
-        {
-          "time_sec": 2268.9,
-          "percentage": 84.03,
-          "intensity": 0.7838
-        },
-        {
-          "time_sec": 2291.6,
-          "percentage": 84.87,
-          "intensity": 0.7416
-        },
-        {
-          "time_sec": 2314.3,
-          "percentage": 85.71,
-          "intensity": 0.6653
-        },
-        {
-          "time_sec": 2337.0,
-          "percentage": 86.55,
-          "intensity": 0.5701
-        },
-        {
-          "time_sec": 2359.7,
-          "percentage": 87.39,
-          "intensity": 0.4725
-        },
-        {
-          "time_sec": 2382.4,
-          "percentage": 88.24,
-          "intensity": 0.3856
-        },
-        {
-          "time_sec": 2405.0,
-          "percentage": 89.08,
-          "intensity": 0.3166
-        },
-        {
-          "time_sec": 2427.7,
-          "percentage": 89.92,
-          "intensity": 0.267
-        },
-        {
-          "time_sec": 2450.4,
-          "percentage": 90.76,
-          "intensity": 0.234
-        },
-        {
-          "time_sec": 2473.1,
-          "percentage": 91.6,
-          "intensity": 0.2133
-        },
-        {
-          "time_sec": 2495.8,
-          "percentage": 92.44,
-          "intensity": 0.2007
-        },
-        {
-          "time_sec": 2518.5,
-          "percentage": 93.28,
-          "intensity": 0.1928
-        },
-        {
-          "time_sec": 2541.2,
-          "percentage": 94.12,
-          "intensity": 0.1875
-        },
-        {
-          "time_sec": 2563.9,
-          "percentage": 94.96,
-          "intensity": 0.1835
-        },
-        {
-          "time_sec": 2586.6,
-          "percentage": 95.8,
-          "intensity": 0.1803
-        },
-        {
-          "time_sec": 2609.2,
-          "percentage": 96.64,
-          "intensity": 0.1777
-        },
-        {
-          "time_sec": 2631.9,
-          "percentage": 97.48,
-          "intensity": 0.1754
-        },
-        {
-          "time_sec": 2654.6,
-          "percentage": 98.32,
-          "intensity": 0.1735
-        },
-        {
-          "time_sec": 2677.3,
-          "percentage": 99.16,
-          "intensity": 0.1721
-        },
-        {
-          "time_sec": 2700.0,
-          "percentage": 100.0,
-          "intensity": 0.171
-        }
-      ],
-      "peaks": [
-        {
-          "id": "peak-1",
-          "start_sec": 480,
-          "end_sec": 720,
-          "peak_sec": 590,
-          "intensity": 0.94,
-          "label": "Degree of Polymerization & Molecular Weight Distribution (PDI)",
-          "description": "High crowd replay peak: Students repeatedly review derivations for Number-Average (Mn) vs Weight-Average (Mw) and Polydispersity Index (PDI = Mw/Mn)."
-        },
-        {
-          "id": "peak-2",
-          "start_sec": 1290,
-          "end_sec": 1470,
-          "peak_sec": 1360,
-          "intensity": 0.89,
-          "label": "Ziegler-Natta Catalysis & Stereospecific Mechanism",
-          "description": "High replay cluster: Coordination polymerisation mechanism between TiCl4 and Al(C2H5)3, focusing on monometallic vs bimetallic active sites."
-        },
-        {
-          "id": "peak-3",
-          "start_sec": 2160,
-          "end_sec": 2370,
-          "peak_sec": 2260,
-          "intensity": 0.82,
-          "label": "Vulcanization, Cross-Linking & Viscoelastic Transition",
-          "description": "Critical exam section: Sulfur bridge crosslinking percentage vs polymer chain mobility, contrasting soft tire elastomer with rigid ebonite."
-        }
-      ],
-      "source": "pre_seeded_curated"
-    },
-    "OSCKBmkrH_g": {
-      "video_id": "OSCKBmkrH_g",
-      "title": "The Ultimate Component: OpAmp (ElectroBOOM101 \u2013 013)",
-      "duration_sec": 754,
-      "chapters": [
-        {
-          "start_time": 0,
-          "end_time": 240,
-          "title": "OpAmp Fundamentals & Virtual Ground"
-        },
-        {
-          "start_time": 240,
-          "end_time": 440,
-          "title": "Inverting & Non-Inverting Amplifier Configurations"
-        },
-        {
-          "start_time": 440,
-          "end_time": 754,
-          "title": "Saturation, Power Rails & Applications"
-        }
-      ],
-      "intensity_points": [
-        {
-          "time_sec": 0.0,
-          "percentage": 0.0,
-          "intensity": 0.2
-        },
-        {
-          "time_sec": 7.6,
-          "percentage": 1.01,
-          "intensity": 0.2057
-        },
-        {
-          "time_sec": 15.2,
-          "percentage": 2.02,
-          "intensity": 0.2114
-        },
-        {
-          "time_sec": 22.8,
-          "percentage": 3.03,
-          "intensity": 0.2169
-        },
-        {
-          "time_sec": 30.5,
-          "percentage": 4.04,
-          "intensity": 0.2224
-        },
-        {
-          "time_sec": 38.1,
-          "percentage": 5.05,
-          "intensity": 0.2277
-        },
-        {
-          "time_sec": 45.7,
-          "percentage": 6.06,
-          "intensity": 0.2329
-        },
-        {
-          "time_sec": 53.3,
-          "percentage": 7.07,
-          "intensity": 0.2382
-        },
-        {
-          "time_sec": 60.9,
-          "percentage": 8.08,
-          "intensity": 0.2437
-        },
-        {
-          "time_sec": 68.5,
-          "percentage": 9.09,
-          "intensity": 0.2501
-        },
-        {
-          "time_sec": 76.2,
-          "percentage": 10.1,
-          "intensity": 0.2581
-        },
-        {
-          "time_sec": 83.8,
-          "percentage": 11.11,
-          "intensity": 0.2691
-        },
-        {
-          "time_sec": 91.4,
-          "percentage": 12.12,
-          "intensity": 0.285
-        },
-        {
-          "time_sec": 99.0,
-          "percentage": 13.13,
-          "intensity": 0.3083
-        },
-        {
-          "time_sec": 106.6,
-          "percentage": 14.14,
-          "intensity": 0.3416
-        },
-        {
-          "time_sec": 114.2,
-          "percentage": 15.15,
-          "intensity": 0.3878
-        },
-        {
-          "time_sec": 121.9,
-          "percentage": 16.16,
-          "intensity": 0.4487
-        },
-        {
-          "time_sec": 129.5,
-          "percentage": 17.17,
-          "intensity": 0.5245
-        },
-        {
-          "time_sec": 137.1,
-          "percentage": 18.18,
-          "intensity": 0.6131
-        },
-        {
-          "time_sec": 144.7,
-          "percentage": 19.19,
-          "intensity": 0.7094
-        },
-        {
-          "time_sec": 152.3,
-          "percentage": 20.2,
-          "intensity": 0.8053
-        },
-        {
-          "time_sec": 159.9,
-          "percentage": 21.21,
-          "intensity": 0.891
-        },
-        {
-          "time_sec": 167.6,
-          "percentage": 22.22,
-          "intensity": 0.9561
-        },
-        {
-          "time_sec": 175.2,
-          "percentage": 23.23,
-          "intensity": 0.9919
-        },
-        {
-          "time_sec": 182.8,
-          "percentage": 24.24,
-          "intensity": 0.9933
-        },
-        {
-          "time_sec": 190.4,
-          "percentage": 25.25,
-          "intensity": 0.9596
-        },
-        {
-          "time_sec": 198.0,
-          "percentage": 26.26,
-          "intensity": 0.8952
-        },
-        {
-          "time_sec": 205.6,
-          "percentage": 27.27,
-          "intensity": 0.8084
-        },
-        {
-          "time_sec": 213.3,
-          "percentage": 28.28,
-          "intensity": 0.7096
-        },
-        {
-          "time_sec": 220.9,
-          "percentage": 29.29,
-          "intensity": 0.6097
-        },
-        {
-          "time_sec": 228.5,
-          "percentage": 30.3,
-          "intensity": 0.5182
-        },
-        {
-          "time_sec": 236.1,
-          "percentage": 31.31,
-          "intensity": 0.4422
-        },
-        {
-          "time_sec": 243.7,
-          "percentage": 32.32,
-          "intensity": 0.3862
-        },
-        {
-          "time_sec": 251.3,
-          "percentage": 33.33,
-          "intensity": 0.3523
-        },
-        {
-          "time_sec": 258.9,
-          "percentage": 34.34,
-          "intensity": 0.3405
-        },
-        {
-          "time_sec": 266.6,
-          "percentage": 35.35,
-          "intensity": 0.3499
-        },
-        {
-          "time_sec": 274.2,
-          "percentage": 36.36,
-          "intensity": 0.3788
-        },
-        {
-          "time_sec": 281.8,
-          "percentage": 37.37,
-          "intensity": 0.4245
-        },
-        {
-          "time_sec": 289.4,
-          "percentage": 38.38,
-          "intensity": 0.4838
-        },
-        {
-          "time_sec": 297.0,
-          "percentage": 39.39,
-          "intensity": 0.5522
-        },
-        {
-          "time_sec": 304.6,
-          "percentage": 40.4,
-          "intensity": 0.6244
-        },
-        {
-          "time_sec": 312.3,
-          "percentage": 41.41,
-          "intensity": 0.6939
-        },
-        {
-          "time_sec": 319.9,
-          "percentage": 42.42,
-          "intensity": 0.7541
-        },
-        {
-          "time_sec": 327.5,
-          "percentage": 43.43,
-          "intensity": 0.7989
-        },
-        {
-          "time_sec": 335.1,
-          "percentage": 44.44,
-          "intensity": 0.8232
-        },
-        {
-          "time_sec": 342.7,
-          "percentage": 45.45,
-          "intensity": 0.8241
-        },
-        {
-          "time_sec": 350.3,
-          "percentage": 46.46,
-          "intensity": 0.8015
-        },
-        {
-          "time_sec": 358.0,
-          "percentage": 47.47,
-          "intensity": 0.7574
-        },
-        {
-          "time_sec": 365.6,
-          "percentage": 48.48,
-          "intensity": 0.6966
-        },
-        {
-          "time_sec": 373.2,
-          "percentage": 49.49,
-          "intensity": 0.625
-        },
-        {
-          "time_sec": 380.8,
-          "percentage": 50.51,
-          "intensity": 0.5494
-        },
-        {
-          "time_sec": 388.4,
-          "percentage": 51.52,
-          "intensity": 0.476
-        },
-        {
-          "time_sec": 396.0,
-          "percentage": 52.53,
-          "intensity": 0.4105
-        },
-        {
-          "time_sec": 403.7,
-          "percentage": 53.54,
-          "intensity": 0.3569
-        },
-        {
-          "time_sec": 411.3,
-          "percentage": 54.55,
-          "intensity": 0.3179
-        },
-        {
-          "time_sec": 418.9,
-          "percentage": 55.56,
-          "intensity": 0.295
-        },
-        {
-          "time_sec": 426.5,
-          "percentage": 56.57,
-          "intensity": 0.2884
-        },
-        {
-          "time_sec": 434.1,
-          "percentage": 57.58,
-          "intensity": 0.2977
-        },
-        {
-          "time_sec": 441.7,
-          "percentage": 58.59,
-          "intensity": 0.322
-        },
-        {
-          "time_sec": 449.4,
-          "percentage": 59.6,
-          "intensity": 0.3599
-        },
-        {
-          "time_sec": 457.0,
-          "percentage": 60.61,
-          "intensity": 0.4095
-        },
-        {
-          "time_sec": 464.6,
-          "percentage": 61.62,
-          "intensity": 0.4683
-        },
-        {
-          "time_sec": 472.2,
-          "percentage": 62.63,
-          "intensity": 0.5333
-        },
-        {
-          "time_sec": 479.8,
-          "percentage": 63.64,
-          "intensity": 0.6008
-        },
-        {
-          "time_sec": 487.4,
-          "percentage": 64.65,
-          "intensity": 0.6666
-        },
-        {
-          "time_sec": 495.1,
-          "percentage": 65.66,
-          "intensity": 0.7263
-        },
-        {
-          "time_sec": 502.7,
-          "percentage": 66.67,
-          "intensity": 0.7759
-        },
-        {
-          "time_sec": 510.3,
-          "percentage": 67.68,
-          "intensity": 0.8115
-        },
-        {
-          "time_sec": 517.9,
-          "percentage": 68.69,
-          "intensity": 0.8307
-        },
-        {
-          "time_sec": 525.5,
-          "percentage": 69.7,
-          "intensity": 0.8323
-        },
-        {
-          "time_sec": 533.1,
-          "percentage": 70.71,
-          "intensity": 0.8165
-        },
-        {
-          "time_sec": 540.7,
-          "percentage": 71.72,
-          "intensity": 0.785
-        },
-        {
-          "time_sec": 548.4,
-          "percentage": 72.73,
-          "intensity": 0.7408
-        },
-        {
-          "time_sec": 556.0,
-          "percentage": 73.74,
-          "intensity": 0.6875
-        },
-        {
-          "time_sec": 563.6,
-          "percentage": 74.75,
-          "intensity": 0.6292
-        },
-        {
-          "time_sec": 571.2,
-          "percentage": 75.76,
-          "intensity": 0.5698
-        },
-        {
-          "time_sec": 578.8,
-          "percentage": 76.77,
-          "intensity": 0.5127
-        },
-        {
-          "time_sec": 586.4,
-          "percentage": 77.78,
-          "intensity": 0.4604
-        },
-        {
-          "time_sec": 594.1,
-          "percentage": 78.79,
-          "intensity": 0.4146
-        },
-        {
-          "time_sec": 601.7,
-          "percentage": 79.8,
-          "intensity": 0.3761
-        },
-        {
-          "time_sec": 609.3,
-          "percentage": 80.81,
-          "intensity": 0.3449
-        },
-        {
-          "time_sec": 616.9,
-          "percentage": 81.82,
-          "intensity": 0.3204
-        },
-        {
-          "time_sec": 624.5,
-          "percentage": 82.83,
-          "intensity": 0.3017
-        },
-        {
-          "time_sec": 632.1,
-          "percentage": 83.84,
-          "intensity": 0.2877
-        },
-        {
-          "time_sec": 639.8,
-          "percentage": 84.85,
-          "intensity": 0.2774
-        },
-        {
-          "time_sec": 647.4,
-          "percentage": 85.86,
-          "intensity": 0.2696
-        },
-        {
-          "time_sec": 655.0,
-          "percentage": 86.87,
-          "intensity": 0.2636
-        },
-        {
-          "time_sec": 662.6,
-          "percentage": 87.88,
-          "intensity": 0.2587
-        },
-        {
-          "time_sec": 670.2,
-          "percentage": 88.89,
-          "intensity": 0.2543
-        },
-        {
-          "time_sec": 677.8,
-          "percentage": 89.9,
-          "intensity": 0.2502
-        },
-        {
-          "time_sec": 685.5,
-          "percentage": 90.91,
-          "intensity": 0.2461
-        },
-        {
-          "time_sec": 693.1,
-          "percentage": 91.92,
-          "intensity": 0.2418
-        },
-        {
-          "time_sec": 700.7,
-          "percentage": 92.93,
-          "intensity": 0.2373
-        },
-        {
-          "time_sec": 708.3,
-          "percentage": 93.94,
-          "intensity": 0.2325
-        },
-        {
-          "time_sec": 715.9,
-          "percentage": 94.95,
-          "intensity": 0.2275
-        },
-        {
-          "time_sec": 723.5,
-          "percentage": 95.96,
-          "intensity": 0.2223
-        },
-        {
-          "time_sec": 731.2,
-          "percentage": 96.97,
-          "intensity": 0.2169
-        },
-        {
-          "time_sec": 738.8,
-          "percentage": 97.98,
-          "intensity": 0.2113
-        },
-        {
-          "time_sec": 746.4,
-          "percentage": 98.99,
-          "intensity": 0.2057
-        },
-        {
-          "time_sec": 754.0,
-          "percentage": 100.0,
-          "intensity": 0.2
-        }
-      ],
-      "peaks": [
-        {
-          "id": "peak-1",
-          "start_sec": 60,
-          "end_sec": 240,
-          "peak_sec": 180,
-          "intensity": 0.95,
-          "label": "Virtual Ground Assumption (V- \u2248 V+ = 0V)",
-          "description": "Crowd replay peak: Why negative feedback forces inverting terminal to 0V without physical ground connection."
-        },
-        {
-          "id": "peak-2",
-          "start_sec": 240,
-          "end_sec": 420,
-          "peak_sec": 340,
-          "intensity": 0.88,
-          "label": "Inverting Amplifier Closed Gain (Av = -Rf / Rin)",
-          "description": "High replay cluster: Applying KCL at the inverting node to derive closed-loop gain and 180\u00b0 phase inversion."
-        },
-        {
-          "id": "peak-3",
-          "start_sec": 440,
-          "end_sec": 600,
-          "peak_sec": 520,
-          "intensity": 0.82,
-          "label": "Power Supply Rail Clipping Saturation",
-          "description": "Exam pitfall: Output voltage limits bounded by VEE and VCC, and clipping when driven beyond rails."
-        }
-      ],
-      "source": "pre_seeded_curated"
-    }
-  },
-  "analyses": {
-    "fnF67w6rDpg": [
-      {
-        "target_sec": 590,
-        "data": {
-          "segment_window": "07:50 - 11:50",
-          "section_classification": "Potentially Difficult Mathematical Derivation",
-          "why_students_struggle": "Students struggle with the discrete summation indices and fail to recognize why weight-average (Mw) squares individual chain masses while number-average (Mn) weights them linearly.",
-          "identified_concepts": [
-            {
-              "name": "Number-Average Molar Mass ($M_n$)",
-              "difficulty": "Intermediate",
-              "modality": "Mathematical"
-            },
-            {
-              "name": "Weight-Average Molar Mass ($M_w$)",
-              "difficulty": "Intermediate",
-              "modality": "Mathematical"
-            },
-            {
-              "name": "Polydispersity Index ($PDI = M_w / M_n$)",
-              "difficulty": "Beginner",
-              "modality": "Theoretical"
-            },
-            {
-              "name": "Moment Inequality ($M_w \\ge M_n$)",
-              "difficulty": "Advanced",
-              "modality": "Visual"
-            }
-          ],
-          "context_locked_explanation": "In this segment around 09:50, the instructor derives the statistical moments governing polymer chain length distributions:\n\n$$\\bar{M}_n = \\frac{\\sum N_i M_i}{\\sum N_i} = \\sum x_i M_i \\quad \\text{(Colligative / Osmometry Count)}$$\n$$\\bar{M}_w = \\frac{\\sum N_i M_i^2}{\\sum N_i M_i} = \\sum w_i M_i \\quad \\text{(Static Light Scattering)}$$\n\n$$\\text{Polydispersity Index: } PDI = \\frac{\\bar{M}_w}{\\bar{M}_n} \\ge 1.0$$\n\n**Real-World Analogy:** Think of calculating average population wealth. $\\bar{M}_n$ is the simple per-capita arithmetic mean where every person counts as one vote ($N_i$). $\\bar{M}_w$ weights each category by total dollars ($w_i = N_i M_i$), which makes billionaires pull the average drastically higher!",
-          "terminology_bridge": [
-            {
-              "prof_term": "Polydispersity Index (PDI)",
-              "alt_video_term": "Dispersity ($\u0110$)",
-              "clarification": "Modern IUPAC nomenclature uses the symbol \u0110 (D-stroke), while Indian and US engineering midterms still write PDI = Mw/Mn."
-            },
-            {
-              "prof_term": "Number-Average ($M_n$)",
-              "alt_video_term": "Colligative Molar Mass",
-              "clarification": "Techniques that count particle numbers (membrane osmometry, freezing point depression) always yield Mn."
-            },
-            {
-              "prof_term": "Weight-Average ($M_w$)",
-              "alt_video_term": "Mass-Fraction Average",
-              "clarification": "Techniques sensitive to particle mass (static light scattering, ultracentrifugation) always yield Mw."
-            }
-          ],
-          "recommended_search_queries": [
-            "polydispersity index explained visually",
-            "why weight average molecular weight is greater than number average",
-            "polymer molecular weight distribution intuition"
-          ],
-          "visual_diagram": {
-            "title": "Molecular Weight Distribution & PDI Flow",
-            "nodes": [
-              {
-                "id": "1",
-                "label": "Polymer Chain Distribution Matrix {Ni, Mi}",
-                "is_hidden_quiz": false
-              },
-              {
-                "id": "2",
-                "label": "$M_n = \\sum(N_i M_i) / \\sum N_i$",
-                "is_hidden_quiz": true,
-                "options": [
-                  "$M_n = \\sum(N_i M_i) / \\sum N_i$",
-                  "$M_n = \\sum N_i M_i^2$",
-                  "$M_n = PDI \\cdot DP$"
-                ]
-              },
-              {
-                "id": "3",
-                "label": "$M_w = \\sum(N_i M_i^2) / \\sum(N_i M_i)$",
-                "is_hidden_quiz": false
-              },
-              {
-                "id": "4",
-                "label": "Dispersity Metric: $PDI = M_w / M_n$",
-                "is_hidden_quiz": true,
-                "options": [
-                  "$PDI = M_w / M_n$",
-                  "$PDI = M_n / M_w$",
-                  "$PDI = M_w \\cdot M_n$"
-                ]
-              }
-            ]
-          },
-          "checkpoint_mcqs": [
-            {
-              "question": "For a pure biological protein sample where every single macromolecular chain contains exactly 450 amino acid units, what is the exact value of PDI?",
-              "options": [
-                "PDI = 1.0 (Strict monodisperse boundary)",
-                "PDI = 0.0 (Zero spread)",
-                "PDI = 2.0 (Flory-Schulz distribution)",
-                "PDI > 1.5 (Industrial synthetic polymer)"
-              ],
-              "correct_index": 0,
-              "explanation": "When all chains have identical molecular weights, Mw = Mn, meaning PDI = Mw / Mn = 1.0.",
-              "review_timestamp_sec": 590
-            },
-            {
-              "question": "Which analytical technique counts the number of dissolved polymer particles independent of size, directly yielding the Number-Average Molecular Weight (Mn)?",
-              "options": [
-                "Membrane Osmometry (Colligative pressure)",
-                "Static Laser Light Scattering",
-                "Analytical Ultracentrifugation",
-                "Differential Scanning Calorimetry"
-              ],
-              "correct_index": 0,
-              "explanation": "Membrane osmometry measures osmotic pressure, a colligative property proportional to the number density of polymer molecules in solution.",
-              "review_timestamp_sec": 590
-            }
-          ],
-          "source": "domain_chemistry_fallback",
-          "has_live_transcript": false
-        }
-      }
-    ],
-    "OSCKBmkrH_g": [
-      {
-        "target_sec": 180,
-        "data": {
-          "segment_window": "01:00 - 05:00",
-          "section_classification": "Potentially Difficult Mathematical Derivation",
-          "why_students_struggle": "Students struggle with the virtual ground assumption, failing to understand how negative feedback dynamically forces the inverting terminal to 0V without drawing physical ground current.",
-          "identified_concepts": [
-            {
-              "name": "Virtual Ground Condition ($V_+ \\approx V_-$)",
-              "difficulty": "Intermediate",
-              "modality": "Mathematical"
-            },
-            {
-              "name": "Infinite Input Impedance ($I_{in} \\approx 0$)",
-              "difficulty": "Beginner",
-              "modality": "Theoretical"
-            },
-            {
-              "name": "Closed-Loop Gain ($A_v = -R_f / R_{in}$)",
-              "difficulty": "Intermediate",
-              "modality": "Mathematical"
-            },
-            {
-              "name": "Power Rail Saturation Limits ($V_{EE} \\le V_{out} \\le V_{CC}$)",
-              "difficulty": "Advanced",
-              "modality": "Visual"
-            }
-          ],
-          "context_locked_explanation": "In this segment around 03:00, the instructor applies the two Golden Rules of Operational Amplifiers with negative feedback:\n\n$$1) \\quad I_+ = I_- = 0 \\quad \\text{(Infinite Input Impedance)}$$\n$$2) \\quad V_+ - V_- \\approx 0 \\implies V_- = V_+ \\quad \\text{(Virtual Ground when $V_+$ is grounded)}$$\n\nApplying Kirchhoff's Current Law (KCL) at the inverting node summing point:\n\n$$\\frac{V_{in} - 0}{R_{in}} = \\frac{0 - V_{out}}{R_f} \\implies V_{out} = -\\left(\\frac{R_f}{R_{in}}\\right) V_{in}$$\n\n**Real-World Analogy:** Think of the op-amp as a high-speed seesaw pivot. The negative feedback instantly pushes the inverting node back down whenever the input pushes it up, keeping the midpoint balanced at 0V!",
-          "terminology_bridge": [
-            {
-              "prof_term": "Virtual Ground ($V_- = 0V$)",
-              "alt_video_term": "Virtual Earth / Summing Point",
-              "clarification": "Both refer to the inverting input being held at zero volts by negative feedback without a physical ground connection."
-            },
-            {
-              "prof_term": "Open-Loop Gain ($A_{OL} \\to \\infty$)",
-              "alt_video_term": "Internal Differential Gain",
-              "clarification": "The raw amplifier gain before connecting the external $R_f$ feedback loop."
-            },
-            {
-              "prof_term": "Rail Saturation ($V_{CC} / V_{EE}$)",
-              "alt_video_term": "Output Voltage Clipping",
-              "clarification": "The physical voltage limit of the op-amp supply rails beyond which waveforms get flat-topped."
-            }
-          ],
-          "recommended_search_queries": [
-            "Op-Amp virtual ground explained visually",
-            "inverting amplifier negative feedback intuition",
-            "why op-amps clip at power supply rails"
-          ],
-          "visual_diagram": {
-            "title": "Inverting Op-Amp Feedback Process Flow",
-            "nodes": [
-              {
-                "id": "1",
-                "label": "Differential Input Voltage $(V_+ - V_-)$",
-                "is_hidden_quiz": false
-              },
-              {
-                "id": "2",
-                "label": "Golden Rule 1: $I_{in} = 0A$",
-                "is_hidden_quiz": true,
-                "options": [
-                  "$I_{in} = 0A$ (Infinite Impedance)",
-                  "$I_{in} = 10mA$ (Load Current)",
-                  "$I_{in} \\to \\infty$ (Short)"
-                ]
-              },
-              {
-                "id": "3",
-                "label": "Virtual Ground Node ($V_- = 0V$)",
-                "is_hidden_quiz": false
-              },
-              {
-                "id": "4",
-                "label": "Closed Gain: $V_{out} = -(R_f/R_{in})V_{in}$",
-                "is_hidden_quiz": true,
-                "options": [
-                  "$V_{out} = -(R_f/R_{in})V_{in}$",
-                  "$V_{out} = (1 + R_f/R_{in})V_{in}$",
-                  "$V_{out} = A_{OL} V_{in}$"
-                ]
-              }
-            ]
-          },
-          "checkpoint_mcqs": [
-            {
-              "question": "What primary mechanism enforces the 'virtual ground' condition at the inverting input terminal of an Op-Amp?",
-              "options": [
-                "Negative feedback driving the differential input voltage (V+ - V-) towards zero",
-                "A permanent internal short circuit to the chassis ground plate",
-                "High capacitance between input pins bypassing DC voltages",
-                "Positive feedback causing the amplifier to self-oscillate"
-              ],
-              "correct_index": 0,
-              "explanation": "Because open-loop gain AOL is massive, negative feedback feeds output voltage back to drive (V+ - V-) to approximately zero.",
-              "review_timestamp_sec": 180
-            },
-            {
-              "question": "If an inverting Op-Amp has Rin = 5 k\u03a9 and Rf = 50 k\u03a9 with Vin = 1.0 V, what is the output voltage Vout (assuming \u00b115V supplies)?",
-              "options": [
-                "-10.0 V (Phase inverted 10x gain)",
-                "+10.0 V (Non-inverting gain)",
-                "-0.1 V (Attenuation)",
-                "+11.0 V (Non-inverting formula)"
-              ],
-              "correct_index": 0,
-              "explanation": "Vout = -(Rf / Rin) * Vin = -(50k / 5k) * 1.0V = -10.0V.",
-              "review_timestamp_sec": 180
-            }
-          ],
-          "source": "domain_opamp_fallback",
-          "has_live_transcript": false
-        }
-      }
-    ]
-  }
-};
-
-
-window.STATIC_TRANSCRIPTS = {
-  "fnF67w6rDpg": "[08:30] Now let us examine the statistical distribution of molecular weights in synthetic polymers.\n[09:10] Notice that unlike small molecules, synthetic polymer chains do not have a uniform molar mass.\n[09:40] We define the polydispersity index, PDI, as the ratio of weight-average molecular weight Mw over number-average molecular weight Mn.\n[10:15] If all polymer chains have the exact same length, Mw equals Mn, and PDI equals exactly 1.0.\n[11:00] For the number-average Mn, we sum Ni times Mi divided by total number of moles Ni.\n[11:15] In weight-average Mw, each chain mass is weighted by its own mass fraction, which introduces the Mi squared term in the numerator.\n[12:00] Because of the squared term, heavier chains dominate Mw, making Mw always greater than or equal to Mn.\n[21:40] Turning now to coordination polymerization, Karl Ziegler and Giulio Natta introduced stereospecific catalysis.\n[22:15] The titanium tetrachloride and triethylaluminum catalyst coordinates the alpha-olefin monomer prior to insertion.\n[23:00] This forces all methyl side groups into the same spatial orientation, producing isotactic polypropylene with high crystallinity.\n[36:50] To convert unvulcanized natural polyisoprene elastomer into durable rubber, Charles Goodyear heated it with sulfur.\n[37:45] Sulfur bridges form covalent crosslinks between adjacent polyisoprene chains, preventing irreversible plastic flow.\n[38:30] At 1 to 3 percent sulfur, we achieve high elasticity and resilience; above 30 percent sulfur, ebonite hard rubber is formed.",
-  "OSCKBmkrH_g": "[00:00] Hi, in this episode of ElectroBOOM 101,\n[00:02] I talk about op amps or operational\n[00:05] amplifiers. Like my professor back in\n[00:07] the university said, they are the best\n[00:09] thing ever designed in electronics.\n[00:11] That's true if we ignore all other\n[00:14] things. And you can get them as these\n[00:15] electronic chips stand-alone if not part\n[00:18] of a more complex chip. And they\n[00:20] amplify. Like here, I tied a microphone\n[00:23] to amplify sound and without loading the\n[00:26] source signal, without any distortion,\n[00:29] without\n[00:32] Oh, What happened? Ah, don't\n[00:37] Oh, oops.\n[00:40] This is a non-operational amplifier.\n[00:44] Which begs the question, why are they\n[00:46] called operational amplifier? What's a\n[00:49] Is there a secret society of engineers\n[00:52] using non-operational amplifiers trying\n[00:54] to bring the world of amplification to\n[00:57] an end?\n[00:58] Somebody explain it in the comments. Of\n[01:00] course, they come with their\n[01:01] limitations.\n[01:03] But it is almost impossible to talk\n[01:06] about analog circuits without including\n[01:08] an op amp. Here, the top plot is the\n[01:10] microphone signal and the bottom is the\n[01:12] output with five times amplification.\n[01:21] Op amps have made amplification so easy\n[01:24] and accurate that they are used\n[01:26] everywhere, like in any type of sensor\n[01:28] signal processing and amplification,\n[01:30] audio, video, measurements, filters,\n[01:32] comparators, buffers, power supplies,\n[01:35] analog math, and all it is is this at\n[01:38] its simplest form, a voltage amplifier.\n[01:41] It takes two inputs and amplifies their\n[01:43] difference by a gain so high we\n[01:46] typically assume the gain is infinity in\n[01:49] an ideal case. In reality, it can be\n[01:52] well over 10,000 times. So, compared to\n[01:55] infinity,\n[01:57] it's infinite times as smaller, but it\n[02:00] is so large that the error it creates\n[02:02] compared to an infinite gain is\n[02:05] negligible.\n[02:06] So, tell me what's been bothering you?\n[02:09] See, proper engineering is done with so\n[02:13] much neglect. Otherwise, we go crazy.\n[02:16] Yes, it's quite the conundrum.\n[02:19] So, basically, an ideal op-amp is like\n[02:22] an open circuit at its input. So, it\n[02:24] never draws current from the circuit it\n[02:27] connects to. It has an infinite gain,\n[02:29] and you can draw as much current as you\n[02:32] want from its output. In reality, none\n[02:35] of these are true, but we can work with\n[02:37] these assumptions. You know what they\n[02:39] say, fake it till you make it, and\n[02:42] that's when the reality hits you.\n[02:44] That's all, a simple thing with a\n[02:46] billion applications. What can we use it\n[02:49] for as is? Only one way, that is a\n[02:51] comparator. With a gain of infinity, any\n[02:54] non-zero input voltage difference just\n[02:56] gives a positive or negative\n[02:59] infinity.\n[03:01] Oh, so this is where the reality hits\n[03:03] us.\n[03:04] In any circuit without capacitance and\n[03:06] inductance, aka components that can\n[03:09] store and release energy, the voltages\n[03:12] of the circuit stay within the supply\n[03:14] voltages, or rails as we call them, that\n[03:16] power the circuit. Op-amps are one such\n[03:20] circuits. Ideally, I said ideally. So,\n[03:24] in an op-amp where we now add two other\n[03:27] terminals to show the supply rails they\n[03:29] ride on, the output voltage will jump to\n[03:32] the power rails and no further. So, you\n[03:35] could say the gain is ideally infinite\n[03:38] as long as the output voltage is within\n[03:40] the power rails. So, with the single\n[03:42] op-amp, we are just comparing the two\n[03:44] inputs, and our output is high or low\n[03:47] like a digital circuit based on which\n[03:49] input is higher. If you aim to compare\n[03:52] only, there are comparators with the\n[03:54] same symbol that perform better than\n[03:56] op-amps to create a digital output.\n[03:59] Op-amps are designed to perform better\n[04:01] in an analog circuit, although you can\n[04:03] use them as a comparator as we see here.\n[04:05] I'll talk about comparators in another\n[04:07] video. So, as you can see, the output\n[04:09] jumps to the supply voltages.\n[04:12] As you can see, the output jumps close\n[04:15] to the supply rails in typical op-amps\n[04:17] with some voltage difference. Only in\n[04:20] rail-to-rail op-amps can the input and\n[04:23] output voltages get real close to the\n[04:26] supply rails. What makes op-amps really\n[04:29] spicy is when you add feedback to them,\n[04:31] where you somehow connect the output of\n[04:33] the op-amp to its input. You can connect\n[04:35] the output to positive input or V+ for a\n[04:38] positive feedback or negative input or\n[04:41] V- for a negative feedback or both.\n[04:44] Maybe I should have had a video on\n[04:47] feedback first before jumping into it\n[04:49] here. But, let's make it simple. For\n[04:52] stability, positive feedback, bad.\n[04:55] Negative feedback, good. I was once\n[04:58] contemplating making a device where you\n[05:00] put two spiky electrodes on a chair with\n[05:03] a microphone and a circuit to convert\n[05:05] sound into high voltage feeding into\n[05:07] spikes. A person would sit on the\n[05:10] spikes, yell, the audio turned into high\n[05:13] voltage, the guy would get louder\n[05:15] creating higher voltage, and so on. That\n[05:17] would be a positive feedback loop. I\n[05:20] didn't make it into a product though,\n[05:21] because I received negative feedback\n[05:23] from my test subjects.\n[05:26] Get out of jail.\n[05:27] Same goes for op-amp. In a simple\n[05:29] positive feedback where the output goes\n[05:31] to V+, a tiny rise in V+ raises Vout,\n[05:36] that raises V+, that raises Vout driving\n[05:39] it into a power rail and latches in that\n[05:41] state or vice versa in the opposite\n[05:44] direction. There are great applications\n[05:46] for positive feedback though, but unless\n[05:48] you use it along with a stronger\n[05:50] negative feedback, it's output is\n[05:53] digital and falls under comparator\n[05:55] applications. Subscribe and stay tuned\n[05:58] for the next ElectroBOOM 101 on that.\n[06:00] What we really like for an op-amp,\n[06:02] though, is a negative feedback. If V- is\n[06:05] slightly higher than V+, creating a\n[06:07] negative input delta, it pulls the\n[06:10] output back down, bringing V- close to\n[06:12] V+. Similarly, if V- is lower than V+,\n[06:16] creating a positive input delta, the\n[06:19] output goes positive, pulling V- close\n[06:22] to V+. Stability. So, the output has to\n[06:26] stay still between the power rails with\n[06:28] a known value. This means, assuming an\n[06:31] infinite gain, the delta between the\n[06:34] positive and negative inputs must be\n[06:36] zero. So, we can assume both inputs are\n[06:39] virtually shorted because their voltages\n[06:41] are the same as long as the output is\n[06:44] within the power rails. But, as soon as\n[06:47] the output gets too close to a power\n[06:49] rail, all bets are off and the input\n[06:51] delta will increase. Okay, let's talk\n[06:53] reality. Like I said, an op-amp's output\n[06:56] voltage hardly ever gets close to the\n[06:58] rails, and there is always a distance to\n[07:00] the rails. The current you can draw from\n[07:02] the output is limited. There can be a\n[07:04] very small current draw from the input\n[07:06] pins we ignore. There is some input\n[07:09] impedance. There can be a very small\n[07:11] input offset voltage, and inputs are not\n[07:13] exactly equal in a feedback loop. The\n[07:15] op-amp gain is only very high for a\n[07:18] small frequency range and drops quickly\n[07:20] by frequency. The output voltage can\n[07:22] arise like a line at high frequencies\n[07:25] due to something called slew rate. There\n[07:27] are power limitations, voltage\n[07:29] limitations for input and output and\n[07:31] supply. Dude, we need to protect our\n[07:33] youth against too much information too\n[07:35] early. The birds and the bees talk come\n[07:37] later. Let them chew on the simpler\n[07:39] stuff first. Oh, yeah? Then chew on\n[07:40] this.\n[07:42] Anyway, there are tons of fascinating\n[07:45] circuits to be built with an op-amp. I\n[07:47] only point to a few of them here and\n[07:49] won't spam my channel with videos about\n[07:51] all the possibilities. The point is to\n[07:54] get you inspired and interested. But, I\n[07:56] was also thinking if you are interested\n[07:59] to learn more about op-amps or how they\n[08:01] work in real life or any other circuit,\n[08:05] I could sit down in a live stream for\n[08:08] each, play some elevator music, and try\n[08:12] to analyze a circuit or two. If that's\n[08:16] something that interests you, then toss\n[08:18] in\n[08:19] to your teacher\n[08:21] on Patreon or join YouTube memberships\n[08:24] and I'll stream privately for those\n[08:26] guys, which makes it easier to interact\n[08:29] with fewer people and answer questions,\n[08:30] too. Anyway, keep it simple. Simple\n[08:33] works in most cases. Let's assume we\n[08:35] have a positive and negative supply\n[08:37] voltage large enough and a simple\n[08:39] circuit like this. Considering the input\n[08:42] has no current draw or loading, ideally,\n[08:45] there is no difference between a short\n[08:47] circuit or a resistor on the feedback\n[08:49] loop because no current means zero volts\n[08:52] across the loop component, anyway. The\n[08:54] two input voltages are equal, equal to\n[08:56] the output voltage. This is a simple\n[09:00] buffer. You can connect a sensitive\n[09:02] signal to the input without loading it\n[09:05] that otherwise would be disturbed by\n[09:07] even a minimal load. The buffer copies\n[09:09] the signal at the output and connects it\n[09:12] to another circuit that may safely draw\n[09:14] current from it. But, you can also add\n[09:16] more resistors to your feedback path.\n[09:18] Now, you are dividing the output voltage\n[09:21] over two resistors and feeding it to V\n[09:23] minus. Let's calculate what's going on\n[09:25] here. Assuming the output voltage is\n[09:27] within the power rails, it means the\n[09:30] op-amp input voltages are virtually\n[09:32] shorted or V minus is equal to V plus,\n[09:35] which is V in. Now, again, op amp\n[09:38] doesn't draw input current and so\n[09:40] doesn't affect the voltage divider.\n[09:42] What? I give up.\n[09:43] It's accurate enough. So, like I\n[09:45] mentioned in my other video, a resistor\n[09:47] divider splits the voltage across it\n[09:49] into a smaller voltage proportionally.\n[09:52] V- is equal to V in. So, rearranging the\n[09:55] equations, we see the output is equal to\n[09:59] input amplified with a gain only related\n[10:02] to resistor values.\n[10:04] This is an\n[10:05] infinite input impedance, zero\n[10:08] distortion, non-inverting amplifier.\n[10:11] You can do the same calculation assuming\n[10:13] a finite op amp gain. But still, op\n[10:16] amp's gain is so large that with a very\n[10:18] good precision, you can assume the\n[10:20] overall gain is only related to\n[10:22] resistors. In this circuit, the output\n[10:24] and input are in phase. But what if you\n[10:26] want to flip the output? You simply give\n[10:29] the input voltage to the resistor and\n[10:31] connect V+ to a fixed voltage like\n[10:33] ground and you get a negative gain.\n[10:36] This is a\n[10:37] finite input impedance. The input\n[10:40] impedance of this is R1 since V- is a\n[10:43] virtual ground. Not good for sensitive\n[10:46] signals.\n[10:47] Zero distortion inverting amplifier.\n[10:50] The lovely thing about the huge gain of\n[10:53] the op amp is, as you have noticed, in\n[10:55] these feedback circuits, the gain is\n[10:58] only dependent on the resistors you\n[11:00] pick, not the gain of the op amp itself.\n[11:03] So, the op amp's huge gain can be\n[11:05] distorted, changed from 10,000 to\n[11:07] 100,000 and back, or drop over the\n[11:10] frequency band. As long as it is super\n[11:13] large, the feedback removes the\n[11:15] distortion with high precision or\n[11:17] significantly increases the bandwidths\n[11:19] of the circuit. That's the beauty of the\n[11:22] op amp. Take this transistor push-pull\n[11:25] circuit. You use it to buffer. It draws\n[11:28] small input current and outputs massive\n[11:30] current like in audio amplifiers and\n[11:33] such. Its gain is around one, but it\n[11:36] distorts the signal heavily by cutting\n[11:39] the midsection. You add an op amp to it\n[11:41] with feedback from its output. The op\n[11:44] amp trying to keep its inputs equal\n[11:46] sends signal with an inverse distortion\n[11:49] to the push-pull buffer that passed\n[11:51] through it creates the same signal as\n[11:53] the input. Huge gain is awesome.\n[11:58] Op amp is key.\n[12:02] Toss a coin to your teacher if you want\n[12:06] to see more. If you want to learn more\n[12:10] privately.\n[12:12] Toss a coin to your teacher, fans of\n[12:15] electricity."
-};
-
-function getCachedTranscriptForVideo(videoId, centerSec, windowSec) {
-  try {
-    const raw = (window.STATIC_TRANSCRIPTS && window.STATIC_TRANSCRIPTS[videoId]) || StorageManager.getTranscript(videoId) || "";
-    if (!raw) return "";
-    const halfWin = (windowSec || 240) / 2;
-    const startSec = Math.max(0, centerSec - halfWin);
-    const endSec = centerSec + halfWin;
-    const lines = raw.split("\n");
-    const matched = lines.filter(line => {
-      const m = line.match(/\[(\d+):(\d+)\]/);
-      if (!m) return true;
-      const sec = parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
-      return sec >= startSec && sec <= endSec;
-    });
-    if (matched.length > 0) return matched.join("\n");
-    return raw.slice(0, 3000);
-  } catch (err) {
-    console.warn("getCachedTranscriptForVideo notice:", err);
-    return "";
-  }
-}
-
-const StorageManager = {
-  get(key, fallback = null) {
-    try {
-      const val = localStorage.getItem(`synclearn_${key}`);
-      return val ? JSON.parse(val) : fallback;
-    } catch (e) {
-      console.warn("StorageManager.get error:", e);
-      return fallback;
-    }
-  },
-
-  set(key, value) {
-    try {
-      localStorage.setItem(`synclearn_${key}`, JSON.stringify(value));
-    } catch (e) {
-      console.warn("StorageManager.set error:", e);
-    }
-  },
-
-  getFolders() {
-    const custom = this.get("folders", null);
-    if (custom && Array.isArray(custom) && custom.length > 0) return custom;
-    return STATIC_FALLBACK_DATA.folders;
-  },
-
-  saveFolder(folder) {
-    const folders = this.getFolders().slice();
-    const newId = folders.length > 0 ? Math.max(...folders.map(f => f.id || 0)) + 1 : 1;
-    const newFolder = { id: newId, video_count: 0, ...folder };
-    folders.push(newFolder);
-    this.set("folders", folders);
-    return newFolder;
-  },
-
-  getVideos() {
-    const custom = this.get("videos", null);
-    if (custom && Array.isArray(custom) && custom.length > 0) return custom;
-    return STATIC_FALLBACK_DATA.videos;
-  },
-
-  saveVideo(video) {
-    const list = this.getVideos().slice();
-    const idx = list.findIndex(v => v.video_id === video.video_id);
-    if (idx >= 0) {
-      list[idx] = { ...list[idx], ...video };
-    } else {
-      list.push(video);
-    }
-    this.set("videos", list);
-  },
-
-  getPins(videoId) {
-    const allPins = this.get("pins", null);
-    const base = allPins !== null ? allPins : STATIC_FALLBACK_DATA.pins;
-    return base.filter(p => p.video_id === videoId);
-  },
-
-  savePin(pin) {
-    const allPins = (this.get("pins", null) || STATIC_FALLBACK_DATA.pins).slice();
-    const newId = pin.id || Date.now();
-    const fullPin = { ...pin, id: newId, created_at: new Date().toISOString() };
-    allPins.push(fullPin);
-    this.set("pins", allPins);
-    return fullPin;
-  },
-
-  deletePin(pinId) {
-    const allPins = (this.get("pins", null) || STATIC_FALLBACK_DATA.pins).slice();
-    const filtered = allPins.filter(p => p.id !== pinId);
-    this.set("pins", filtered);
-  },
-
-  getAnalysis(videoId, timestampSec) {
-    // 1. Check local storage cache
-    const key = `analysis_${videoId}_${Math.round(timestampSec / 60)}`;
-    const cached = this.get(key, null);
-    if (cached) return cached;
-
-    // 2. Check static fallback data
-    const list = STATIC_FALLBACK_DATA.analyses[videoId] || [];
-    for (const item of list) {
-      if (Math.abs(item.target_sec - timestampSec) <= 180) {
-        return item.data;
-      }
-    }
-    return null;
-  },
-
-  saveAnalysis(videoId, timestampSec, data) {
-    const key = `analysis_${videoId}_${Math.round(timestampSec / 60)}`;
-    this.set(key, data);
-  }
-  },
-  getTranscript(videoId) {
-    return this.get(`transcript_${videoId}`, null);
-  },
-  saveTranscript(videoId, text) {
-    this.set(`transcript_${videoId}`, text);
-  }
-};
-
 // Global Application State
 const state = {
   currentVideoId: "fnF67w6rDpg", // Default Engineering Chemistry lecture
@@ -1860,13 +131,9 @@ function onPlayerReady(event) {
     setTimeout(() => loader.classList.add("hidden"), 300);
   }
 
-  // If landing page overlay is visible on initial load, ensure player starts paused and studio is hidden
+  // If landing page overlay is visible on initial load, ensure player starts paused
   const landingOverlay = document.getElementById("landing-page-view");
   if (landingOverlay && !landingOverlay.classList.contains("hidden")) {
-    const studioHeader = document.querySelector("header.sticky");
-    const studioMain = document.getElementById("main-content");
-    if (studioHeader) studioHeader.classList.add("hidden");
-    if (studioMain) studioMain.classList.add("hidden");
     try {
       if (state.player && typeof state.player.pauseVideo === "function") {
         state.player.pauseVideo();
@@ -2099,24 +366,28 @@ async function loadVideoStudio(videoId) {
     renderCheatSheetBridges();
     renderCheatSheetMissedMCQs();
 
-    // 1. Instant fallback metadata & heatmap from StorageManager or STATIC_FALLBACK_DATA
-    const fallbackHeatmap = STATIC_FALLBACK_DATA.heatmaps[videoId];
-    const fallbackVideo = StorageManager.getVideos().find(v => v.video_id === videoId);
+    const res = await fetch(`/api/video/${videoId}`);
+    const data = await res.json();
 
-    if (fallbackVideo) {
-      const titleEl = document.getElementById("video-title");
-      if (titleEl) titleEl.textContent = fallbackVideo.title;
-      if (fallbackVideo.duration_sec) state.durationSec = fallbackVideo.duration_sec;
+    if (data.video) {
+      document.getElementById("video-title").textContent = data.video.title;
+      if (data.video.duration_sec) {
+        state.durationSec = data.video.duration_sec;
+      }
     }
-    if (fallbackHeatmap) {
-      state.heatmapData = fallbackHeatmap;
-      if (fallbackHeatmap.duration_sec) state.durationSec = fallbackHeatmap.duration_sec;
-      renderHeatmap(fallbackHeatmap);
-      renderDynamicPeaksUI(fallbackHeatmap);
+
+    if (data.heatmap) {
+      state.heatmapData = data.heatmap;
+      if (data.heatmap.duration_sec) {
+        state.durationSec = data.heatmap.duration_sec;
+      }
+      renderHeatmap(data.heatmap);
+      renderDynamicPeaksUI(data.heatmap);
     }
+
     updateDurationBadge();
 
-    // 2. Load Pins synchronously
+    // Load Pins
     await loadPins(videoId);
 
     // Switch video in player or fallback iframe
@@ -2130,7 +401,7 @@ async function loadVideoStudio(videoId) {
       fallbackToDirectIframe();
     }
 
-    // Dismiss loader overlay
+    // Dismiss any loader overlay
     const loader = document.getElementById("player-loader");
     if (loader) {
       loader.style.opacity = "0";
@@ -2139,32 +410,13 @@ async function loadVideoStudio(videoId) {
 
     // Determine target initial peak for analysis
     let initialTimestamp = 30;
-    if (state.heatmapData && state.heatmapData.peaks && state.heatmapData.peaks.length > 0) {
-      initialTimestamp = state.heatmapData.peaks[0].peak_sec || state.heatmapData.peaks[0].start_sec;
+    if (data.heatmap && data.heatmap.peaks && data.heatmap.peaks.length > 0) {
+      initialTimestamp = data.heatmap.peaks[0].peak_sec || data.heatmap.peaks[0].start_sec;
     }
 
-    // Automatically load analysis & quiz for this initial focus point
-    fetchSegmentAnalysis(initialTimestamp);
-    fetchSegmentQuiz(initialTimestamp);
-
-    // 3. Concurrently fetch real backend heatmap and video info in background
-    fetch(`/api/video/${videoId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.video && data.video.title) {
-          const titleEl = document.getElementById("video-title");
-          if (titleEl) titleEl.textContent = data.video.title;
-          if (data.video.duration_sec) state.durationSec = data.video.duration_sec;
-        }
-        if (data.heatmap && data.heatmap.intensity_points && data.heatmap.intensity_points.length > 0) {
-          state.heatmapData = data.heatmap;
-          if (data.heatmap.duration_sec) state.durationSec = data.heatmap.duration_sec;
-          renderHeatmap(data.heatmap);
-          renderDynamicPeaksUI(data.heatmap);
-          updateDurationBadge();
-        }
-      })
-      .catch(e => console.debug("Video backend sync notice:", e));
+    // Automatically load analysis & quiz for this video's initial focus point
+    await fetchSegmentAnalysis(initialTimestamp);
+    await fetchSegmentQuiz(initialTimestamp);
 
   } catch (err) {
     console.error("Failed to load video studio:", err);
@@ -2177,8 +429,6 @@ function updateDurationBadge() {
   if (badge) badge.textContent = durStr;
   const endMarker = document.getElementById("timeline-end-time");
   if (endMarker) endMarker.textContent = durStr;
-  const container = document.getElementById("timeline-container");
-  if (container) container.setAttribute("aria-valuemax", Math.round(state.durationSec));
 }
 
 // Renders dynamic timeline labels and quick peak buttons for any loaded video
@@ -2241,7 +491,6 @@ function renderHeatmap(heatmap) {
   const zonesGroup = document.getElementById("difficult-zones-group");
 
   if (!svg || !fillPath || !strokePath || !heatmap.intensity_points) return;
-  svg.setAttribute("viewBox", "0 0 1000 100");
 
   const points = heatmap.intensity_points;
   const numPoints = points.length;
@@ -2351,28 +600,14 @@ function initTimelineInteractions() {
 // ==========================================
 
 async function loadPins(videoId) {
-  // 1. Instant synchronous load from StorageManager
-  state.pins = StorageManager.getPins(videoId);
-  renderTimelinePins();
-  renderCheatSheetPins();
-
-  // 2. Concurrently fetch and sync with backend if online
   try {
     const res = await fetch(`/api/pins/${videoId}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.pins && data.pins.length > 0) {
-        state.pins = data.pins;
-        // Merge into StorageManager
-        const allPins = (StorageManager.get("pins", null) || STATIC_FALLBACK_DATA.pins).slice();
-        const otherPins = allPins.filter(p => p.video_id !== videoId);
-        StorageManager.set("pins", [...otherPins, ...data.pins]);
-        renderTimelinePins();
-        renderCheatSheetPins();
-      }
-    }
+    const data = await res.json();
+    state.pins = data.pins || [];
+    renderTimelinePins();
+    renderCheatSheetPins();
   } catch (err) {
-    console.debug("Backend pins sync notice (fallback active):", err);
+    console.error("Failed to load pins:", err);
   }
 }
 
@@ -2557,11 +792,10 @@ function deletePinWithUndo(pinId) {
 }
 
 async function executePermanentDelete(pinId) {
-  StorageManager.deletePin(pinId);
   try {
     await fetch(`/api/pins/${pinId}`, { method: "DELETE" });
   } catch (err) {
-    console.debug("Backend delete pin notice:", err);
+    console.warn("Failed to delete pin permanently:", err);
   }
 }
 
@@ -2569,7 +803,7 @@ async function executePermanentDelete(pinId) {
 // 5. TAB 1: SIMPLE EXPLANATION (STEP-BY-STEP PROGRESS & PLAIN LANGUAGE)
 // ==========================================
 
-async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFresh = false) {
+async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
   const skeleton = document.getElementById("rescue-loading-skeleton");
   const content = document.getElementById("rescue-real-content");
   const winBanner = document.getElementById("rescue-window-time");
@@ -2584,25 +818,6 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFres
 
   if (winBanner) {
     winBanner.textContent = `${formatTime(startSec)} – ${formatTime(endSec)}`;
-  }
-
-  // 1. Instant check in StorageManager (0ms latency!) on initial load
-  if (!forceFresh && !studentDoubt) {
-    const cachedAnalysis = StorageManager.getAnalysis(state.currentVideoId, timestampSec);
-    if (cachedAnalysis) {
-      state.activeAnalysis = cachedAnalysis;
-      renderTab1AIRescue(cachedAnalysis, timestampSec);
-      if (cachedAnalysis.visual_diagram) {
-        renderVisualDiagram(cachedAnalysis.visual_diagram);
-      }
-      if (cachedAnalysis.checkpoint_mcqs) {
-        renderCheckpointMCQs(cachedAnalysis.checkpoint_mcqs);
-      }
-      if (skeleton) skeleton.classList.add("hidden");
-      if (content) content.classList.remove("hidden");
-      lucide.createIcons();
-      return;
-    }
   }
 
   // Show friendly step-by-step skeleton while AI analysis is running
@@ -2622,19 +837,15 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFres
     if (skStep3) skStep3.className = "flex items-center gap-2 text-indigo-300 font-bold";
   }, 1400);
 
-  const videoTitle = document.getElementById("video-title")?.textContent || "College Lecture";
-
   try {
     const res = await fetch("/api/analyze-segment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         video_id: state.currentVideoId,
-        video_title: videoTitle,
         center_timestamp_sec: timestampSec,
         window_seconds: windowSec,
-        student_doubt: studentDoubt,
-        cached_transcript_text: getCachedTranscriptForVideo(state.currentVideoId, timestampSec, windowSec)
+        student_doubt: studentDoubt
       })
     });
 
@@ -2644,7 +855,6 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFres
 
     const data = await res.json();
     state.activeAnalysis = data;
-    StorageManager.saveAnalysis(state.currentVideoId, timestampSec, data);
 
     // Render Tab 1 Simple Explanation
     renderTab1AIRescue(data, timestampSec);
@@ -2658,16 +868,7 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFres
     }
 
   } catch (err) {
-    console.warn("AI segment analysis API fallback invoked:", err);
-    // Graceful fallback to static data so user never sees a broken state
-    const fallback = StorageManager.getAnalysis(state.currentVideoId, timestampSec) || 
-      (STATIC_FALLBACK_DATA.analyses["fnF67w6rDpg"] && STATIC_FALLBACK_DATA.analyses["fnF67w6rDpg"][0]?.data);
-    if (fallback) {
-      state.activeAnalysis = fallback;
-      renderTab1AIRescue(fallback, timestampSec);
-      if (fallback.visual_diagram) renderVisualDiagram(fallback.visual_diagram);
-      if (fallback.checkpoint_mcqs) renderCheckpointMCQs(fallback.checkpoint_mcqs);
-    }
+    console.error("Failed to run segment explanation:", err);
   } finally {
     clearTimeout(stepTimer1);
     clearTimeout(stepTimer2);
@@ -2678,8 +879,8 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFres
 }
 
 // Unified alias for callers
-async function fetchSegmentAnalysis(timestampSec, studentDoubt = null, forceFresh = false) {
-  return await runAiSegmentAnalysis(timestampSec, studentDoubt, forceFresh);
+async function fetchSegmentAnalysis(timestampSec, studentDoubt = null) {
+  return await runAiSegmentAnalysis(timestampSec, studentDoubt);
 }
 
 async function fetchSegmentQuiz(timestampSec) {
@@ -2809,27 +1010,27 @@ function renderTab1AIRescue(data, timestampSec) {
         note: `★ Key Takeaway: ${data.why_students_struggle}\n\n💡 Breakdown: ${data.context_locked_explanation ? data.context_locked_explanation.slice(0, 320) : ""}...`
       };
 
-      const savedPin = StorageManager.savePin(newPin);
-      state.pins.push(savedPin);
-      state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
-      renderTimelinePins();
-      renderCheatSheetPins();
-
-      autoSaveBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400" aria-hidden="true"></i><span class="text-emerald-300 font-bold">✓ Saved to Notes!</span>`;
-      lucide.createIcons();
-      setTimeout(() => {
-        autoSaveBtn.innerHTML = `<i data-lucide="bookmark-plus" class="w-3.5 h-3.5" aria-hidden="true"></i><span>Save as Note</span>`;
-        lucide.createIcons();
-      }, 2500);
-
       try {
-        await fetch("/api/pins", {
+        const pRes = await fetch("/api/pins", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newPin)
         });
+        const pData = await pRes.json();
+        if (pData.pin) {
+          state.pins.push(pData.pin);
+          state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
+          renderTimelinePins();
+          renderCheatSheetPins();
+          autoSaveBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400" aria-hidden="true"></i><span class="text-emerald-300 font-bold">✓ Saved to Notes!</span>`;
+          lucide.createIcons();
+          setTimeout(() => {
+            autoSaveBtn.innerHTML = `<i data-lucide="bookmark-plus" class="w-3.5 h-3.5" aria-hidden="true"></i><span>Save as Note</span>`;
+            lucide.createIcons();
+          }, 2500);
+        }
       } catch (err) {
-        console.debug("Auto-save note backend sync notice:", err);
+        console.error("Auto-save note error:", err);
       }
     };
   }
@@ -3395,7 +1596,7 @@ function initUIEventListeners() {
   const confusedBtn = document.getElementById("btn-confused-rescue");
   if (confusedBtn) {
     confusedBtn.addEventListener("click", () => {
-      fetchSegmentAnalysis(state.currentTimeSec, null, true);
+      fetchSegmentAnalysis(state.currentTimeSec);
       fetchSegmentQuiz(state.currentTimeSec);
       switchTab("tab-content-rescue");
     });
@@ -3676,13 +1877,9 @@ function initLandingPageListeners() {
       }
 
       // Step D: Smoothly hide landing page overlay
-      const studioHeader = document.querySelector("header.sticky");
-      const studioMain = document.getElementById("main-content");
       landingView.classList.add("opacity-0", "pointer-events-none");
       setTimeout(() => {
         landingView.classList.add("hidden");
-        if (studioHeader) studioHeader.classList.remove("hidden");
-        if (studioMain) studioMain.classList.remove("hidden");
         if (landingBtn) {
           landingBtn.disabled = false;
           landingBtn.innerHTML = `<span>Start Studying This Video &rarr;</span>`;
@@ -3707,11 +1904,7 @@ function initLandingPageListeners() {
         } catch (_) {}
       }
 
-      // Hide studio and show landing page overlay again
-      const studioHeader = document.querySelector("header.sticky");
-      const studioMain = document.getElementById("main-content");
-      if (studioHeader) studioHeader.classList.add("hidden");
-      if (studioMain) studioMain.classList.add("hidden");
+      // Show landing page overlay again
       landingView.classList.remove("hidden");
       requestAnimationFrame(() => {
         landingView.classList.remove("opacity-0", "pointer-events-none");
@@ -3746,29 +1939,28 @@ function initModalListeners() {
         return;
       }
 
-      const newPin = {
-        video_id: state.currentVideoId,
-        timestamp_sec: state.currentTimeSec,
-        tag: tag,
-        title: title,
-        note: note
-      };
-
-      const savedPin = StorageManager.savePin(newPin);
-      state.pins.push(savedPin);
-      state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
-      renderTimelinePins();
-      renderCheatSheetPins();
-      pinModal.classList.add("hidden");
-
       try {
-        await fetch("/api/pins", {
+        const res = await fetch("/api/pins", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newPin)
+          body: JSON.stringify({
+            video_id: state.currentVideoId,
+            timestamp_sec: state.currentTimeSec,
+            tag: tag,
+            title: title,
+            note: note
+          })
         });
+        const data = await res.json();
+        if (data.pin) {
+          state.pins.push(data.pin);
+          state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
+          renderTimelinePins();
+          renderCheatSheetPins();
+          pinModal.classList.add("hidden");
+        }
       } catch (err) {
-        console.debug("Backend pin save notice:", err);
+        alert("Failed to save note: " + err);
       }
     });
   }
@@ -3799,20 +1991,21 @@ function initModalListeners() {
       const color = document.getElementById("new-folder-color").value;
       if (!name) return;
 
-      const createdFolder = StorageManager.saveFolder({ name, color, icon: "folder" });
-      folderModal.classList.add("hidden");
-      await loadSubjectFolders();
-      if (folderSelect) folderSelect.value = createdFolder.id;
-      state.currentFolderId = createdFolder.id;
-
       try {
-        await fetch("/api/folders", {
+        const res = await fetch("/api/folders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, color })
         });
+        const data = await res.json();
+        if (data.id) {
+          folderModal.classList.add("hidden");
+          await loadSubjectFolders();
+          folderSelect.value = data.id;
+          state.currentFolderId = data.id;
+        }
       } catch (err) {
-        console.debug("Backend folder save notice:", err);
+        alert("Failed to create folder: " + err);
       }
     });
   }
@@ -3935,47 +2128,41 @@ function openPinModal() {
 async function loadSubjectFolders() {
   const select = document.getElementById("folder-select");
 
-  // 1. Instantaneous populate from StorageManager
-  state.folders = StorageManager.getFolders();
-  renderFoldersUI(select, state.folders);
-
-  // 2. Concurrently fetch and sync with backend
   try {
     const res = await fetch("/api/folders");
-    if (res.ok) {
-      const data = await res.json();
-      if (data.folders && data.folders.length > 0) {
-        state.folders = data.folders;
-        StorageManager.set("folders", data.folders);
-        renderFoldersUI(select, data.folders);
+    const data = await res.json();
+    if (data.folders) {
+      state.folders = data.folders;
+
+      // 1. Populate Navbar Select with Dark Themed Options
+      if (select) {
+        select.innerHTML = "";
+        data.folders.forEach(f => {
+          const opt = document.createElement("option");
+          opt.value = f.id;
+          opt.textContent = `${f.name} (${f.video_count || 0} vids)`;
+          opt.style.backgroundColor = "#0f172a";
+          opt.style.color = "#f8fafc";
+          select.appendChild(opt);
+        });
+        const addNewOpt = document.createElement("option");
+        addNewOpt.value = "add_new";
+        addNewOpt.textContent = "+ Add To Personal Library";
+        addNewOpt.style.backgroundColor = "#0f172a";
+        addNewOpt.style.color = "#a5b4fc";
+        select.appendChild(addNewOpt);
+
+        if (state.currentFolderId) {
+          select.value = state.currentFolderId;
+        }
       }
+
+      // 2. Render Folder Pills & Videos on Landing Page
+      renderLandingFolders(data.folders);
     }
   } catch (err) {
-    console.debug("Backend folders sync notice (fallback active):", err);
+    console.error("Failed to load folders:", err);
   }
-}
-
-function renderFoldersUI(select, folders) {
-  if (select) {
-    select.innerHTML = "";
-    folders.forEach(f => {
-      const opt = document.createElement("option");
-      opt.value = f.id;
-      opt.textContent = `${f.name} (${f.video_count || 0} vids)`;
-      opt.className = "bg-slate-900 text-slate-100 font-medium py-1";
-      select.appendChild(opt);
-    });
-    const addNewOpt = document.createElement("option");
-    addNewOpt.value = "add_new";
-    addNewOpt.textContent = "+ Add To Personal Library";
-    addNewOpt.className = "bg-slate-900 text-indigo-400 font-semibold py-1";
-    select.appendChild(addNewOpt);
-
-    if (state.currentFolderId) {
-      select.value = state.currentFolderId;
-    }
-  }
-  renderLandingFolders(folders);
 }
 
 // ------------------------------------------
@@ -4102,10 +2289,7 @@ async function loadLandingFolderVideos(folderId) {
   try {
     const res = await fetch(`/api/videos?folder_id=${folderId}`);
     const data = await res.json();
-    let videos = data.videos || [];
-    if (videos.length === 0) {
-      videos = StorageManager.getVideos().filter(v => v.folder_id === folderId);
-    }
+    const videos = data.videos || [];
 
     if (videos.length === 0) {
       grid.innerHTML = `
@@ -4127,15 +2311,9 @@ async function loadLandingFolderVideos(folderId) {
 
       card.addEventListener("click", async () => {
         const landingView = document.getElementById("landing-page-view");
-        const studioHeader = document.querySelector("header.sticky");
-        const studioMain = document.getElementById("main-content");
         if (landingView) {
           landingView.classList.add("opacity-0", "pointer-events-none");
-          setTimeout(() => {
-            landingView.classList.add("hidden");
-            if (studioHeader) studioHeader.classList.remove("hidden");
-            if (studioMain) studioMain.classList.remove("hidden");
-          }, 300);
+          setTimeout(() => landingView.classList.add("hidden"), 300);
         }
         state.currentFolderId = folderId;
         const folderSelect = document.getElementById("folder-select");
@@ -4148,31 +2326,8 @@ async function loadLandingFolderVideos(folderId) {
 
     lucide.createIcons();
   } catch (err) {
-    console.debug("Landing folder videos backend notice (using StorageManager):", err);
-    const videos = StorageManager.getVideos().filter(v => v.folder_id === folderId);
-    if (videos.length > 0) {
-      grid.innerHTML = "";
-      videos.forEach(v => {
-        const cardWrapper = document.createElement("div");
-        cardWrapper.innerHTML = createVideoCardHtml(v, v.video_id === state.currentVideoId, true);
-        const card = cardWrapper.firstElementChild;
-        card.addEventListener("click", async () => {
-          const landingView = document.getElementById("landing-page-view");
-          if (landingView) {
-            landingView.classList.add("opacity-0", "pointer-events-none");
-            setTimeout(() => landingView.classList.add("hidden"), 300);
-          }
-          state.currentFolderId = folderId;
-          const folderSelect = document.getElementById("folder-select");
-          if (folderSelect) folderSelect.value = folderId;
-          await loadVideoStudio(v.video_id);
-        });
-        grid.appendChild(card);
-      });
-      lucide.createIcons();
-    } else {
-      grid.innerHTML = `<div class="col-span-full py-4 text-xs text-rose-400">Failed to load lectures.</div>`;
-    }
+    console.error("Failed to load folder videos on landing page:", err);
+    grid.innerHTML = `<div class="col-span-full py-4 text-xs text-rose-400">Failed to load lectures.</div>`;
   }
 }
 
@@ -4229,10 +2384,7 @@ async function openFolderVideosModal(targetFolderId) {
   try {
     const res = await fetch(`/api/videos?folder_id=${currentId}`);
     const data = await res.json();
-    let videos = data.videos || [];
-    if (videos.length === 0) {
-      videos = StorageManager.getVideos().filter(v => v.folder_id === currentId);
-    }
+    const videos = data.videos || [];
 
     if (countEl) countEl.textContent = `${videos.length} lecture${videos.length === 1 ? '' : 's'} saved in this folder`;
 
@@ -4266,27 +2418,8 @@ async function openFolderVideosModal(targetFolderId) {
 
     lucide.createIcons();
   } catch (err) {
-    console.debug("Folder videos backend notice (using StorageManager):", err);
-    const videos = StorageManager.getVideos().filter(v => v.folder_id === currentId);
-    if (countEl) countEl.textContent = `${videos.length} lecture${videos.length === 1 ? '' : 's'} saved in this folder`;
-    if (videos.length > 0) {
-      listContainer.innerHTML = "";
-      videos.forEach(v => {
-        const cardWrapper = document.createElement("div");
-        cardWrapper.innerHTML = createVideoCardHtml(v, v.video_id === state.currentVideoId, false);
-        const card = cardWrapper.firstElementChild;
-        card.addEventListener("click", async () => {
-          modal.classList.add("hidden");
-          const folderSelect = document.getElementById("folder-select");
-          if (folderSelect) folderSelect.value = currentId;
-          await loadVideoStudio(v.video_id);
-        });
-        listContainer.appendChild(card);
-      });
-      lucide.createIcons();
-    } else {
-      listContainer.innerHTML = `<div class="py-4 text-xs text-rose-400">No lectures found in this folder.</div>`;
-    }
+    console.error("Failed to load folder videos:", err);
+    listContainer.innerHTML = `<div class="py-4 text-xs text-rose-400">Failed to load lectures: ${err}</div>`;
   }
 }
 
