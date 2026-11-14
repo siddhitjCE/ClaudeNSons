@@ -1604,6 +1604,34 @@ const STATIC_FALLBACK_DATA = {
   }
 };
 
+
+window.STATIC_TRANSCRIPTS = {
+  "fnF67w6rDpg": "[08:30] Now let us examine the statistical distribution of molecular weights in synthetic polymers.\n[09:10] Notice that unlike small molecules, synthetic polymer chains do not have a uniform molar mass.\n[09:40] We define the polydispersity index, PDI, as the ratio of weight-average molecular weight Mw over number-average molecular weight Mn.\n[10:15] If all polymer chains have the exact same length, Mw equals Mn, and PDI equals exactly 1.0.\n[11:00] For the number-average Mn, we sum Ni times Mi divided by total number of moles Ni.\n[11:15] In weight-average Mw, each chain mass is weighted by its own mass fraction, which introduces the Mi squared term in the numerator.\n[12:00] Because of the squared term, heavier chains dominate Mw, making Mw always greater than or equal to Mn.\n[21:40] Turning now to coordination polymerization, Karl Ziegler and Giulio Natta introduced stereospecific catalysis.\n[22:15] The titanium tetrachloride and triethylaluminum catalyst coordinates the alpha-olefin monomer prior to insertion.\n[23:00] This forces all methyl side groups into the same spatial orientation, producing isotactic polypropylene with high crystallinity.\n[36:50] To convert unvulcanized natural polyisoprene elastomer into durable rubber, Charles Goodyear heated it with sulfur.\n[37:45] Sulfur bridges form covalent crosslinks between adjacent polyisoprene chains, preventing irreversible plastic flow.\n[38:30] At 1 to 3 percent sulfur, we achieve high elasticity and resilience; above 30 percent sulfur, ebonite hard rubber is formed.",
+  "OSCKBmkrH_g": "[00:00] Hi, in this episode of ElectroBOOM 101,\n[00:02] I talk about op amps or operational\n[00:05] amplifiers. Like my professor back in\n[00:07] the university said, they are the best\n[00:09] thing ever designed in electronics.\n[00:11] That's true if we ignore all other\n[00:14] things. And you can get them as these\n[00:15] electronic chips stand-alone if not part\n[00:18] of a more complex chip. And they\n[00:20] amplify. Like here, I tied a microphone\n[00:23] to amplify sound and without loading the\n[00:26] source signal, without any distortion,\n[00:29] without\n[00:32] Oh, What happened? Ah, don't\n[00:37] Oh, oops.\n[00:40] This is a non-operational amplifier.\n[00:44] Which begs the question, why are they\n[00:46] called operational amplifier? What's a\n[00:49] Is there a secret society of engineers\n[00:52] using non-operational amplifiers trying\n[00:54] to bring the world of amplification to\n[00:57] an end?\n[00:58] Somebody explain it in the comments. Of\n[01:00] course, they come with their\n[01:01] limitations.\n[01:03] But it is almost impossible to talk\n[01:06] about analog circuits without including\n[01:08] an op amp. Here, the top plot is the\n[01:10] microphone signal and the bottom is the\n[01:12] output with five times amplification.\n[01:21] Op amps have made amplification so easy\n[01:24] and accurate that they are used\n[01:26] everywhere, like in any type of sensor\n[01:28] signal processing and amplification,\n[01:30] audio, video, measurements, filters,\n[01:32] comparators, buffers, power supplies,\n[01:35] analog math, and all it is is this at\n[01:38] its simplest form, a voltage amplifier.\n[01:41] It takes two inputs and amplifies their\n[01:43] difference by a gain so high we\n[01:46] typically assume the gain is infinity in\n[01:49] an ideal case. In reality, it can be\n[01:52] well over 10,000 times. So, compared to\n[01:55] infinity,\n[01:57] it's infinite times as smaller, but it\n[02:00] is so large that the error it creates\n[02:02] compared to an infinite gain is\n[02:05] negligible.\n[02:06] So, tell me what's been bothering you?\n[02:09] See, proper engineering is done with so\n[02:13] much neglect. Otherwise, we go crazy.\n[02:16] Yes, it's quite the conundrum.\n[02:19] So, basically, an ideal op-amp is like\n[02:22] an open circuit at its input. So, it\n[02:24] never draws current from the circuit it\n[02:27] connects to. It has an infinite gain,\n[02:29] and you can draw as much current as you\n[02:32] want from its output. In reality, none\n[02:35] of these are true, but we can work with\n[02:37] these assumptions. You know what they\n[02:39] say, fake it till you make it, and\n[02:42] that's when the reality hits you.\n[02:44] That's all, a simple thing with a\n[02:46] billion applications. What can we use it\n[02:49] for as is? Only one way, that is a\n[02:51] comparator. With a gain of infinity, any\n[02:54] non-zero input voltage difference just\n[02:56] gives a positive or negative\n[02:59] infinity.\n[03:01] Oh, so this is where the reality hits\n[03:03] us.\n[03:04] In any circuit without capacitance and\n[03:06] inductance, aka components that can\n[03:09] store and release energy, the voltages\n[03:12] of the circuit stay within the supply\n[03:14] voltages, or rails as we call them, that\n[03:16] power the circuit. Op-amps are one such\n[03:20] circuits. Ideally, I said ideally. So,\n[03:24] in an op-amp where we now add two other\n[03:27] terminals to show the supply rails they\n[03:29] ride on, the output voltage will jump to\n[03:32] the power rails and no further. So, you\n[03:35] could say the gain is ideally infinite\n[03:38] as long as the output voltage is within\n[03:40] the power rails. So, with the single\n[03:42] op-amp, we are just comparing the two\n[03:44] inputs, and our output is high or low\n[03:47] like a digital circuit based on which\n[03:49] input is higher. If you aim to compare\n[03:52] only, there are comparators with the\n[03:54] same symbol that perform better than\n[03:56] op-amps to create a digital output.\n[03:59] Op-amps are designed to perform better\n[04:01] in an analog circuit, although you can\n[04:03] use them as a comparator as we see here.\n[04:05] I'll talk about comparators in another\n[04:07] video. So, as you can see, the output\n[04:09] jumps to the supply voltages.\n[04:12] As you can see, the output jumps close\n[04:15] to the supply rails in typical op-amps\n[04:17] with some voltage difference. Only in\n[04:20] rail-to-rail op-amps can the input and\n[04:23] output voltages get real close to the\n[04:26] supply rails. What makes op-amps really\n[04:29] spicy is when you add feedback to them,\n[04:31] where you somehow connect the output of\n[04:33] the op-amp to its input. You can connect\n[04:35] the output to positive input or V+ for a\n[04:38] positive feedback or negative input or\n[04:41] V- for a negative feedback or both.\n[04:44] Maybe I should have had a video on\n[04:47] feedback first before jumping into it\n[04:49] here. But, let's make it simple. For\n[04:52] stability, positive feedback, bad.\n[04:55] Negative feedback, good. I was once\n[04:58] contemplating making a device where you\n[05:00] put two spiky electrodes on a chair with\n[05:03] a microphone and a circuit to convert\n[05:05] sound into high voltage feeding into\n[05:07] spikes. A person would sit on the\n[05:10] spikes, yell, the audio turned into high\n[05:13] voltage, the guy would get louder\n[05:15] creating higher voltage, and so on. That\n[05:17] would be a positive feedback loop. I\n[05:20] didn't make it into a product though,\n[05:21] because I received negative feedback\n[05:23] from my test subjects.\n[05:26] Get out of jail.\n[05:27] Same goes for op-amp. In a simple\n[05:29] positive feedback where the output goes\n[05:31] to V+, a tiny rise in V+ raises Vout,\n[05:36] that raises V+, that raises Vout driving\n[05:39] it into a power rail and latches in that\n[05:41] state or vice versa in the opposite\n[05:44] direction. There are great applications\n[05:46] for positive feedback though, but unless\n[05:48] you use it along with a stronger\n[05:50] negative feedback, it's output is\n[05:53] digital and falls under comparator\n[05:55] applications. Subscribe and stay tuned\n[05:58] for the next ElectroBOOM 101 on that.\n[06:00] What we really like for an op-amp,\n[06:02] though, is a negative feedback. If V- is\n[06:05] slightly higher than V+, creating a\n[06:07] negative input delta, it pulls the\n[06:10] output back down, bringing V- close to\n[06:12] V+. Similarly, if V- is lower than V+,\n[06:16] creating a positive input delta, the\n[06:19] output goes positive, pulling V- close\n[06:22] to V+. Stability. So, the output has to\n[06:26] stay still between the power rails with\n[06:28] a known value. This means, assuming an\n[06:31] infinite gain, the delta between the\n[06:34] positive and negative inputs must be\n[06:36] zero. So, we can assume both inputs are\n[06:39] virtually shorted because their voltages\n[06:41] are the same as long as the output is\n[06:44] within the power rails. But, as soon as\n[06:47] the output gets too close to a power\n[06:49] rail, all bets are off and the input\n[06:51] delta will increase. Okay, let's talk\n[06:53] reality. Like I said, an op-amp's output\n[06:56] voltage hardly ever gets close to the\n[06:58] rails, and there is always a distance to\n[07:00] the rails. The current you can draw from\n[07:02] the output is limited. There can be a\n[07:04] very small current draw from the input\n[07:06] pins we ignore. There is some input\n[07:09] impedance. There can be a very small\n[07:11] input offset voltage, and inputs are not\n[07:13] exactly equal in a feedback loop. The\n[07:15] op-amp gain is only very high for a\n[07:18] small frequency range and drops quickly\n[07:20] by frequency. The output voltage can\n[07:22] arise like a line at high frequencies\n[07:25] due to something called slew rate. There\n[07:27] are power limitations, voltage\n[07:29] limitations for input and output and\n[07:31] supply. Dude, we need to protect our\n[07:33] youth against too much information too\n[07:35] early. The birds and the bees talk come\n[07:37] later. Let them chew on the simpler\n[07:39] stuff first. Oh, yeah? Then chew on\n[07:40] this.\n[07:42] Anyway, there are tons of fascinating\n[07:45] circuits to be built with an op-amp. I\n[07:47] only point to a few of them here and\n[07:49] won't spam my channel with videos about\n[07:51] all the possibilities. The point is to\n[07:54] get you inspired and interested. But, I\n[07:56] was also thinking if you are interested\n[07:59] to learn more about op-amps or how they\n[08:01] work in real life or any other circuit,\n[08:05] I could sit down in a live stream for\n[08:08] each, play some elevator music, and try\n[08:12] to analyze a circuit or two. If that's\n[08:16] something that interests you, then toss\n[08:18] in\n[08:19] to your teacher\n[08:21] on Patreon or join YouTube memberships\n[08:24] and I'll stream privately for those\n[08:26] guys, which makes it easier to interact\n[08:29] with fewer people and answer questions,\n[08:30] too. Anyway, keep it simple. Simple\n[08:33] works in most cases. Let's assume we\n[08:35] have a positive and negative supply\n[08:37] voltage large enough and a simple\n[08:39] circuit like this. Considering the input\n[08:42] has no current draw or loading, ideally,\n[08:45] there is no difference between a short\n[08:47] circuit or a resistor on the feedback\n[08:49] loop because no current means zero volts\n[08:52] across the loop component, anyway. The\n[08:54] two input voltages are equal, equal to\n[08:56] the output voltage. This is a simple\n[09:00] buffer. You can connect a sensitive\n[09:02] signal to the input without loading it\n[09:05] that otherwise would be disturbed by\n[09:07] even a minimal load. The buffer copies\n[09:09] the signal at the output and connects it\n[09:12] to another circuit that may safely draw\n[09:14] current from it. But, you can also add\n[09:16] more resistors to your feedback path.\n[09:18] Now, you are dividing the output voltage\n[09:21] over two resistors and feeding it to V\n[09:23] minus. Let's calculate what's going on\n[09:25] here. Assuming the output voltage is\n[09:27] within the power rails, it means the\n[09:30] op-amp input voltages are virtually\n[09:32] shorted or V minus is equal to V plus,\n[09:35] which is V in. Now, again, op amp\n[09:38] doesn't draw input current and so\n[09:40] doesn't affect the voltage divider.\n[09:42] What? I give up.\n[09:43] It's accurate enough. So, like I\n[09:45] mentioned in my other video, a resistor\n[09:47] divider splits the voltage across it\n[09:49] into a smaller voltage proportionally.\n[09:52] V- is equal to V in. So, rearranging the\n[09:55] equations, we see the output is equal to\n[09:59] input amplified with a gain only related\n[10:02] to resistor values.\n[10:04] This is an\n[10:05] infinite input impedance, zero\n[10:08] distortion, non-inverting amplifier.\n[10:11] You can do the same calculation assuming\n[10:13] a finite op amp gain. But still, op\n[10:16] amp's gain is so large that with a very\n[10:18] good precision, you can assume the\n[10:20] overall gain is only related to\n[10:22] resistors. In this circuit, the output\n[10:24] and input are in phase. But what if you\n[10:26] want to flip the output? You simply give\n[10:29] the input voltage to the resistor and\n[10:31] connect V+ to a fixed voltage like\n[10:33] ground and you get a negative gain.\n[10:36] This is a\n[10:37] finite input impedance. The input\n[10:40] impedance of this is R1 since V- is a\n[10:43] virtual ground. Not good for sensitive\n[10:46] signals.\n[10:47] Zero distortion inverting amplifier.\n[10:50] The lovely thing about the huge gain of\n[10:53] the op amp is, as you have noticed, in\n[10:55] these feedback circuits, the gain is\n[10:58] only dependent on the resistors you\n[11:00] pick, not the gain of the op amp itself.\n[11:03] So, the op amp's huge gain can be\n[11:05] distorted, changed from 10,000 to\n[11:07] 100,000 and back, or drop over the\n[11:10] frequency band. As long as it is super\n[11:13] large, the feedback removes the\n[11:15] distortion with high precision or\n[11:17] significantly increases the bandwidths\n[11:19] of the circuit. That's the beauty of the\n[11:22] op amp. Take this transistor push-pull\n[11:25] circuit. You use it to buffer. It draws\n[11:28] small input current and outputs massive\n[11:30] current like in audio amplifiers and\n[11:33] such. Its gain is around one, but it\n[11:36] distorts the signal heavily by cutting\n[11:39] the midsection. You add an op amp to it\n[11:41] with feedback from its output. The op\n[11:44] amp trying to keep its inputs equal\n[11:46] sends signal with an inverse distortion\n[11:49] to the push-pull buffer that passed\n[11:51] through it creates the same signal as\n[11:53] the input. Huge gain is awesome.\n[11:58] Op amp is key.\n[12:02] Toss a coin to your teacher if you want\n[12:06] to see more. If you want to learn more\n[12:10] privately.\n[12:12] Toss a coin to your teacher, fans of\n[12:15] electricity."
+};
+
+function getCachedTranscriptForVideo(videoId, centerSec, windowSec) {
+  try {
+    const raw = (window.STATIC_TRANSCRIPTS && window.STATIC_TRANSCRIPTS[videoId]) || StorageManager.getTranscript(videoId) || "";
+    if (!raw) return "";
+    const halfWin = (windowSec || 240) / 2;
+    const startSec = Math.max(0, centerSec - halfWin);
+    const endSec = centerSec + halfWin;
+    const lines = raw.split("\n");
+    const matched = lines.filter(line => {
+      const m = line.match(/\[(\d+):(\d+)\]/);
+      if (!m) return true;
+      const sec = parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+      return sec >= startSec && sec <= endSec;
+    });
+    if (matched.length > 0) return matched.join("\n");
+    return raw.slice(0, 3000);
+  } catch (err) {
+    console.warn("getCachedTranscriptForVideo notice:", err);
+    return "";
+  }
+}
+
 const StorageManager = {
   get(key, fallback = null) {
     try {
@@ -1695,6 +1723,13 @@ const StorageManager = {
   saveAnalysis(videoId, timestampSec, data) {
     const key = `analysis_${videoId}_${Math.round(timestampSec / 60)}`;
     this.set(key, data);
+  }
+  },
+  getTranscript(videoId) {
+    return this.get(`transcript_${videoId}`, null);
+  },
+  saveTranscript(videoId, text) {
+    this.set(`transcript_${videoId}`, text);
   }
 };
 
@@ -1825,9 +1860,13 @@ function onPlayerReady(event) {
     setTimeout(() => loader.classList.add("hidden"), 300);
   }
 
-  // If landing page overlay is visible on initial load, ensure player starts paused
+  // If landing page overlay is visible on initial load, ensure player starts paused and studio is hidden
   const landingOverlay = document.getElementById("landing-page-view");
   if (landingOverlay && !landingOverlay.classList.contains("hidden")) {
+    const studioHeader = document.querySelector("header.sticky");
+    const studioMain = document.getElementById("main-content");
+    if (studioHeader) studioHeader.classList.add("hidden");
+    if (studioMain) studioMain.classList.add("hidden");
     try {
       if (state.player && typeof state.player.pauseVideo === "function") {
         state.player.pauseVideo();
@@ -2594,7 +2633,8 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null, forceFres
         video_title: videoTitle,
         center_timestamp_sec: timestampSec,
         window_seconds: windowSec,
-        student_doubt: studentDoubt
+        student_doubt: studentDoubt,
+        cached_transcript_text: getCachedTranscriptForVideo(state.currentVideoId, timestampSec, windowSec)
       })
     });
 
@@ -3636,9 +3676,13 @@ function initLandingPageListeners() {
       }
 
       // Step D: Smoothly hide landing page overlay
+      const studioHeader = document.querySelector("header.sticky");
+      const studioMain = document.getElementById("main-content");
       landingView.classList.add("opacity-0", "pointer-events-none");
       setTimeout(() => {
         landingView.classList.add("hidden");
+        if (studioHeader) studioHeader.classList.remove("hidden");
+        if (studioMain) studioMain.classList.remove("hidden");
         if (landingBtn) {
           landingBtn.disabled = false;
           landingBtn.innerHTML = `<span>Start Studying This Video &rarr;</span>`;
@@ -3663,7 +3707,11 @@ function initLandingPageListeners() {
         } catch (_) {}
       }
 
-      // Show landing page overlay again
+      // Hide studio and show landing page overlay again
+      const studioHeader = document.querySelector("header.sticky");
+      const studioMain = document.getElementById("main-content");
+      if (studioHeader) studioHeader.classList.add("hidden");
+      if (studioMain) studioMain.classList.add("hidden");
       landingView.classList.remove("hidden");
       requestAnimationFrame(() => {
         landingView.classList.remove("opacity-0", "pointer-events-none");
@@ -4079,9 +4127,15 @@ async function loadLandingFolderVideos(folderId) {
 
       card.addEventListener("click", async () => {
         const landingView = document.getElementById("landing-page-view");
+        const studioHeader = document.querySelector("header.sticky");
+        const studioMain = document.getElementById("main-content");
         if (landingView) {
           landingView.classList.add("opacity-0", "pointer-events-none");
-          setTimeout(() => landingView.classList.add("hidden"), 300);
+          setTimeout(() => {
+            landingView.classList.add("hidden");
+            if (studioHeader) studioHeader.classList.remove("hidden");
+            if (studioMain) studioMain.classList.remove("hidden");
+          }, 300);
         }
         state.currentFolderId = folderId;
         const folderSelect = document.getElementById("folder-select");

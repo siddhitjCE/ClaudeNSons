@@ -49,13 +49,15 @@ def is_gemini_available() -> bool:
 # SMART RATE LIMITING & QUOTA PRESERVATION
 # ==========================================
 # Preferred Gemini Flash models in priority order:
-# 1. gemini-2.5-flash: Concise & university tutor tuned
-# 2. gemini-3.1-flash-lite: Ultra-fast (<1s) backup
-# 3. gemini-3.5-flash-lite: Secondary fallback
+# 1. gemini-3.1-flash-lite: Ultra-fast (<1s), active on all API tiers
+# 2. gemini-3.5-flash-lite: Secondary high-throughput model
+# 3. gemini-3.5-flash: Advanced reasoning model
+# 4. gemini-3.6-flash: Next-gen preview fallback
 PREFERRED_GEMINI_MODELS = [
-    "gemini-2.5-flash",
     "gemini-3.1-flash-lite",
-    "gemini-3.5-flash-lite"
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash",
+    "gemini-3.6-flash"
 ]
 
 # In-memory segment cache to prevent redundant API calls and protect RPM/TPM quota
@@ -223,7 +225,7 @@ def _call_gemini_raw(client, model_name: str, prompt: str) -> str:
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
-            max_output_tokens=1200,
+            max_output_tokens=1500,
             temperature=0.25
         )
     )
@@ -292,8 +294,8 @@ def analyze_segment_ai(
                 for model_name in PREFERRED_GEMINI_MODELS:
                     try:
                         future = executor.submit(_call_gemini_raw, client, model_name, prompt)
-                        # Strict 6.5s timeout to guarantee response stays well under Vercel 10s limit
-                        raw_text = future.result(timeout=6.5)
+                        # Strict 8.5s timeout to guarantee response stays under Vercel serverless limit
+                        raw_text = future.result(timeout=8.5)
 
                         raw_text = raw_text.strip()
                         if raw_text.startswith("```json"):
