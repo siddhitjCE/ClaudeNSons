@@ -237,6 +237,18 @@
         </button>
       </div>
 
+      <!-- Center-Right: Interactive Feature Guide / Tour Trigger Button -->
+      <button 
+        id="btn-restart-tour"
+        type="button"
+        class="min-h-[36px] px-3 py-1.5 rounded-xl bg-indigo-950/70 hover:bg-indigo-600/30 border border-indigo-700/60 text-xs font-semibold text-indigo-300 hover:text-white transition-all flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+        title="Open Interactive Step-by-Step Feature Guide"
+      >
+        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-indigo-400" aria-hidden="true"></i>
+        <span class="hidden sm:inline">Interactive Guide</span>
+        <span class="sm:hidden">Guide</span>
+      </button>
+
       <!-- Right: Load YouTube URL Input Bar with Visible Label & Error Feedback -->
       <div class="flex flex-col flex-1 max-w-md min-w-[280px]">
         <div class="flex items-center">
@@ -1106,6 +1118,87 @@
     <button id="undo-delete-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl transition-colors cursor-pointer shadow">
       Undo
     </button>
+  </div>
+
+  <!-- CONTEXTUAL ONBOARDING FEATURE GUIDE DIALOGUE BOX -->
+  <div id="tour-overlay" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 hidden">
+    <!-- Semi-transparent subtle backdrop -->
+    <div id="tour-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-[2px] pointer-events-auto"></div>
+
+    <!-- Floating Contextual Dialogue Card -->
+    <div 
+      id="tour-dialog" 
+      class="fixed z-50 pointer-events-auto max-w-sm sm:max-w-md w-full bg-slate-900/95 border border-indigo-500/60 rounded-2xl shadow-2xl p-5 backdrop-blur-xl text-slate-100 transition-all duration-300 bottom-6 right-6 sm:bottom-8 sm:right-8"
+      role="dialog"
+      aria-labelledby="tour-step-title"
+      aria-describedby="tour-step-description"
+    >
+      <!-- Top Bar: Step Counter, Category Badge, and Close/Skip Controls -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span id="tour-step-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+            Step 1 of 5
+          </span>
+          <span id="tour-feature-tag" class="text-xs font-semibold text-slate-400">
+            Feature Tour
+          </span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button 
+            id="tour-skip-btn" 
+            class="text-[11px] text-slate-400 hover:text-slate-200 px-2 py-1 rounded hover:bg-slate-800 transition-colors cursor-pointer"
+            title="Skip onboarding tour"
+          >
+            Skip Tour
+          </button>
+          <button 
+            id="tour-close-btn" 
+            class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            aria-label="Close Guide"
+          >
+            <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dialogue Content -->
+      <div class="py-3.5 space-y-2">
+        <div class="flex items-center gap-2.5">
+          <div id="tour-icon-container" class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/30">
+            <i id="tour-step-icon" data-lucide="flame" class="w-4 h-4 text-amber-400" aria-hidden="true"></i>
+          </div>
+          <h3 id="tour-step-title" class="text-sm font-bold text-white tracking-tight">
+            1. Crowd Replay Heatmap
+          </h3>
+        </div>
+        <p id="tour-step-description" class="text-xs text-slate-300 leading-relaxed">
+          This curve isn't audio volume—it's real YouTube crowd replay data. The peaks show where thousands of students hit rewind. Click any highlighted peak to jump directly to tricky derivations.
+        </p>
+      </div>
+
+      <!-- Bottom Actions -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+        <!-- Step Indicator Dots -->
+        <div id="tour-step-dots" class="flex items-center gap-1.5">
+          <!-- Dynamically populated dots -->
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button 
+            id="tour-prev-btn" 
+            class="hidden px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
+          >
+            &larr; Back
+          </button>
+          <button 
+            id="tour-next-btn" 
+            class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>Next Step &rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- SyncLearn Main JavaScript -->

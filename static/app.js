@@ -340,6 +340,234 @@ function buildClientAiFallback(videoId, videoTitle, centerSec) {
   };
 }
 
+// ==========================================
+// 0.1 CONTEXTUAL ONBOARDING & PROGRESSIVE DISCLOSURE TOUR
+// ==========================================
+
+const OnboardingTour = {
+  currentStep: 0,
+  steps: [
+    {
+      id: "step-timeline",
+      targetId: "timeline-container",
+      title: "1. Spot Tricky Parts on Timeline",
+      icon: "flame",
+      badge: "Step 1 of 5",
+      tag: "Crowd Replay Peaks",
+      description: "This curve isn't audio volume—it's real YouTube crowd replay data. The peaks show where thousands of students hit rewind. Click any highlighted peak to jump directly to tricky derivations.",
+      actionText: "Next: Plain English Breakdown →",
+      onEnter: () => {
+        const landing = document.getElementById("landing-page-view");
+        if (landing) landing.classList.add("hidden");
+      }
+    },
+    {
+      id: "step-rescue-btn",
+      targetId: "btn-confused-rescue",
+      title: "2. Context-Locked AI Rescue",
+      icon: "sparkles",
+      badge: "Step 2 of 5",
+      tag: "Plain English Explanations",
+      description: "Whenever you feel stuck, click 'Explain This Part Simply' (or press Alt + E). SyncLearn breaks down the current segment step-by-step using the instructor's exact chalkboard terms.",
+      actionText: "Next: Terminology Bridge →",
+      onEnter: () => {
+        switchTab("tab-content-rescue");
+      }
+    },
+    {
+      id: "step-terminology",
+      targetId: "tab-btn-rescue",
+      title: "3. Chalkboard Terminology Bridge",
+      icon: "book-open",
+      badge: "Step 3 of 5",
+      tag: "Notation Translation",
+      description: "Professors frequently use custom chalkboard shorthand (like PDI, Mn, or Mw). SyncLearn translates chalkboard shorthand into standard textbook definitions so you never misread exam questions.",
+      actionText: "Next: Active Recall Quiz →",
+      onEnter: () => {
+        switchTab("tab-content-rescue");
+        const bridge = document.getElementById("rescue-terminology-bridge-table");
+        if (bridge) bridge.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    },
+    {
+      id: "step-quiz",
+      targetId: "tab-btn-recall",
+      title: "4. Active Recall & Quizzes",
+      icon: "target",
+      badge: "Step 4 of 5",
+      tag: "Auto-Pause & Memory",
+      description: "Passive watching leads to forgetting. Tab 2 generates fill-in-the-blank concept diagrams and exam MCQs, and auto-pauses the video right after tricky sections so you can test yourself.",
+      actionText: "Next: Study Cheatsheet →",
+      onEnter: () => {
+        switchTab("tab-content-recall");
+      }
+    },
+    {
+      id: "step-pins",
+      targetId: "btn-drop-pin",
+      title: "5. Pinned Notes & Cheatsheet",
+      icon: "bookmark-plus",
+      badge: "Step 5 of 5",
+      tag: "1-Click Export",
+      description: "Drop timestamp notes (★ Exam Priority, ∑ Key Formula) as you watch. In Tab 3, SyncLearn compiles your notes into a clean, 1-page markdown cheatsheet you can export or print!",
+      actionText: "Finish Tour & Start Studying 🎉",
+      onEnter: () => {
+        switchTab("tab-content-notes");
+      }
+    }
+  ],
+
+  init() {
+    this.bindEvents();
+
+    // Check if tour should auto-trigger for first-time visitors
+    const completed = StorageManager.get("tour_completed", false);
+    if (!completed) {
+      // Auto-trigger when landing overlay is dismissed
+      window._checkTourTrigger = () => {
+        const landing = document.getElementById("landing-page-view");
+        const isHidden = !landing || landing.classList.contains("hidden") || landing.classList.contains("opacity-0");
+        if (isHidden && !StorageManager.get("tour_completed", false)) {
+          setTimeout(() => {
+            this.start(0);
+          }, 800);
+        }
+      };
+    }
+  },
+
+  start(stepIndex = 0) {
+    this.currentStep = stepIndex;
+    const overlay = document.getElementById("tour-overlay");
+    if (overlay) overlay.classList.remove("hidden");
+    this.renderStep();
+  },
+
+  next() {
+    if (this.currentStep < this.steps.length - 1) {
+      this.currentStep++;
+      this.renderStep();
+    } else {
+      this.finish();
+    }
+  },
+
+  prev() {
+    if (this.currentStep > 0) {
+      this.currentStep--;
+      this.renderStep();
+    }
+  },
+
+  renderStep() {
+    const step = this.steps[this.currentStep];
+    if (!step) return;
+
+    if (typeof step.onEnter === "function") step.onEnter();
+
+    // Remove spotlight from previous elements
+    document.querySelectorAll(".tour-spotlight-active").forEach(el => el.classList.remove("tour-spotlight-active"));
+
+    // Add spotlight to current target
+    const target = document.getElementById(step.targetId);
+    if (target) {
+      target.classList.add("tour-spotlight-active");
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    // Update text
+    const titleEl = document.getElementById("tour-step-title");
+    const descEl = document.getElementById("tour-step-description");
+    const badgeEl = document.getElementById("tour-step-badge");
+    const tagEl = document.getElementById("tour-feature-tag");
+    const iconEl = document.getElementById("tour-step-icon");
+    const nextBtn = document.getElementById("tour-next-btn");
+    const prevBtn = document.getElementById("tour-prev-btn");
+
+    if (titleEl) titleEl.textContent = step.title;
+    if (descEl) descEl.textContent = step.description;
+    if (badgeEl) badgeEl.textContent = step.badge;
+    if (tagEl) tagEl.textContent = step.tag;
+    if (iconEl) iconEl.setAttribute("data-lucide", step.icon);
+
+    if (nextBtn) {
+      nextBtn.innerHTML = `<span>${step.actionText}</span>`;
+    }
+    if (prevBtn) {
+      if (this.currentStep === 0) {
+        prevBtn.classList.add("hidden");
+      } else {
+        prevBtn.classList.remove("hidden");
+      }
+    }
+
+    // Update step dots
+    const dotsContainer = document.getElementById("tour-step-dots");
+    if (dotsContainer) {
+      dotsContainer.innerHTML = "";
+      this.steps.forEach((s, idx) => {
+        const dot = document.createElement("span");
+        dot.className = idx === this.currentStep 
+          ? "w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-sm shadow-indigo-500/50" 
+          : "w-2 h-2 rounded-full bg-slate-700 cursor-pointer hover:bg-slate-500 transition-colors";
+        dot.title = s.title;
+        dot.addEventListener("click", () => {
+          this.currentStep = idx;
+          this.renderStep();
+        });
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    lucide.createIcons();
+  },
+
+  finish() {
+    StorageManager.set("tour_completed", true);
+    this.close();
+  },
+
+  skip() {
+    StorageManager.set("tour_completed", true);
+    this.close();
+  },
+
+  close() {
+    const overlay = document.getElementById("tour-overlay");
+    if (overlay) overlay.classList.add("hidden");
+    document.querySelectorAll(".tour-spotlight-active").forEach(el => el.classList.remove("tour-spotlight-active"));
+  },
+
+  bindEvents() {
+    const nextBtn = document.getElementById("tour-next-btn");
+    const prevBtn = document.getElementById("tour-prev-btn");
+    const skipBtn = document.getElementById("tour-skip-btn");
+    const closeBtn = document.getElementById("tour-close-btn");
+    const restartBtn = document.getElementById("btn-restart-tour");
+
+    if (nextBtn) nextBtn.addEventListener("click", () => this.next());
+    if (prevBtn) prevBtn.addEventListener("click", () => this.prev());
+    if (skipBtn) skipBtn.addEventListener("click", () => this.skip());
+    if (closeBtn) closeBtn.addEventListener("click", () => this.close());
+
+    if (restartBtn) {
+      restartBtn.addEventListener("click", () => {
+        this.start(0);
+      });
+    }
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const overlay = document.getElementById("tour-overlay");
+        if (overlay && !overlay.classList.contains("hidden")) {
+          this.close();
+        }
+      }
+    });
+  }
+};
+
 // Initialize Application on DOM Ready
 document.addEventListener("DOMContentLoaded", () => {
   initUIEventListeners();
@@ -347,6 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCheatSheetBridges();
   renderCheatSheetMissedMCQs();
   loadVideoStudio(state.currentVideoId);
+  OnboardingTour.init();
 });
 
 // ==========================================
@@ -697,7 +926,10 @@ async function loadVideoStudio(videoId, customTitle = null) {
     const landingView = document.getElementById("landing-page-view");
     if (landingView && !landingView.classList.contains("hidden")) {
       landingView.classList.add("opacity-0", "pointer-events-none");
-      setTimeout(() => landingView.classList.add("hidden"), 300);
+      setTimeout(() => {
+        landingView.classList.add("hidden");
+        if (window._checkTourTrigger) window._checkTourTrigger();
+      }, 300);
     }
 
     // Client-Side Extraction: Resolve real video title immediately
@@ -2159,7 +2391,10 @@ function initUIEventListeners() {
       const landingView = document.getElementById("landing-page-view");
       if (landingView) {
         landingView.classList.add("opacity-0", "pointer-events-none");
-        setTimeout(() => landingView.classList.add("hidden"), 300);
+        setTimeout(() => {
+          landingView.classList.add("hidden");
+          if (window._checkTourTrigger) window._checkTourTrigger();
+        }, 300);
       }
 
       loadBtn.disabled = true;
@@ -2761,7 +2996,10 @@ async function loadLandingFolderVideos(folderId) {
         const landingView = document.getElementById("landing-page-view");
         if (landingView) {
           landingView.classList.add("opacity-0", "pointer-events-none");
-          setTimeout(() => landingView.classList.add("hidden"), 300);
+          setTimeout(() => {
+            landingView.classList.add("hidden");
+            if (window._checkTourTrigger) window._checkTourTrigger();
+          }, 300);
         }
         state.currentFolderId = folderId;
         const folderSelect = document.getElementById("folder-select");
