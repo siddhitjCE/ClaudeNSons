@@ -11,12 +11,22 @@ Features:
 - Graceful algorithmic fallback if yt-dlp is rate-limited or offline
 """
 
+import os
+import json
 import math
 import logging
 from typing import Dict, List, Any, Optional
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger("synclearn.heatmap")
+
+def get_proxy_url() -> Optional[str]:
+    """Retrieves configured outbound proxy for yt-dlp to bypass cloud datacenter IP blocks."""
+    proxy = (os.getenv("YTDLP_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY") or "").strip()
+    return proxy if proxy else None
 
 DEFAULT_VIDEO_ID = "fnF67w6rDpg"
 DEFAULT_DURATION = 2700  # 45 minutes
@@ -81,16 +91,22 @@ def _extract_via_yt_dlp(video_id: str) -> Optional[Dict[str, Any]]:
     """
     Extracts real YouTube Most Replayed heatmap, duration, title, and chapters using yt-dlp.
     This corresponds directly to laitifranz/yt-most-replayed.
+    Routes through YTDLP_PROXY when configured to bypass datacenter IP restrictions.
     """
     try:
         import yt_dlp
         url = f"https://www.youtube.com/watch?v={video_id}"
+        proxy = get_proxy_url()
         ydl_opts = {
             'skip_download': True,
             'quiet': True,
             'no_warnings': True,
-            'extract_flat': False
+            'extract_flat': False,
+            'socket_timeout': 10
         }
+        if proxy:
+            ydl_opts['proxy'] = proxy
+            logger.info(f"Routing yt-dlp extraction for {video_id} through configured proxy...")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
             if not info:
@@ -285,7 +301,23 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None, client_
         _HEATMAP_CACHE[clean_id] = result
         return result
 
-    # 2. Extract live data using yt-dlp
+    # 2. Pre-seeded high-fidelity data for Veritasium's Antimatter lecture
+    if clean_id == "Y-W-w8yNiKU":
+        extracted = _extract_via_yt_dlp(clean_id)
+        if extracted:
+            _HEATMAP_CACHE[clean_id] = extracted
+            return extracted
+        v_file = os.path.join(os.path.dirname(__file__), "veritasium_heatmap.json")
+        if os.path.exists(v_file):
+            try:
+                with open(v_file, "r", encoding="utf-8") as f:
+                    v_data = json.load(f)
+                    _HEATMAP_CACHE[clean_id] = v_data
+                    return v_data
+            except Exception as e:
+                logger.warning(f"Failed to load seeded veritasium data: {e}")
+
+    # 3. Extract live data using yt-dlp (uses YTDLP_PROXY if set)
     logger.info(f"Extracting live YouTube heatmap for {clean_id} via yt-dlp...")
     extracted = _extract_via_yt_dlp(clean_id)
     if extracted:
@@ -294,7 +326,7 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None, client_
         _HEATMAP_CACHE[clean_id] = extracted
         return extracted
 
-    # 3. Fallback to algorithmic generator scaled to provided duration
+    # 4. Fallback to algorithmic generator scaled to provided duration
     duration = duration_sec or 1800
     points = _generate_synthetic_points(duration, num_points=100)
     peaks = _detect_peaks_from_points(points, duration)

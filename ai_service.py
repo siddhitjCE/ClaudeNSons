@@ -126,12 +126,20 @@ def fetch_transcript_segment(
     start_sec = max(0.0, center_timestamp_sec - half_win)
     end_sec = center_timestamp_sec + half_win
 
+    proxy_url = (os.getenv("YTDLP_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY") or "").strip()
     try:
         from youtube_transcript_api import YouTubeTranscriptApi
         
         snippets = None
         try:
-            api = YouTubeTranscriptApi()
+            if proxy_url:
+                try:
+                    from youtube_transcript_api.proxies import GenericProxyConfig
+                    api = YouTubeTranscriptApi(proxy_config=GenericProxyConfig(http_url=proxy_url, https_url=proxy_url))
+                except Exception:
+                    api = YouTubeTranscriptApi()
+            else:
+                api = YouTubeTranscriptApi()
             snippets = api.fetch(video_id)
         except (AttributeError, TypeError):
             snippets = YouTubeTranscriptApi.get_transcript(video_id)
