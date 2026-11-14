@@ -1070,9 +1070,9 @@ function renderDynamicPeaksUI(heatmap) {
       const intensityPct = Math.round((p.intensity || 0.8) * 100);
 
       const btn = document.createElement("button");
-      btn.className = "peak-jump-btn min-h-[38px] bg-slate-800 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-100 transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-medium";
+      btn.className = "peak-jump-btn min-h-[38px] bg-[#1e2325] hover:bg-[#252b2e] hover:border-[#e59130] border border-[#3d484b] px-3 py-1.5 rounded text-[#f0f2f2] transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-mono text-xs font-bold";
       btn.innerHTML = `
-        <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+        <span class="w-2 h-2 rounded-full bg-[#f59f38] shrink-0"></span>
         <span class="truncate max-w-[190px]">${formatTime(peakTime)} • ${cleanLabel} (${intensityPct}% replayed)</span>
       `;
       btn.addEventListener("click", () => jumpToTime(peakTime, true));
@@ -1315,29 +1315,29 @@ function renderCheatSheetPins() {
   container.innerHTML = "";
   filtered.forEach(pin => {
     const card = document.createElement("div");
-    card.className = "bg-slate-950/80 border border-slate-800 hover:border-slate-700 rounded-xl p-3.5 space-y-2 transition-all";
+    card.className = "factorio-panel border-[#3d484b] hover:border-[#e59130] rounded p-3.5 space-y-2 transition-all font-mono";
 
-    let tagBadge = `<span class="px-2 py-0.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[10px] font-bold">★ Exam Important</span>`;
+    let tagBadge = `<span class="px-2 py-0.5 rounded bg-[#2a1715] border border-[#b23b3b] text-[#ff8f8f] text-[10px] font-bold">★ EXAM IMPORTANT</span>`;
     if (pin.tag === "revisit") {
-      tagBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-bold">? Needs Review</span>`;
+      tagBadge = `<span class="px-2 py-0.5 rounded bg-[#292015] border border-[#e59130] text-[#f59f38] text-[10px] font-bold">? NEEDS REVIEW</span>`;
     } else if (pin.tag === "key_formula") {
-      tagBadge = `<span class="px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-[10px] font-bold">∑ Key Formula</span>`;
+      tagBadge = `<span class="px-2 py-0.5 rounded bg-[#18231c] border border-[#27ae60] text-[#2ecc71] text-[10px] font-bold">∑ KEY FORMULA</span>`;
     }
 
     card.innerHTML = `
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2">
           ${tagBadge}
-          <button class="pin-jump-btn font-mono text-[11px] font-bold text-indigo-300 hover:text-white bg-indigo-950/60 border border-indigo-800/60 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer" data-time="${pin.timestamp_sec}">
-            <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i> ${formatTime(pin.timestamp_sec)}
+          <button class="pin-jump-btn font-mono text-[11px] font-bold text-[#f59f38] hover:text-white bg-[#1e2325] border border-[#e59130]/50 px-2.5 py-1 rounded flex items-center gap-1.5 transition-colors cursor-pointer" data-time="${pin.timestamp_sec}">
+            <i data-lucide="play" class="w-3 h-3 fill-current text-[#f59f38]" aria-hidden="true"></i> ${formatTime(pin.timestamp_sec)}
           </button>
         </div>
-        <button class="delete-pin-btn min-h-[36px] min-w-[36px] text-slate-400 hover:text-rose-400 p-1.5 transition-colors cursor-pointer rounded-lg hover:bg-slate-900" data-id="${pin.id}" title="Delete Saved Note" aria-label="Delete saved note: ${pin.title}">
+        <button class="delete-pin-btn min-h-[36px] min-w-[36px] text-[#8a9699] hover:text-[#ff8f8f] p-1.5 transition-colors cursor-pointer rounded hover:bg-[#252b2e]" data-id="${pin.id}" title="Delete Saved Note" aria-label="Delete saved note: ${pin.title}">
           <i data-lucide="trash-2" class="w-4 h-4" aria-hidden="true"></i>
         </button>
       </div>
-      <h4 class="text-xs font-bold text-slate-100">${pin.title}</h4>
-      ${pin.note ? `<p class="text-xs text-slate-300 leading-relaxed font-serif bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">${pin.note}</p>` : ""}
+      <h4 class="text-xs font-bold text-white">${pin.title}</h4>
+      ${pin.note ? `<p class="text-xs text-[#d6dcde] leading-relaxed factorio-inset p-2.5 rounded border border-[#3d484b]">${pin.note}</p>` : ""}
     `;
 
     card.querySelector(".pin-jump-btn").addEventListener("click", () => {
@@ -2869,23 +2869,23 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   if (isLanding) {
     return `
-      <div class="landing-video-card group bg-slate-900/90 border border-slate-800 hover:border-indigo-500/70 rounded-2xl p-3.5 transition-all flex flex-col justify-between cursor-pointer shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-indigo-500/10" data-video-id="${v.video_id}">
+      <div class="landing-video-card group factorio-panel border-[#3d484b] hover:border-[#e59130] rounded p-3.5 transition-all flex flex-col justify-between cursor-pointer shadow-lg hover:-translate-y-1" data-video-id="${v.video_id}">
         <div class="space-y-2.5">
-          <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-950 border border-slate-800">
+          <div class="relative w-full aspect-video rounded overflow-hidden bg-[#121516] border border-[#3d484b]">
             <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-            <span class="absolute bottom-1.5 right-1.5 bg-slate-950/85 backdrop-blur-md text-[10px] font-mono px-2 py-0.5 rounded-md text-slate-200 font-semibold border border-slate-800">
+            <span class="absolute bottom-1.5 right-1.5 bg-[#121516]/90 backdrop-blur-md text-[10px] font-mono px-2 py-0.5 rounded text-[#f59f38] font-bold border border-[#3d484b]">
               ${durStr}
             </span>
           </div>
-          <h3 class="text-xs font-bold text-slate-100 group-hover:text-indigo-300 transition-colors line-clamp-2 leading-relaxed">
+          <h3 class="text-xs font-bold text-white group-hover:text-[#f59f38] transition-colors line-clamp-2 leading-relaxed font-mono">
             ${v.title}
           </h3>
         </div>
-        <div class="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between">
-          <span class="text-[10px] font-mono text-slate-400">ID: ${v.video_id}</span>
-          <button class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1 shadow-sm transition-all pointer-events-none">
+        <div class="pt-3 mt-3 border-t border-[#3d484b] flex items-center justify-between">
+          <span class="text-[10px] font-mono text-[#8a9699]">ID: ${v.video_id}</span>
+          <button class="factorio-btn-primary px-3 py-1 text-xs font-mono font-bold flex items-center gap-1 shadow-sm transition-all pointer-events-none">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
-            <span>Study Video</span>
+            <span>INITIALIZE</span>
           </button>
         </div>
       </div>
@@ -2894,28 +2894,28 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   // Inside Main Page Modal
   return `
-    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded-xl border ${isActiveVideo ? 'bg-indigo-950/50 border-indigo-500/60 shadow-md shadow-indigo-500/10' : 'bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900'} transition-all cursor-pointer" data-video-id="${v.video_id}">
+    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded border ${isActiveVideo ? 'bg-[#292015] border-[#e59130] shadow-md' : 'bg-[#171a1b] border-[#333b3d] hover:border-[#e59130] hover:bg-[#1e2325]'} transition-all cursor-pointer font-mono" data-video-id="${v.video_id}">
       <div class="flex items-center space-x-3 overflow-hidden">
-        <div class="relative w-28 aspect-video rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-800">
+        <div class="relative w-28 aspect-video rounded overflow-hidden bg-[#121516] shrink-0 border border-[#3d484b]">
           <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-          <span class="absolute bottom-1 right-1 bg-slate-950/90 font-mono text-[9px] px-1.5 py-0.5 rounded text-slate-300 font-semibold">${durStr}</span>
+          <span class="absolute bottom-1 right-1 bg-[#121516]/95 font-mono text-[9px] px-1.5 py-0.5 rounded text-[#f59f38] font-bold">${durStr}</span>
         </div>
         <div class="min-w-0 pr-3">
-          <h4 class="text-xs font-bold ${isActiveVideo ? 'text-indigo-200' : 'text-slate-100 group-hover:text-indigo-300'} truncate transition-colors">
+          <h4 class="text-xs font-bold ${isActiveVideo ? 'text-[#f59f38]' : 'text-white group-hover:text-[#f59f38]'} truncate transition-colors">
             ${v.title}
           </h4>
-          <p class="text-[11px] text-slate-400 font-mono mt-1">ID: ${v.video_id}</p>
+          <p class="text-[11px] text-[#8a9699] font-mono mt-1">ID: ${v.video_id}</p>
         </div>
       </div>
       <div class="shrink-0 pl-2">
         ${isActiveVideo ? `
-          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Active Now
+          <span class="px-2.5 py-1 rounded text-[10px] font-bold font-mono bg-[#18231c] border border-[#27ae60] text-[#2ecc71] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#2ecc71] animate-pulse"></span> ONLINE
           </span>
         ` : `
-          <button class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 shadow-sm">
+          <button class="factorio-btn-primary px-3 py-1.5 text-xs font-mono font-bold rounded transition-colors flex items-center gap-1 shadow-sm">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
-            <span>Load Video</span>
+            <span>ENGAGE</span>
           </button>
         `}
       </div>

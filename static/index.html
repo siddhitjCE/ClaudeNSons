@@ -3,29 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SyncLearn | Interactive YouTube Study Studio</title>
+  <title>SyncLearn // Factorio Edition | Industrial Knowledge Automation</title>
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Factorio Google Fonts (Titillium Web & Share Tech Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Titillium+Web:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN with Factorio Industrial Palette -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Titillium Web"', 'system-ui', 'sans-serif'],
+            mono: ['"Share Tech Mono"', 'Consolas', 'monospace']
+          },
           colors: {
-            brand: {
-              50: '#eef2ff',
-              400: '#818cf8',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
+            // Factorio Orange Palette (Replaces default Indigo for seamless theme transition)
+            indigo: {
+              50: '#fef6ee',
+              100: '#fdebd7',
+              200: '#fbd4af',
+              300: '#f7b57b',
+              400: '#f59f38', // Factorio Orange Bright
+              500: '#e59130', // Factorio Orange Primary
+              600: '#d87515', // Factorio Burnt Copper
+              700: '#b85d0d', // Factorio Industrial Rust
+              800: '#8a4407',
+              900: '#542803',
+              950: '#331602'
             },
-            dark: {
-              950: '#090d16',
-              900: '#0f172a',
-              850: '#141e33',
-              800: '#1e293b',
-              700: '#334155',
+            // Factorio Gritty Slate & Steel Palette
+            slate: {
+              50: '#f4f6f6',
+              100: '#e5e9ea',
+              200: '#ced6d8',
+              300: '#b1bec1',
+              400: '#8f9ea2',
+              500: '#6f8084',
+              600: '#556367',
+              700: '#3d484b', // Factorio Steel Outline
+              800: '#2b3336', // Factorio Panel Steel
+              850: '#23292b', // Factorio Card Panel
+              900: '#1b2022', // Factorio Dark Container
+              950: '#141718'  // Factorio Deep Machinery Floor
+            },
+            factorio: {
+              bg: '#151819',
+              panel: '#24282a',
+              panelLight: '#2c3235',
+              inset: '#17191a',
+              border: '#3d4447',
+              orange: '#e59130',
+              orangeHover: '#f59f38',
+              orangeDark: '#b86514',
+              steel: '#8a9699',
+              copper: '#c87d46',
+              green: '#27ae60',
+              red: '#c0392b',
+              yellow: '#f1c40f'
             }
           }
         }
@@ -41,52 +80,50 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
-  <!-- Custom CSS -->
+  <!-- Custom Factorio CSS -->
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
-<body class="bg-[#090d16] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-[#151819] text-[#e2e4e5] min-h-screen flex flex-col font-sans antialiased selection:bg-[#e59130] selection:text-white">
 
   <!-- 0. FULL-SCREEN LANDING PAGE OVERLAY (FIRST-TIME USER VIEW) -->
-  <div id="landing-page-view" class="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-y-auto p-6 sm:p-10 transition-opacity duration-300">
+  <div id="landing-page-view" class="fixed inset-0 z-50 bg-[#121415] flex flex-col justify-between overflow-y-auto p-6 sm:p-10 transition-opacity duration-300">
     <!-- Top Header -->
-    <header class="max-w-6xl mx-auto w-full flex items-center justify-between pb-4 border-b border-slate-900">
+    <header class="max-w-6xl mx-auto w-full flex items-center justify-between pb-4 border-b border-[#2d3437]">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[1.5px] shadow-lg shadow-indigo-500/20">
-          <div class="w-full h-full bg-[#090d16] rounded-[10px] flex items-center justify-center">
-            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400" aria-hidden="true"></i>
-          </div>
+        <div class="w-10 h-10 rounded-lg bg-[#25292b] border border-[#e59130] shadow-md shadow-[#e59130]/20 flex items-center justify-center">
+          <i data-lucide="cog" class="w-5 h-5 text-[#f59f38] animate-[spin_10s_linear_infinite]" aria-hidden="true"></i>
         </div>
         <div>
-          <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-indigo-100 to-slate-200 bg-clip-text text-transparent">
-            SyncLearn Studio
+          <span class="text-xl font-black tracking-wider text-white">
+            SYNC<span class="text-[#f59f38]">LEARN</span>
           </span>
-          <span class="text-xs text-slate-400 ml-2 font-medium hidden sm:inline">| Interactive YouTube Learning Workspace</span>
+          <span class="text-xs text-[#8f9ea2] font-mono ml-2 hidden sm:inline">[ INDUSTRIAL KNOWLEDGE AUTOMATION ]</span>
         </div>
       </div>
-      <div class="text-xs text-slate-400 font-mono">
-        by Team ClaudeNSons
+      <div class="text-xs text-[#8f9ea2] font-mono border border-[#3d484b] px-3 py-1 rounded bg-[#1b2022] shadow-inner">
+        TEAM CLAUDENSONS // FACTORIO v2.4
       </div>
     </header>
 
     <!-- Centered Hero Section -->
     <main class="max-w-4xl mx-auto w-full py-10 my-auto text-center space-y-6">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold shadow-inner">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400" aria-hidden="true"></i>
-        <span>AI-Powered Interactive Study Studio</span>
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#1e2325] border border-[#e59130]/50 text-[#f59f38] text-xs font-mono font-bold tracking-wider uppercase shadow-inner">
+        <i data-lucide="circuit-board" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i>
+        <span>AUTOMATED COGNITIVE WORKSPACE // ZERO-FRICTION STUDY</span>
       </div>
 
-      <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight max-w-3xl mx-auto">
-        Understand tough YouTube lectures <span class="bg-gradient-to-r from-indigo-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent">without rewinding ten times.</span>
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight max-w-3xl mx-auto uppercase">
+        Master complex technical lectures <span class="text-[#f59f38] underline decoration-[#b85d0d] decoration-4 underline-offset-8">without rewinding ten times.</span>
       </h1>
 
-      <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-        Paste any educational YouTube link below. SyncLearn highlights the trickiest moments, explains them step-by-step using the instructor's exact notation, and tests your understanding.
+      <p class="text-[#b1bec1] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+        Input any YouTube engineering or science lecture. SyncLearn detects crowd replay spikes, reverse-engineers chalkboard derivations in plain English, and tests retention with active recall diagrams.
       </p>
 
       <!-- URL Form -->
       <form id="landing-url-form" class="max-w-2xl mx-auto text-left pt-2 space-y-2">
-        <label for="landing-url-input" class="block text-xs font-semibold text-slate-300 ml-1">
-          Paste a YouTube lecture URL to start
+        <label for="landing-url-input" class="block text-xs font-mono uppercase tracking-wider text-[#ced6d8] ml-1">
+          [ INPUT LECTURE TELEMETRY FEED ]
         </label>
         <div class="flex flex-col sm:flex-row gap-2.5">
           <div class="relative flex-1">
@@ -95,32 +132,33 @@
               type="text" 
               id="landing-url-input" 
               placeholder="https://www.youtube.com/watch?v=..." 
-              class="w-full min-h-[50px] bg-slate-900 border border-slate-700 hover:border-slate-600 focus:border-indigo-500 rounded-xl pl-11 pr-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-mono shadow-inner"
+              class="w-full min-h-[50px] bg-[#17191a] border border-[#3d484b] hover:border-[#556367] focus:border-[#e59130] rounded-lg pl-11 pr-4 text-sm text-[#f0f2f2] placeholder-[#556367] focus:outline-none focus:ring-2 focus:ring-[#e59130]/50 transition-all font-mono shadow-inner"
               autocomplete="off"
             />
           </div>
           <button 
             type="submit" 
             id="landing-submit-btn" 
-            class="min-h-[50px] bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-lg shadow-indigo-600/30 border border-indigo-400/40 transition-all flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
+            class="factorio-btn-primary min-h-[50px] px-7 rounded-lg text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
           >
-            <span>Start Studying This Video &rarr;</span>
+            <i data-lucide="play" class="w-4 h-4 fill-current" aria-hidden="true"></i>
+            <span>INITIALIZE WORKSPACE &rarr;</span>
           </button>
         </div>
-        <p id="landing-url-error" class="hidden text-xs text-rose-400 font-medium pl-1 flex items-center gap-1.5" role="alert">
-          <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0" aria-hidden="true"></i>
-          <span>Please enter a valid YouTube lecture link (e.g., https://www.youtube.com/watch?v=fnF67w6rDpg or https://youtu.be/...).</span>
+        <p id="landing-url-error" class="hidden text-xs text-rose-400 font-mono pl-1 flex items-center gap-1.5" role="alert">
+          <i data-lucide="alert-triangle" class="w-3.5 h-3.5 shrink-0 text-amber-400" aria-hidden="true"></i>
+          <span>ERROR: Please enter a valid YouTube video link (e.g. https://www.youtube.com/watch?v=fnF67w6rDpg).</span>
         </p>
       </form>
 
       <!-- Saved Folders & Videos Explorer on Landing Page -->
       <div class="w-full max-w-4xl mx-auto pt-6 text-left space-y-3.5">
-        <div class="flex items-center justify-between border-b border-slate-900 pb-2.5">
-          <h2 class="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
-            <i data-lucide="folder" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i>
-            <span>Or Study From Your Saved Subject Folders:</span>
+        <div class="flex items-center justify-between border-b border-[#2d3437] pb-2.5">
+          <h2 class="text-xs sm:text-sm font-mono uppercase tracking-wider text-[#ced6d8] flex items-center gap-2">
+            <i data-lucide="folder" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+            <span>[ SAVED FACTORY BLUEPRINTS &amp; LECTURES ]</span>
           </h2>
-          <span class="text-xs text-slate-400 hidden sm:inline">Click any lecture to open directly in studio</span>
+          <span class="text-xs text-[#8f9ea2] font-mono hidden sm:inline">Select any module to load immediate telemetry</span>
         </div>
 
         <!-- Folder Pills on Landing Page -->
@@ -134,49 +172,49 @@
         </div>
       </div>
 
-      <!-- 3-Column Feature Preview Cards -->
+      <!-- 3-Column Factorio Industrial Feature Modules -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 text-left max-w-4xl mx-auto">
-        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition-colors space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-3">
-            <i data-lucide="flame" class="w-4 h-4" aria-hidden="true"></i>
+        <div class="p-5 rounded-lg bg-[#1e2325] border border-[#3d484b] hover:border-[#e59130]/80 transition-all space-y-2 shadow-lg">
+          <div class="w-8 h-8 rounded bg-[#17191a] border border-[#e59130]/50 flex items-center justify-center text-[#f59f38] mb-3">
+            <i data-lucide="activity" class="w-4 h-4" aria-hidden="true"></i>
           </div>
-          <h2 class="text-sm font-bold text-slate-100">1. Spot Tricky Parts Instantly</h2>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Crowd replay peaks highlight where students rewind the most.
+          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">1. Crowd Replay Telemetry</h2>
+          <p class="text-xs text-[#b1bec1] leading-relaxed">
+            Real-time crowd replay peaks pinpoint exactly where students rewind the most.
           </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition-colors space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-3">
-            <i data-lucide="sparkles" class="w-4 h-4" aria-hidden="true"></i>
+        <div class="p-5 rounded-lg bg-[#1e2325] border border-[#3d484b] hover:border-[#e59130]/80 transition-all space-y-2 shadow-lg">
+          <div class="w-8 h-8 rounded bg-[#17191a] border border-[#27ae60]/50 flex items-center justify-center text-[#27ae60] mb-3">
+            <i data-lucide="cpu" class="w-4 h-4" aria-hidden="true"></i>
           </div>
-          <h2 class="text-sm font-bold text-slate-100">2. Context-Locked AI Rescue</h2>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Get step-by-step explanations and formulas using the video's exact terms.
+          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">2. Context-Locked Decoder</h2>
+          <p class="text-xs text-[#b1bec1] leading-relaxed">
+            Step-by-step breakdown locked strictly to the lecturer's notation and chalkboard formulas.
           </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition-colors space-y-2">
-          <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-3">
-            <i data-lucide="target" class="w-4 h-4" aria-hidden="true"></i>
+        <div class="p-5 rounded-lg bg-[#1e2325] border border-[#3d484b] hover:border-[#e59130]/80 transition-all space-y-2 shadow-lg">
+          <div class="w-8 h-8 rounded bg-[#17191a] border border-[#f1c40f]/50 flex items-center justify-center text-[#f1c40f] mb-3">
+            <i data-lucide="layers" class="w-4 h-4" aria-hidden="true"></i>
           </div>
-          <h2 class="text-sm font-bold text-slate-100">3. Active Recall &amp; Cheat-Sheet</h2>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Test yourself with interactive quizzes and bookmark exam-important timestamps.
+          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">3. Active Recall &amp; Blueprint</h2>
+          <p class="text-xs text-[#b1bec1] leading-relaxed">
+            Circuit-diagram quizzes and instant 1-click Markdown examination cheat-sheet export.
           </p>
         </div>
       </div>
     </main>
 
     <!-- Bottom Footer -->
-    <footer class="max-w-6xl mx-auto w-full pt-4 border-t border-slate-900 text-center text-xs text-slate-400 flex items-center justify-between">
-      <span>SyncLearn &copy; 2026 by Team ClaudeNSons</span>
-      <span class="font-mono text-slate-400">Powered by Gemini 3.1 Flash-Lite</span>
+    <footer class="max-w-6xl mx-auto w-full pt-4 border-t border-[#2d3437] text-center text-xs text-[#8f9ea2] font-mono flex items-center justify-between">
+      <span>SYNCLEARN // FACTORIO EDITION &copy; 2026</span>
+      <span>AUTOMATED COGNITION PROTOCOL // GEMINI 3.1</span>
     </footer>
   </div>
 
-  <!-- TOP NAVIGATION BAR -->
-  <header class="sticky top-0 z-40 bg-[#0c1220]/95 backdrop-blur-md border-b border-slate-800 px-4 lg:px-6 py-2.5">
+  <!-- TOP FACTORIO ENGINEERING CONSOLE BAR -->
+  <header class="sticky top-0 z-40 bg-[#1b2022]/98 backdrop-blur-md border-b border-[#3d484b] px-4 lg:px-6 py-2.5 shadow-xl">
     <div class="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-3">
       
       <!-- Brand & Team + Home Button -->
@@ -184,56 +222,54 @@
         <button 
           id="back-to-landing-btn"
           type="button"
-          class="min-h-[36px] px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-colors flex items-center gap-1.5 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+          class="factorio-btn-secondary min-h-[36px] px-3 py-1.5 rounded text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer uppercase tracking-wider"
           title="Return to Home Landing Page"
         >
           <i data-lucide="arrow-left" class="w-3.5 h-3.5" aria-hidden="true"></i>
-          <span>&larr; Home</span>
+          <span>&larr; Blueprints</span>
         </button>
 
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 p-[1.5px] shadow-lg shadow-indigo-500/20">
-          <div class="w-full h-full bg-[#090d16] rounded-[10px] flex items-center justify-center">
-            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400" aria-hidden="true"></i>
-          </div>
+        <div class="w-9 h-9 rounded bg-[#25292b] border border-[#e59130] shadow-sm flex items-center justify-center">
+          <i data-lucide="cog" class="w-4 h-4 text-[#f59f38] animate-[spin_10s_linear_infinite]" aria-hidden="true"></i>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-indigo-100 to-slate-200 bg-clip-text text-transparent">
-              SyncLearn
+            <span class="text-lg font-black tracking-wider text-white">
+              SYNC<span class="text-[#f59f38]">LEARN</span>
             </span>
-            <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-semibold">
-              Study Studio
+            <span class="text-[10px] px-2 py-0.5 rounded bg-[#2b3336] border border-[#e59130]/50 text-[#f59f38] font-mono font-bold uppercase tracking-wider">
+              CONSOLE v2.4
             </span>
           </div>
-          <p class="text-[11px] text-slate-300 flex items-center gap-1">
-            Interactive YouTube Study Studio <span class="text-slate-600" aria-hidden="true">&bull;</span> <span class="text-slate-300 font-mono">by Team ClaudeNSons</span>
+          <p class="text-[11px] text-[#8f9ea2] font-mono flex items-center gap-1">
+            Industrial YouTube Study Studio &bull; Team ClaudeNSons
           </p>
         </div>
       </div>
 
       <!-- Center: Personal Subject Folder Dropdown & Browse Videos Button -->
-      <div class="flex items-center space-x-2 bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-1.5 shadow-inner">
-        <i data-lucide="folder" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i>
-        <label for="folder-select" class="text-xs text-slate-300 font-medium hidden sm:inline">Folder:</label>
+      <div class="flex items-center space-x-2 bg-[#17191a] border border-[#3d484b] rounded-lg px-3 py-1.5 shadow-inner">
+        <i data-lucide="folder" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+        <label for="folder-select" class="text-xs text-[#b1bec1] font-mono hidden sm:inline">[MODULE]:</label>
         <select 
           id="folder-select" 
           aria-label="Select Subject Study Folder"
           style="color-scheme: dark;"
-          class="bg-slate-900 text-xs text-slate-100 font-semibold focus:outline-none cursor-pointer pr-3 focus-visible:ring-1 focus-visible:ring-indigo-400 rounded"
+          class="bg-[#17191a] text-xs text-[#f0f2f2] font-mono font-bold focus:outline-none cursor-pointer pr-3"
         >
           <option value="1">Engineering Chemistry: Polymers</option>
           <option value="2">Intro to Mechatronics</option>
           <option value="3">Digital Electronics</option>
-          <option value="add_new">+ Add To Personal Library</option>
+          <option value="add_new">+ Add To Factory Library</option>
         </select>
         <button 
           id="btn-open-folder-drawer"
           type="button"
-          class="ml-1 text-[11px] font-semibold text-indigo-300 hover:text-white bg-indigo-950/70 hover:bg-indigo-600/90 border border-indigo-700/60 rounded-lg px-2.5 py-1 transition-all flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+          class="factorio-btn-secondary text-[11px] font-mono font-bold px-2.5 py-1 rounded transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
           title="Browse videos in this folder"
         >
-          <i data-lucide="layout-grid" class="w-3.5 h-3.5" aria-hidden="true"></i>
-          <span class="hidden md:inline">Browse</span> Videos
+          <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i>
+          <span>Modules</span>
         </button>
       </div>
 
@@ -241,12 +277,11 @@
       <button 
         id="btn-restart-tour"
         type="button"
-        class="min-h-[36px] px-3 py-1.5 rounded-xl bg-indigo-950/70 hover:bg-indigo-600/30 border border-indigo-700/60 text-xs font-semibold text-indigo-300 hover:text-white transition-all flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+        class="factorio-btn-secondary min-h-[36px] px-3 py-1.5 rounded text-xs font-mono font-bold text-[#f59f38] flex items-center gap-1.5 cursor-pointer whitespace-nowrap uppercase tracking-wider"
         title="Open Interactive Step-by-Step Feature Guide"
       >
-        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-indigo-400" aria-hidden="true"></i>
-        <span class="hidden sm:inline">Interactive Guide</span>
-        <span class="sm:hidden">Guide</span>
+        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i>
+        <span>Guide</span>
       </button>
 
       <!-- Right: Load YouTube URL Input Bar with Visible Label & Error Feedback -->
@@ -258,24 +293,24 @@
             <input 
               type="text" 
               id="youtube-url-input" 
-              placeholder="Paste YouTube link (e.g., https://youtube.com/watch?v=...)" 
+              placeholder="Paste YouTube link (https://youtube.com/watch?v=...)" 
               aria-label="Paste YouTube Lecture Link"
-              class="w-full bg-slate-900 border border-slate-700 rounded-l-xl pl-9 pr-3 py-2 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono"
+              class="w-full bg-[#17191a] border border-[#3d484b] rounded-l-lg pl-9 pr-3 py-2 text-xs text-[#f0f2f2] placeholder-[#6f8084] focus:outline-none focus:border-[#e59130] focus:ring-1 focus:ring-[#e59130] transition-all font-mono"
               value="https://www.youtube.com/watch?v=fnF67w6rDpg"
             />
             <button 
               id="load-video-btn" 
-              class="min-h-[38px] bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs font-semibold px-4 py-2 rounded-r-xl border border-indigo-500 transition-all flex items-center gap-1.5 whitespace-nowrap shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+              class="factorio-btn-primary min-h-[38px] text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-r-lg flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
             >
               <i data-lucide="play" class="w-3.5 h-3.5 fill-current" aria-hidden="true"></i>
-              <span>Load Video</span>
+              <span>LOAD</span>
             </button>
           </div>
         </div>
         <!-- Inline Error Feedback -->
-        <p id="youtube-url-error" class="hidden text-[11px] text-rose-300 mt-1 pl-1 flex items-center gap-1 font-medium" role="alert">
-          <i data-lucide="alert-circle" class="w-3 h-3 text-rose-400 shrink-0" aria-hidden="true"></i>
-          <span>Please paste a valid YouTube video link (for example: https://www.youtube.com/watch?v=fnF67w6rDpg).</span>
+        <p id="youtube-url-error" class="hidden text-[11px] text-rose-300 font-mono mt-1 pl-1 flex items-center gap-1 font-medium" role="alert">
+          <i data-lucide="alert-triangle" class="w-3 h-3 text-amber-400 shrink-0" aria-hidden="true"></i>
+          <span>ERROR: Invalid YouTube URL format.</span>
         </p>
       </div>
 
@@ -289,64 +324,64 @@
     <div class="lg:col-span-7 flex flex-col space-y-3.5">
       
       <!-- Video Player Card -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-xl overflow-hidden backdrop-blur-sm">
+      <div class="factorio-panel rounded-lg p-3.5 shadow-2xl overflow-hidden">
         
         <!-- Lecture Header Banner -->
-        <div class="flex items-center justify-between mb-2.5 pb-2.5 border-b border-slate-800">
+        <div class="flex items-center justify-between mb-2.5 pb-2.5 border-b border-[#3d484b]">
           <div class="flex items-center space-x-2 truncate">
-            <span class="px-2 py-0.5 rounded bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-[10px] font-semibold tracking-wide uppercase">
-              Current Video
+            <span class="px-2 py-0.5 rounded bg-[#1e2325] border border-[#e59130]/50 text-[#f59f38] text-[10px] font-mono font-bold tracking-wider uppercase">
+              ACTIVE TELEMETRY FEED
             </span>
-            <h1 id="video-title" class="text-sm font-semibold text-slate-100 truncate">
-              Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry
+            <h1 id="video-title" class="text-sm font-bold text-white truncate font-mono">
+              Engineering Chemistry: Polymers, Molecular Weight Distribution &amp; Stereochemistry
             </h1>
           </div>
-          <span id="video-duration-badge" class="text-xs font-mono text-slate-300 bg-slate-800 px-2 py-0.5 rounded font-medium">
+          <span id="video-duration-badge" class="text-xs font-mono text-[#f59f38] bg-[#17191a] border border-[#3d484b] px-2 py-0.5 rounded font-bold">
             45:00
           </span>
         </div>
 
-        <!-- Auto-Pause Toast Notification Banner -->
-        <div id="autopause-toast" class="hidden mb-2.5 p-3 rounded-xl bg-gradient-to-r from-amber-950/95 via-indigo-950/95 to-slate-900 border border-amber-500/60 shadow-xl flex items-center justify-between text-xs text-amber-200" role="status" aria-live="polite">
-          <div class="flex items-center gap-2">
-            <i data-lucide="zap" class="w-4 h-4 text-amber-400 shrink-0 animate-bounce" aria-hidden="true"></i>
-            <span id="autopause-toast-msg" class="font-medium">⚡ Tricky spot passed — Auto-pausing for quick practice!</span>
+        <!-- Auto-Pause Toast Notification Banner (Hazard Warning Style) -->
+        <div id="autopause-toast" class="hidden mb-2.5 p-3 rounded-lg factorio-hazard shadow-2xl flex items-center justify-between text-xs text-[#f5b263]" role="status" aria-live="polite">
+          <div class="flex items-center gap-2 font-mono">
+            <i data-lucide="zap" class="w-4 h-4 text-[#f59f38] shrink-0 animate-bounce" aria-hidden="true"></i>
+            <span id="autopause-toast-msg" class="font-bold">⚡ FRICTION ZONE DETECTED — AUTO-PAUSED FOR RECALL TESTING!</span>
           </div>
-          <button id="dismiss-autopause-toast-btn" class="text-amber-400/90 hover:text-white p-1 rounded hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Dismiss Notification">
+          <button id="dismiss-autopause-toast-btn" class="text-[#f59f38] hover:text-white p-1 rounded hover:bg-[#17191a] transition-colors cursor-pointer" aria-label="Dismiss Notification">
             <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
           </button>
         </div>
 
         <!-- Embedded YouTube IFrame Container -->
-        <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-inner border border-slate-800">
+        <div class="relative w-full aspect-video rounded-lg overflow-hidden bg-black shadow-inner border border-[#3d484b]">
           <div id="youtube-player" class="w-full h-full"></div>
-          <!-- Loading placeholder if player initializing (auto-fades, non-blocking) -->
-          <div id="player-loader" class="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center text-slate-300 text-xs gap-2 pointer-events-none transition-opacity duration-300">
-            <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-indigo-400" aria-hidden="true"></i>
-            <span>Connecting to YouTube Studio Player...</span>
+          <!-- Loading placeholder if player initializing -->
+          <div id="player-loader" class="absolute inset-0 bg-[#141718]/95 flex flex-col items-center justify-center text-[#b1bec1] text-xs gap-2 pointer-events-none transition-opacity duration-300 font-mono">
+            <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-[#f59f38]" aria-hidden="true"></i>
+            <span>INITIALIZING FACTORY VIDEO FEED...</span>
           </div>
         </div>
 
         <!-- Player Quick Controls Bar -->
-        <div class="flex items-center justify-between mt-3 px-1 text-xs text-slate-200">
+        <div class="flex items-center justify-between mt-3 px-1 text-xs text-[#e2e4e5]">
           <div class="flex items-center space-x-2">
-            <button id="ctrl-play-pause" class="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" title="Play / Pause (Space)" aria-label="Play or Pause Video">
-              <i data-lucide="play" class="w-4 h-4 fill-current" aria-hidden="true"></i>
+            <button id="ctrl-play-pause" class="factorio-btn-secondary min-h-[40px] min-w-[40px] p-2 rounded flex items-center justify-center cursor-pointer" title="Play / Pause (Space)" aria-label="Play or Pause Video">
+              <i data-lucide="play" class="w-4 h-4 fill-current text-[#f59f38]" aria-hidden="true"></i>
             </button>
-            <button id="ctrl-rewind" class="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" title="Rewind 10 seconds" aria-label="Rewind 10 seconds">
+            <button id="ctrl-rewind" class="factorio-btn-secondary min-h-[40px] min-w-[40px] p-2 rounded flex items-center justify-center cursor-pointer" title="Rewind 10 seconds" aria-label="Rewind 10 seconds">
               <i data-lucide="rotate-ccw" class="w-4 h-4" aria-hidden="true"></i>
             </button>
-            <button id="ctrl-forward" class="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" title="Forward 10 seconds" aria-label="Fast forward 10 seconds">
+            <button id="ctrl-forward" class="factorio-btn-secondary min-h-[40px] min-w-[40px] p-2 rounded flex items-center justify-center cursor-pointer" title="Forward 10 seconds" aria-label="Fast forward 10 seconds">
               <i data-lucide="rotate-cw" class="w-4 h-4" aria-hidden="true"></i>
             </button>
-            <span id="time-display" class="font-mono text-xs text-indigo-300 font-semibold ml-2">
+            <span id="time-display" class="font-mono text-xs text-[#f59f38] font-bold ml-2">
               00:00 / 45:00
             </span>
           </div>
 
-          <div class="flex items-center space-x-2">
-            <label for="playback-speed-select" class="text-xs text-slate-300 font-medium">Speed:</label>
-            <select id="playback-speed-select" aria-label="Playback Speed" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer">
+          <div class="flex items-center space-x-2 font-mono">
+            <label for="playback-speed-select" class="text-xs text-[#b1bec1] font-bold">[SPEED]:</label>
+            <select id="playback-speed-select" aria-label="Playback Speed" class="bg-[#17191a] border border-[#3d484b] rounded px-2 py-1 text-xs text-[#f0f2f2] focus:outline-none cursor-pointer">
               <option value="0.75">0.75x</option>
               <option value="1" selected>1.0x</option>
               <option value="1.25">1.25x</option>
@@ -356,32 +391,32 @@
           </div>
         </div>
 
-        <!-- DUAL-SIGNAL SCRUBBER & HEATMAP TIMELINE (USER-CENTRED NAMING) -->
-        <div class="mt-3.5 pt-3 border-t border-slate-800">
+        <!-- DUAL-SIGNAL SCRUBBER & HEATMAP TIMELINE (FACTORIO CONVEYOR TRACK) -->
+        <div class="mt-3.5 pt-3 border-t border-[#3d484b]">
           
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-1.5 gap-1.5 text-xs">
             <div class="flex items-center space-x-2 flex-wrap">
-              <span class="font-bold text-slate-100 text-xs tracking-wide">
-                Most Replayed Parts of This Video
+              <span class="font-bold text-white text-xs font-mono uppercase tracking-wider">
+                [ CONVEYOR THROUGHPUT // REPLAY HEATMAP ]
               </span>
-              <span id="timeline-peak-count" class="text-[10px] text-amber-300 font-mono bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded font-semibold">
-                ⚡ 3 Tricky Spots Found
+              <span id="timeline-peak-count" class="text-[10px] text-[#f59f38] font-mono bg-[#1e2325] border border-[#e59130]/50 px-2 py-0.5 rounded font-bold">
+                ⚡ 3 FRICTION PEAKS
               </span>
             </div>
-            <!-- Pin Legend (Never rely on color alone) -->
-            <div class="flex items-center space-x-2.5 text-[11px] text-slate-300">
-              <span class="flex items-center gap-1 font-medium"><span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> ★ Exam Important</span>
-              <span class="flex items-center gap-1 font-medium"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> ? Needs Review</span>
-              <span class="flex items-center gap-1 font-medium"><span class="w-2 h-2 rounded-full bg-cyan-500 inline-block"></span> ∑ Key Formula</span>
+            <!-- Pin Legend -->
+            <div class="flex items-center space-x-2.5 text-[11px] font-mono text-[#b1bec1]">
+              <span class="flex items-center gap-1 font-bold"><span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span> ★ Exam Priority</span>
+              <span class="flex items-center gap-1 font-bold"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> ? Review</span>
+              <span class="flex items-center gap-1 font-bold"><span class="w-2 h-2 rounded-full bg-[#f59f38] inline-block"></span> ∑ Formula</span>
             </div>
           </div>
 
-          <!-- Helper caption for first-time students -->
-          <p class="text-[11px] text-slate-300 mb-2">
-            Peaks show where students rewind the most. Click any highlighted peak to get a simpler explanation.
+          <!-- Helper caption -->
+          <p class="text-[11px] text-[#8f9ea2] font-mono mb-2">
+            Peaks show where students rewind the most. Click any glowing peak to jump directly to that derivation.
           </p>
 
-          <!-- Interactive Timeline Scrubber Container -->
+          <!-- Interactive Timeline Scrubber Container (Factorio Inset Track) -->
           <div 
             id="timeline-container" 
             role="slider"
@@ -389,20 +424,20 @@
             aria-valuemin="0"
             aria-valuemax="2700"
             aria-valuenow="0"
-            class="relative w-full h-20 bg-slate-950 rounded-xl border border-slate-800 cursor-pointer overflow-hidden select-none group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            class="relative w-full h-20 rounded-lg border border-[#3d484b] cursor-pointer overflow-hidden select-none group factorio-inset"
           >
             
             <!-- SVG Heatmap Curve Background -->
             <svg id="heatmap-svg" class="w-full h-full absolute inset-0 preserve-3d" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="heat-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#818cf8" stop-opacity="0.85" />
-                  <stop offset="60%" stop-color="#6366f1" stop-opacity="0.3" />
-                  <stop offset="100%" stop-color="#4338ca" stop-opacity="0.05" />
+                  <stop offset="0%" stop-color="#f59f38" stop-opacity="0.9" />
+                  <stop offset="60%" stop-color="#d87515" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#8a4407" stop-opacity="0.05" />
                 </linearGradient>
                 <linearGradient id="peak-zone-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.4" />
-                  <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.05" />
+                  <stop offset="0%" stop-color="#ffb833" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#d87515" stop-opacity="0.05" />
                 </linearGradient>
               </defs>
               <!-- Highlighted Tricky Spots Rects -->
@@ -410,7 +445,7 @@
               <!-- Heatmap Curve Fill -->
               <path id="heatmap-curve-fill" fill="url(#heat-grad)" d="" />
               <!-- Heatmap Curve Stroke Line -->
-              <path id="heatmap-curve-stroke" fill="none" stroke="#a5b4fc" stroke-width="2" d="" />
+              <path id="heatmap-curve-stroke" fill="none" stroke="#f59f38" stroke-width="2.5" d="" />
             </svg>
 
             <!-- Overlay Clickable Personal Study Pins Layer -->
@@ -418,20 +453,20 @@
               <!-- Pin elements injected by JS with pointer-events-auto -->
             </div>
 
-            <!-- Current Playhead Scrubber Bar -->
-            <div id="timeline-playhead" class="absolute top-0 bottom-0 w-0.5 bg-cyan-400 shadow-[0_0_8px_#22d3ee] pointer-events-none transition-all duration-75" style="left: 0%;">
-              <div class="absolute -top-1 -left-1.5 w-3.5 h-3.5 rounded-full bg-cyan-400 border-2 border-slate-900 shadow"></div>
+            <!-- Current Playhead Scrubber Bar (Factorio Orange Needle) -->
+            <div id="timeline-playhead" class="absolute top-0 bottom-0 w-0.5 bg-[#f59f38] shadow-[0_0_10px_#f59f38] pointer-events-none transition-all duration-75" style="left: 0%;">
+              <div class="absolute -top-1 -left-1.5 w-3.5 h-3.5 rounded-sm bg-[#f59f38] border-2 border-[#141718] shadow"></div>
             </div>
 
             <!-- Hover Time & Intensity Tooltip -->
-            <div id="timeline-tooltip" class="absolute -top-9 bg-slate-900 border border-slate-700 text-slate-100 text-[11px] font-mono px-2 py-0.5 rounded shadow-lg pointer-events-none hidden whitespace-nowrap z-30 font-medium">
+            <div id="timeline-tooltip" class="absolute -top-9 bg-[#17191a] border border-[#e59130] text-[#f59f38] text-[11px] font-mono px-2 py-0.5 rounded shadow-xl pointer-events-none hidden whitespace-nowrap z-30 font-bold">
               <span id="tooltip-text">08:30 (94% Replay)</span>
             </div>
 
           </div>
 
-          <!-- Timeline Time Markers (Dynamically populated) -->
-          <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono mt-1 px-1">
+          <!-- Timeline Time Markers -->
+          <div class="flex justify-between items-center text-[10px] text-[#8f9ea2] font-mono mt-1 px-1">
             <span>00:00</span>
             <div id="timeline-peaks-label-container" class="flex items-center gap-3 overflow-hidden">
               <!-- Populated dynamically with active video peaks -->
@@ -441,78 +476,78 @@
 
         </div>
 
-        <!-- ACTION BAR (FITTS'S LAW & VISUAL HIERARCHY: PRIMARY vs SECONDARY) -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mt-3.5 pt-3.5 border-t border-slate-800 items-center">
+        <!-- ACTION BAR (FACTORIO INDUSTRIAL BUTTONS) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mt-3.5 pt-3.5 border-t border-[#3d484b] items-center">
           
           <!-- Primary CTA + Advanced Settings -->
           <div class="md:col-span-7 flex items-center gap-2">
-            <!-- Button 1: Explain This Part Simply (High-Contrast Solid Primary CTA, min-h 48px) -->
+            <!-- Button 1: Explain This Part Simply (Factorio Signature Orange Button) -->
             <button 
               id="btn-confused-rescue" 
-              class="flex-1 min-h-[48px] bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white text-sm font-bold px-4 py-3 rounded-xl shadow-lg shadow-indigo-600/30 border border-indigo-400/40 transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 cursor-pointer"
+              class="factorio-btn-primary flex-1 min-h-[48px] px-4 py-3 rounded-lg text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
               title="Breaks down the current 4-minute section in plain English (Alt + E)"
             >
-              <i data-lucide="sparkles" class="w-5 h-5 text-indigo-200 shrink-0" aria-hidden="true"></i>
-              <span class="truncate">Explain This Part Simply</span>
-              <span class="text-[11px] font-mono text-indigo-200/80 bg-indigo-700/60 px-1.5 py-0.5 rounded hidden sm:inline font-semibold">Alt + E</span>
+              <i data-lucide="wrench" class="w-4 h-4 text-white shrink-0" aria-hidden="true"></i>
+              <span class="truncate">EXPLAIN THIS PART SIMPLY</span>
+              <span class="text-[10px] font-mono text-white/90 bg-[#7a3a05] px-1.5 py-0.5 rounded hidden sm:inline font-bold">Alt + E</span>
             </button>
 
             <!-- Advanced Settings Popover Button -->
             <div class="relative">
               <button 
                 id="btn-advanced-settings" 
-                class="min-h-[48px] w-12 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" 
+                class="factorio-btn-secondary min-h-[48px] w-12 rounded-lg flex items-center justify-center cursor-pointer" 
                 title="Advanced Analysis Settings"
                 aria-label="Advanced Settings"
                 aria-expanded="false"
               >
-                <i data-lucide="sliders-horizontal" class="w-4 h-4" aria-hidden="true"></i>
+                <i data-lucide="sliders-horizontal" class="w-4 h-4 text-[#ced6d8]" aria-hidden="true"></i>
               </button>
 
               <!-- Advanced Settings Popover Dropdown -->
               <div 
                 id="advanced-settings-popover" 
-                class="hidden absolute bottom-full left-0 mb-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl p-3.5 shadow-2xl z-40 space-y-3 backdrop-blur-md"
+                class="hidden absolute bottom-full left-0 mb-2 w-72 bg-[#1b2022] border border-[#3d484b] rounded-lg p-3.5 shadow-2xl z-40 space-y-3 font-mono"
               >
-                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                  <span class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-indigo-400" aria-hidden="true"></i> Advanced Settings
+                <div class="flex items-center justify-between border-b border-[#2d3437] pb-2">
+                  <span class="text-xs font-bold text-white uppercase flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i> [TELEMETRY WINDOW]
                   </span>
-                  <button id="close-advanced-settings-btn" class="text-slate-400 hover:text-white p-0.5 rounded cursor-pointer" aria-label="Close Settings">
+                  <button id="close-advanced-settings-btn" class="text-[#8f9ea2] hover:text-white p-0.5 rounded cursor-pointer" aria-label="Close Settings">
                     <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
                   </button>
                 </div>
 
                 <div>
-                  <label class="block text-[11px] font-semibold text-slate-200 mb-1">Explanation Window</label>
+                  <label class="block text-[11px] font-bold text-[#ced6d8] mb-1">TELEMETRY WINDOW:</label>
                   <div class="grid grid-cols-3 gap-1">
-                    <button class="window-size-btn text-[11px] font-mono py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer" data-window="120">±1 min</button>
-                    <button class="window-size-btn active text-[11px] font-mono py-1.5 rounded-lg border border-indigo-500 bg-indigo-600/30 text-indigo-200 font-bold transition-colors cursor-pointer" data-window="240">±2m (Def)</button>
-                    <button class="window-size-btn text-[11px] font-mono py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer" data-window="480">±4 min</button>
+                    <button class="window-size-btn text-[11px] font-mono py-1.5 rounded border border-[#3d484b] bg-[#17191a] text-[#b1bec1] hover:bg-[#252a2c] transition-colors cursor-pointer" data-window="120">±1 min</button>
+                    <button class="window-size-btn active text-[11px] font-mono py-1.5 rounded border border-[#e59130] bg-[#e59130]/20 text-[#f59f38] font-bold transition-colors cursor-pointer" data-window="240">±2m (Def)</button>
+                    <button class="window-size-btn text-[11px] font-mono py-1.5 rounded border border-[#3d484b] bg-[#17191a] text-[#b1bec1] hover:bg-[#252a2c] transition-colors cursor-pointer" data-window="480">±4 min</button>
                   </div>
                 </div>
 
-                <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
-                  <span class="text-[11px] text-slate-200 leading-tight font-medium">Auto-pause for practice quiz after tricky parts</span>
+                <div class="pt-2 border-t border-[#2d3437] flex items-center justify-between text-xs">
+                  <span class="text-[11px] text-[#ced6d8] leading-tight font-bold">Auto-pause for practice quiz after tricky parts</span>
                   <label class="relative inline-flex items-center cursor-pointer select-none shrink-0 ml-2">
                     <input type="checkbox" id="toggle-autopause" class="sr-only peer" checked />
-                    <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <div class="w-9 h-5 bg-[#17191a] border border-[#3d484b] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#f59f38] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#b85d0d]"></div>
                   </label>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Secondary Button: Save Timestamp Note (Distinct Outline, min-h 48px) -->
+          <!-- Secondary Button: Save Timestamp Note (Factorio Steel Button) -->
           <div class="md:col-span-5">
             <button 
               id="btn-drop-pin" 
-              class="w-full min-h-[48px] px-4 py-3 rounded-xl border border-slate-600 hover:border-slate-400 bg-slate-900/60 hover:bg-slate-800 text-slate-100 text-sm font-semibold transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 cursor-pointer shadow-sm"
+              class="factorio-btn-secondary w-full min-h-[48px] px-4 py-3 rounded-lg text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
               title="Save a note at this video timestamp (Alt + S)"
             >
-              <i data-lucide="bookmark-plus" class="w-4 h-4 text-indigo-400 shrink-0" aria-hidden="true"></i>
-              <span class="truncate">Save Timestamp Note</span>
-              <span class="text-[11px] font-mono text-slate-400 hidden sm:inline ml-1 font-semibold">Alt + S</span>
+              <i data-lucide="bookmark-plus" class="w-4 h-4 text-[#f59f38] shrink-0" aria-hidden="true"></i>
+              <span class="truncate">SAVE TIMESTAMP NOTE</span>
+              <span class="text-[10px] font-mono text-[#8f9ea2] hidden sm:inline ml-1 font-bold">Alt + S</span>
             </button>
           </div>
 
@@ -520,10 +555,10 @@
 
       </div>
 
-      <!-- Quick Peak Jump Navigator Bar (Dynamically populated) -->
-      <div id="quick-peaks-container" class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex items-center gap-2 overflow-x-auto text-xs">
-        <span class="text-slate-300 text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 shrink-0">
-          <i data-lucide="flame" class="w-3.5 h-3.5 text-amber-400" aria-hidden="true"></i> Jump to Tricky Spots:
+      <!-- Quick Peak Jump Navigator Bar (Factorio Logistics Ribbon) -->
+      <div id="quick-peaks-container" class="bg-[#1b2022] border border-[#3d484b] rounded-lg p-3 flex items-center gap-2 overflow-x-auto text-xs font-mono">
+        <span class="text-[#f59f38] text-xs font-bold whitespace-nowrap flex items-center gap-1.5 shrink-0 uppercase tracking-wider">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i> [QUICK PEAKS]:
         </span>
         <div id="quick-peaks-buttons" class="flex items-center gap-2">
           <!-- Dynamically populated buttons -->
@@ -535,22 +570,22 @@
     <!-- RIGHT COLUMN (40% width = 5/12 cols in LG) -->
     <div class="lg:col-span-5 flex flex-col space-y-3.5">
       
-      <!-- Studio Tabs Card Container -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[calc(100vh-100px)] min-h-[620px] backdrop-blur-sm overflow-hidden">
+      <!-- Studio Tabs Card Container (Factorio Heavy Machinery Terminal) -->
+      <div class="factorio-panel rounded-lg shadow-2xl flex flex-col h-[calc(100vh-100px)] min-h-[620px] overflow-hidden">
         
-        <!-- Tab Navigation Headers with ARIA attributes & Plain Language -->
-        <div class="flex items-center border-b border-slate-800 bg-slate-950/80 p-2 gap-1.5" role="tablist" aria-label="Studio Study Views">
+        <!-- Tab Navigation Headers with Factorio Industrial Styling -->
+        <div class="flex items-center border-b border-[#3d484b] bg-[#141718] p-1.5 gap-1" role="tablist" aria-label="Studio Study Views">
           <button 
             id="tab-btn-rescue" 
             role="tab"
             aria-selected="true"
             aria-controls="tab-content-rescue"
             tabindex="0"
-            class="tab-btn active flex-1 min-h-[44px] py-2 px-2.5 text-center rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-indigo-300 bg-slate-800 border border-indigo-500/40 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+            class="tab-btn active flex-1 min-h-[44px] py-2 px-2 text-center rounded text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer font-mono uppercase tracking-wider"
             data-target="tab-content-rescue"
           >
-            <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i>
-            <span class="truncate">1. Simple Explanation</span>
+            <i data-lucide="wrench" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+            <span class="truncate">1. SIMPLE EXPLANATION</span>
           </button>
           
           <button 
@@ -559,11 +594,11 @@
             aria-selected="false"
             aria-controls="tab-content-recall"
             tabindex="-1"
-            class="tab-btn flex-1 min-h-[44px] py-2 px-2.5 text-center rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all flex items-center justify-center gap-1.5 border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+            class="tab-btn flex-1 min-h-[44px] py-2 px-2 text-center rounded text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer font-mono uppercase tracking-wider"
             data-target="tab-content-recall"
           >
-            <i data-lucide="target" class="w-4 h-4 text-cyan-400" aria-hidden="true"></i>
-            <span class="truncate">2. Quick Practice</span>
+            <i data-lucide="cpu" class="w-4 h-4 text-[#27ae60]" aria-hidden="true"></i>
+            <span class="truncate">2. ACTIVE RECALL</span>
           </button>
 
           <button 
@@ -572,12 +607,12 @@
             aria-selected="false"
             aria-controls="tab-content-cheatsheet"
             tabindex="-1"
-            class="tab-btn flex-1 min-h-[44px] py-2 px-2.5 text-center rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all flex items-center justify-center gap-1.5 border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer"
+            class="tab-btn flex-1 min-h-[44px] py-2 px-2 text-center rounded text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer font-mono uppercase tracking-wider"
             data-target="tab-content-cheatsheet"
           >
-            <i data-lucide="bookmark-check" class="w-4 h-4 text-amber-400" aria-hidden="true"></i>
-            <span class="truncate">3. Saved Notes</span>
-            <span id="pins-count-badge" class="ml-0.5 px-2 py-0.5 rounded-full bg-slate-800 text-[10px] text-slate-200 font-mono font-bold">4</span>
+            <i data-lucide="bookmark-check" class="w-4 h-4 text-[#f1c40f]" aria-hidden="true"></i>
+            <span class="truncate">3. SAVED BLUEPRINT</span>
+            <span id="pins-count-badge" class="ml-0.5 px-2 py-0.5 rounded bg-[#17191a] text-[10px] text-[#f59f38] font-mono font-bold border border-[#3d484b]">4</span>
           </button>
         </div>
 
@@ -585,29 +620,29 @@
         <div id="tab-content-rescue" role="tabpanel" aria-labelledby="tab-btn-rescue" class="tab-pane flex-1 p-5 overflow-y-auto space-y-5">
           
           <!-- Step-by-Step Friendly Skeleton Loader -->
-          <div id="rescue-loading-skeleton" class="hidden p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4" aria-live="polite">
-            <div class="flex items-center gap-2.5 text-xs text-indigo-300 font-bold">
-              <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-indigo-400" aria-hidden="true"></i>
-              <span id="skeleton-status-text">Analyzing this section for you...</span>
+          <div id="rescue-loading-skeleton" class="hidden p-5 factorio-panel border border-[#3d484b] space-y-4" aria-live="polite">
+            <div class="flex items-center gap-2.5 text-xs text-[#f59f38] font-mono font-bold">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-[#f59f38]" aria-hidden="true"></i>
+              <span id="skeleton-status-text">DECOMPILING TELEMETRY WINDOW...</span>
             </div>
-            <div class="space-y-2 text-xs text-slate-200">
-              <div id="sk-step-1" class="flex items-center gap-2 text-indigo-300 font-medium">
-                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-                <span>1. Reading video captions around this timestamp...</span>
+            <div class="space-y-2 text-xs font-mono text-[#d6dcde]">
+              <div id="sk-step-1" class="flex items-center gap-2 text-[#f59f38] font-medium">
+                <span class="w-2 h-2 rounded-full bg-[#f59f38] animate-ping"></span>
+                <span>1. Parsing video captions & formulas around timestamp...</span>
               </div>
-              <div id="sk-step-2" class="flex items-center gap-2 text-slate-400">
-                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
-                <span>2. Writing a simpler explanation in plain English...</span>
+              <div id="sk-step-2" class="flex items-center gap-2 text-[#8a9699]">
+                <span class="w-2 h-2 rounded-full bg-[#3d484b]"></span>
+                <span>2. Synthesizing plain-English engineering logic...</span>
               </div>
-              <div id="sk-step-3" class="flex items-center gap-2 text-slate-400">
-                <span class="w-2 h-2 rounded-full bg-slate-600"></span>
-                <span>3. Preparing quick practice questions and key takeaways...</span>
+              <div id="sk-step-3" class="flex items-center gap-2 text-[#8a9699]">
+                <span class="w-2 h-2 rounded-full bg-[#3d484b]"></span>
+                <span>3. Constructing active recall schematic & checkpoints...</span>
               </div>
             </div>
             <div class="space-y-2 pt-2">
-              <div class="h-4 bg-slate-800 rounded animate-pulse w-3/4"></div>
-              <div class="h-4 bg-slate-800/80 rounded animate-pulse w-full"></div>
-              <div class="h-4 bg-slate-800/60 rounded animate-pulse w-5/6"></div>
+              <div class="h-3.5 bg-[#121516] border border-[#2b3336] rounded animate-pulse w-3/4"></div>
+              <div class="h-3.5 bg-[#121516] border border-[#2b3336] rounded animate-pulse w-full"></div>
+              <div class="h-3.5 bg-[#121516] border border-[#2b3336] rounded animate-pulse w-5/6"></div>
             </div>
           </div>
 
@@ -615,49 +650,49 @@
           <div id="rescue-real-content" class="space-y-5" aria-live="polite">
 
             <!-- Active Focus Window & Auto-Save Pin Bar -->
-            <div class="bg-gradient-to-r from-indigo-950/60 via-slate-900 to-indigo-950/40 border border-indigo-800/50 rounded-2xl p-4 shadow-sm">
+            <div class="factorio-panel p-4 border-[#e59130]/60 shadow-lg">
               <div class="flex items-center justify-between gap-2">
-                <span class="text-xs font-bold text-indigo-300 uppercase tracking-wide flex items-center gap-1.5">
-                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400" aria-hidden="true"></i>
-                  Explaining <span id="rescue-window-time" class="font-mono text-white ml-1">08:00 – 12:00</span>
+                <span class="text-xs font-bold text-[#f59f38] uppercase font-mono tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="cog" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i>
+                  ACTIVE WINDOW: <span id="rescue-window-time" class="font-mono text-white ml-1">08:00 – 12:00</span>
                 </span>
                 <button 
                   id="btn-autosave-summary-pin" 
-                  class="bg-indigo-600/30 hover:bg-indigo-600 border border-indigo-500/50 text-indigo-200 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 cursor-pointer" 
-                  title="Auto-save this explanation as a note"
+                  class="factorio-btn-secondary px-3 py-1.5 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer" 
+                  title="Auto-save this explanation as a blueprint note"
                 >
-                  <i data-lucide="bookmark-plus" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                  <span>Save as Note</span>
+                  <i data-lucide="bookmark-plus" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i>
+                  <span>SAVE AS NOTE</span>
                 </button>
               </div>
               <div class="flex items-center gap-2 mt-2 flex-wrap">
-                <span id="rescue-classification-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/15 border border-rose-500/30 text-rose-300">
-                  ★ Potentially Difficult Math
+                <span id="rescue-classification-badge" class="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-[#2a1715] border border-[#b23b3b] text-[#ff8f8f]">
+                  ★ CRITICAL DERIVATION
                 </span>
-                <h2 id="rescue-title" class="text-xs font-bold text-white truncate max-w-sm">
+                <h2 id="rescue-title" class="text-xs font-bold text-white font-mono truncate max-w-sm">
                   Degree of Polymerization & Molecular Weight Distribution (PDI)
                 </h2>
               </div>
             </div>
 
             <!-- CORE CARD 1 (OPEN BY DEFAULT): Why Students Rewatch This Part + Key Takeaways -->
-            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+            <div class="factorio-panel p-4 space-y-3.5 shadow-md">
               <div class="space-y-1.5">
                 <div class="flex items-center justify-between">
-                  <h3 class="text-xs font-bold text-amber-300 flex items-center gap-2">
-                    <i data-lucide="help-circle" class="w-4 h-4 text-amber-400" aria-hidden="true"></i> Why Students Rewatch This Part
+                  <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-2 font-mono uppercase tracking-wider">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-[#e59130]" aria-hidden="true"></i> WHY STUDENTS REPLAY THIS SEGMENT
                   </h3>
-                  <span class="text-[10px] font-mono text-amber-300/80 font-semibold bg-amber-500/10 px-2 py-0.5 rounded">Core Insight</span>
+                  <span class="text-[10px] font-mono text-[#f59f38] font-bold bg-[#1e2325] border border-[#e59130]/40 px-2 py-0.5 rounded">FRICTION INSIGHT</span>
                 </div>
-                <p id="rescue-why-struggle" class="text-xs text-slate-200 leading-relaxed font-serif">
+                <p id="rescue-why-struggle" class="text-xs text-[#d6dcde] leading-relaxed">
                   Students struggle with discrete summations and fail to recognize why weight-average (Mw) squares individual chain masses while number-average (Mn) weights them linearly.
                 </p>
               </div>
 
               <!-- Key Takeaways (Concepts & Pills) -->
-              <div class="pt-3 border-t border-slate-800/80 space-y-2">
-                <h4 class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                  <i data-lucide="check-square" class="w-3.5 h-3.5 text-cyan-400" aria-hidden="true"></i> Key Takeaways
+              <div class="pt-3 border-t border-[#333b3d] space-y-2">
+                <h4 class="text-xs font-bold text-[#f0f2f2] flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                  <i data-lucide="check-square" class="w-3.5 h-3.5 text-[#27ae60]" aria-hidden="true"></i> KEY TAKEAWAYS & FORMULA HOOKS
                 </h4>
                 <div id="rescue-concept-pills" class="flex flex-wrap gap-1.5">
                   <!-- Dynamically populated pills -->
@@ -666,44 +701,44 @@
             </div>
 
             <!-- CORE CARD 2 (OPEN BY DEFAULT): Step-by-Step Breakdown (Using the Video's Exact Terms) -->
-            <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2.5 shadow-sm">
+            <div class="factorio-panel p-4 space-y-2.5 shadow-md">
               <div class="flex items-center justify-between">
-                <h3 class="text-xs font-bold text-slate-100 flex items-center gap-2">
-                  <i data-lucide="book-open" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Step-by-Step Breakdown (Using the Video's Exact Terms)
+                <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-2 font-mono uppercase tracking-wider">
+                  <i data-lucide="cpu" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> STEP-BY-STEP LOGICAL BREAKDOWN
                 </h3>
-                <span class="text-[10px] text-indigo-300 font-mono font-semibold bg-indigo-500/10 px-2 py-0.5 rounded">Formulas Verified</span>
+                <span class="text-[10px] text-[#2ecc71] font-mono font-bold bg-[#18231c] border border-[#27ae60]/40 px-2 py-0.5 rounded">FORMULAS VERIFIED</span>
               </div>
-              <div id="rescue-explanation" class="text-xs text-slate-200 leading-relaxed space-y-2.5 font-serif text-[13px]">
+              <div id="rescue-explanation" class="text-xs text-[#d6dcde] leading-relaxed space-y-2.5 font-sans">
                 <!-- KaTeX rendered equations & step-by-step intuition -->
               </div>
             </div>
 
             <!-- EXPANDABLE SECTION A (PROGRESSIVE DISCLOSURE): Compare Terms & Watch Alternative Videos -->
-            <details class="group bg-slate-950/70 border border-slate-800 rounded-2xl overflow-hidden transition-all">
-              <summary class="p-4 text-xs font-bold text-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-900/80 select-none transition-colors">
+            <details class="group factorio-panel overflow-hidden transition-all">
+              <summary class="p-4 text-xs font-bold text-[#f0f2f2] font-mono uppercase tracking-wider flex items-center justify-between cursor-pointer hover:bg-[#202527] select-none transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <i data-lucide="git-compare" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i>
-                  <span>Compare Terms & Watch Alternative Videos</span>
+                  <i data-lucide="git-compare" class="w-4 h-4 text-[#27ae60]" aria-hidden="true"></i>
+                  <span>TERMINOLOGY CROSS-REFERENCE & ALTERNATIVE SOURCES</span>
                 </div>
-                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180" aria-hidden="true"></i>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-[#8a9699] transition-transform group-open:rotate-180" aria-hidden="true"></i>
               </summary>
-              <div class="p-4 pt-2 border-t border-slate-800/80 space-y-4">
+              <div class="p-4 pt-2 border-t border-[#333b3d] space-y-4">
                 
                 <!-- Term Comparison Table -->
                 <div class="space-y-2">
-                  <h4 class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                    <i data-lucide="columns-2" class="w-3.5 h-3.5 text-emerald-400" aria-hidden="true"></i> Term Comparison (Lecture vs. Other Videos)
+                  <h4 class="text-xs font-semibold text-[#f0f2f2] font-mono uppercase flex items-center gap-1.5">
+                    <i data-lucide="columns-2" class="w-3.5 h-3.5 text-[#27ae60]" aria-hidden="true"></i> NOMENCLATURE MATRIX (LECTURE VS. STANDARD TEXTBOOKS)
                   </h4>
                   <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border border-slate-800 rounded-lg overflow-hidden">
-                      <thead class="bg-slate-900 text-slate-300 text-[10px] uppercase font-mono">
+                    <table class="w-full text-left text-xs border border-[#333b3d] rounded factorio-inset overflow-hidden">
+                      <thead class="bg-[#17191a] text-[#f59f38] text-[10px] uppercase font-mono">
                         <tr>
-                          <th class="p-2 border-b border-slate-800 font-bold">Lecture Term / Symbol</th>
-                          <th class="p-2 border-b border-slate-800 font-bold">What Other Videos Call It</th>
-                          <th class="p-2 border-b border-slate-800 font-bold">How They Connect</th>
+                          <th class="p-2 border-b border-[#333b3d] font-bold">Lecture Term / Symbol</th>
+                          <th class="p-2 border-b border-[#333b3d] font-bold">Standard Literature Term</th>
+                          <th class="p-2 border-b border-[#333b3d] font-bold">Functional Equivalence</th>
                         </tr>
                       </thead>
-                      <tbody id="rescue-terminology-bridge-body" class="divide-y divide-slate-800/80 text-slate-200">
+                      <tbody id="rescue-terminology-bridge-body" class="divide-y divide-[#2a3134] text-[#d6dcde] font-mono text-[11px]">
                         <!-- Populated dynamically by JS -->
                       </tbody>
                     </table>
@@ -711,9 +746,9 @@
                 </div>
 
                 <!-- Alternative Video Cards -->
-                <div class="space-y-2 pt-2 border-t border-slate-800/70">
-                  <h4 class="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                    <i data-lucide="film" class="w-3.5 h-3.5 text-rose-400" aria-hidden="true"></i> Other Videos on This Topic (With Term Comparison)
+                <div class="space-y-2 pt-2 border-t border-[#333b3d]">
+                  <h4 class="text-xs font-semibold text-[#f0f2f2] font-mono uppercase flex items-center gap-1.5">
+                    <i data-lucide="film" class="w-3.5 h-3.5 text-[#e59130]" aria-hidden="true"></i> ALTERNATIVE LECTURE FEEDS ON THIS TOPIC
                   </h4>
                   <div id="rescue-alt-videos" class="space-y-2">
                     <!-- Injected by JS -->
@@ -724,36 +759,36 @@
             </details>
 
             <!-- EXPANDABLE SECTION B (PROGRESSIVE DISCLOSURE): Ask a Specific Question About This Part -->
-            <details class="group bg-slate-950/70 border border-slate-800 rounded-2xl overflow-hidden transition-all">
-              <summary class="p-4 text-xs font-bold text-slate-200 flex items-center justify-between cursor-pointer hover:bg-slate-900/80 select-none transition-colors">
+            <details class="group factorio-panel overflow-hidden transition-all">
+              <summary class="p-4 text-xs font-bold text-[#f0f2f2] font-mono uppercase tracking-wider flex items-center justify-between cursor-pointer hover:bg-[#202527] select-none transition-colors">
                 <div class="flex items-center gap-2.5">
-                  <i data-lucide="message-square" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i>
-                  <span>Ask a Specific Question About This Part</span>
+                  <i data-lucide="terminal" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+                  <span>QUERY AI STUDY TERMINAL ABOUT THIS MOMENT</span>
                 </div>
-                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform group-open:rotate-180" aria-hidden="true"></i>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-[#8a9699] transition-transform group-open:rotate-180" aria-hidden="true"></i>
               </summary>
-              <div class="p-4 pt-2 border-t border-slate-800/80 space-y-3">
-                <label for="ai-question-input" class="text-xs font-medium text-slate-300 block">
-                  Have a specific doubt about this moment in the video?
+              <div class="p-4 pt-2 border-t border-[#333b3d] space-y-3">
+                <label for="ai-question-input" class="text-xs font-mono text-[#b1bec1] block">
+                  SUBMIT SPECIFIC DERIVATION OR CONCEPT DOUBT:
                 </label>
                 <div class="flex items-center gap-2">
                   <input 
                     type="text" 
                     id="ai-question-input" 
                     placeholder="e.g., Why does the virtual ground not draw current?" 
-                    class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 min-h-[44px]"
+                    class="flex-1 bg-[#121516] border border-[#3d484b] rounded px-3 py-2 text-xs font-mono text-white placeholder-[#687679] focus:outline-none focus:border-[#e59130] min-h-[44px]"
                   />
                   <button 
                     id="ai-ask-btn" 
-                    class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-4 py-2 rounded-xl font-bold transition-colors cursor-pointer"
+                    class="factorio-btn-primary min-h-[44px] px-5 py-2 text-xs font-mono font-bold cursor-pointer"
                   >
-                    Ask
+                    TRANSMIT
                   </button>
                 </div>
                 <!-- AI Response Box -->
-                <div id="ai-response-box" class="hidden text-xs text-slate-200 bg-slate-900 border border-slate-800 rounded-xl p-3 leading-relaxed" aria-live="polite">
-                  <div class="flex items-center gap-1.5 text-indigo-300 font-bold mb-1.5">
-                    <i data-lucide="bot" class="w-4 h-4" aria-hidden="true"></i> Study Assistant:
+                <div id="ai-response-box" class="hidden text-xs text-[#d6dcde] factorio-inset p-3.5 rounded border border-[#3d484b] leading-relaxed font-mono" aria-live="polite">
+                  <div class="flex items-center gap-1.5 text-[#f59f38] font-bold mb-1.5 uppercase">
+                    <i data-lucide="bot" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> COGNITIVE CO-PROCESSOR RESPONSE:
                   </div>
                   <div id="ai-response-content"></div>
                 </div>
@@ -768,27 +803,27 @@
         <div id="tab-content-recall" role="tabpanel" aria-labelledby="tab-btn-recall" class="tab-pane hidden flex-1 p-5 overflow-y-auto space-y-5">
           
           <!-- Recall Header -->
-          <div class="bg-gradient-to-r from-cyan-950/50 via-slate-900 to-indigo-950/30 border border-cyan-800/40 rounded-2xl p-4 shadow-sm">
+          <div class="factorio-panel p-4 border-[#3d484b] shadow-md">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-cyan-300 uppercase tracking-wide flex items-center gap-1.5">
-                <i data-lucide="target" class="w-3.5 h-3.5 text-cyan-400" aria-hidden="true"></i> Quick Practice: Check Your Understanding
+              <span class="text-xs font-bold text-[#f59f38] uppercase font-mono tracking-wider flex items-center gap-1.5">
+                <i data-lucide="target" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i> DIAGNOSTIC DRILL: VERIFY UNDERSTANDING
               </span>
-              <span id="recall-score-badge" class="text-xs font-mono font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-0.5 rounded">
-                0 / 5 Unlocked
+              <span id="recall-score-badge" class="text-xs font-mono font-bold text-[#2ecc71] bg-[#18231c] border border-[#27ae60] px-2.5 py-0.5 rounded">
+                0 / 5 UNLOCKED
               </span>
             </div>
-            <h2 id="diagram-title" class="text-sm font-bold text-white mt-1.5">
+            <h2 id="diagram-title" class="text-sm font-bold text-white font-mono mt-1.5">
               Practice: Polydispersity Index & Molecular Weight Formulas
             </h2>
           </div>
 
           <!-- Fill-in-the-Blank Visual Concept Flow Diagram -->
-          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+          <div class="factorio-panel p-4 space-y-3.5 shadow-md">
             <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                <i data-lucide="git-commit" class="w-4 h-4 text-cyan-400" aria-hidden="true"></i> Visual Concept Flow (Click <span class="text-cyan-300 font-mono">[ ? Click to Recall ]</span> to Test)
+              <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                <i data-lucide="circuit-board" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> LOGIC CIRCUIT FLOW (CLICK <span class="text-[#f59f38] font-mono">[ ? RECALL SOCKET ]</span> TO TEST)
               </h3>
-              <span class="text-[11px] text-slate-300">Fill in the missing step</span>
+              <span class="text-[11px] font-mono text-[#8a9699]">Complete the schematic</span>
             </div>
 
             <!-- Interactive Flow Nodes Container -->
@@ -798,13 +833,13 @@
           </div>
 
           <!-- Checkpoint Multiple Choice Questions (MCQs) -->
-          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+          <div class="factorio-panel p-4 space-y-3.5 shadow-md">
             <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                <i data-lucide="help-circle" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Quick Checkpoint Questions
+              <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                <i data-lucide="help-circle" class="w-4 h-4 text-[#e59130]" aria-hidden="true"></i> QUALITY CONTROL CHECKPOINTS (MCQS)
               </h3>
-              <button id="reset-quiz-btn" class="text-xs text-slate-300 hover:text-white underline cursor-pointer font-medium">
-                Reset Quiz
+              <button id="reset-quiz-btn" class="text-xs text-[#8a9699] hover:text-[#f59f38] underline font-mono cursor-pointer">
+                RESET DRILL
               </button>
             </div>
 
@@ -820,47 +855,47 @@
         <div id="tab-content-cheatsheet" role="tabpanel" aria-labelledby="tab-btn-cheatsheet" class="tab-pane hidden flex-1 p-5 overflow-y-auto space-y-5">
           
           <!-- Cheat Sheet Header -->
-          <div class="bg-gradient-to-r from-amber-950/50 via-slate-900 to-indigo-950/30 border border-amber-800/40 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+          <div class="factorio-panel p-4 border-[#e59130]/60 flex items-center justify-between shadow-lg">
             <div>
               <div class="flex items-center gap-2">
-                <h2 class="text-sm font-bold text-white flex items-center gap-1.5">
-                  <i data-lucide="bookmark-check" class="w-4 h-4 text-amber-400" aria-hidden="true"></i>
-                  Saved Notes & Study Guide
+                <h2 class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-1.5">
+                  <i data-lucide="bookmark-check" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+                  SESSION BLUEPRINTS & STUDY DOSSIER
                 </h2>
-                <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-bold">1-Page Study Guide</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-[#1e2325] border border-[#e59130]/40 text-[#f59f38] font-mono font-bold">1-PAGE REVISION SHEET</span>
               </div>
-              <p class="text-[11px] text-slate-300 mt-1">
-                Saved formulas, term comparisons & questions to review before exams
+              <p class="text-[11px] text-[#8a9699] font-mono mt-1">
+                Exportable formula sheets, nomenclature cross-references & flagged checkpoints
               </p>
             </div>
             <button 
               id="export-cheatsheet-btn" 
-              class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-xs text-white font-bold px-3.5 py-2 rounded-xl border border-indigo-500 flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              class="factorio-btn-primary min-h-[44px] px-4 py-2 text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer"
             >
-              <i data-lucide="file-down" class="w-4 h-4" aria-hidden="true"></i>
-              <span>Export Saved Notes</span>
+              <i data-lucide="file-down" class="w-4 h-4 text-white" aria-hidden="true"></i>
+              <span>EXPORT DOSSIER</span>
             </button>
           </div>
 
           <!-- Section 1: Study Pins & Formulas -->
-          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5 shadow-sm">
+          <div class="factorio-panel p-4 space-y-3.5 shadow-md">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                <i data-lucide="bookmark" class="w-4 h-4 text-rose-400" aria-hidden="true"></i> Saved Timestamp Notes & Formulas
+              <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                <i data-lucide="bookmark" class="w-4 h-4 text-[#e59130]" aria-hidden="true"></i> TIMESTAMP TELEMETRY PINS & FORMULAS
               </h3>
               <!-- Filter Pills (Non-Color Relying) -->
-              <div class="flex items-center gap-1.5 text-xs">
-                <button class="pin-filter-btn active bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer" data-filter="all">
-                  All (<span id="filter-cnt-all">4</span>)
+              <div class="flex items-center gap-1.5 text-xs font-mono">
+                <button class="pin-filter-btn active bg-[#e59130] text-black font-bold px-2.5 py-1 rounded transition-colors cursor-pointer border border-[#f59f38]" data-filter="all">
+                  ALL (<span id="filter-cnt-all">4</span>)
                 </button>
-                <button class="pin-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer" data-filter="exam_priority">
-                  ★ Exam (<span id="filter-cnt-exam">1</span>)
+                <button class="pin-filter-btn factorio-btn-secondary px-2.5 py-1 rounded font-medium transition-colors cursor-pointer text-[#d6dcde]" data-filter="exam_priority">
+                  ★ EXAM (<span id="filter-cnt-exam">1</span>)
                 </button>
-                <button class="pin-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer" data-filter="revisit">
-                  ? Review (<span id="filter-cnt-revisit">1</span>)
+                <button class="pin-filter-btn factorio-btn-secondary px-2.5 py-1 rounded font-medium transition-colors cursor-pointer text-[#d6dcde]" data-filter="revisit">
+                  ? REVIEW (<span id="filter-cnt-revisit">1</span>)
                 </button>
-                <button class="pin-filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer" data-filter="key_formula">
-                  ∑ Formula (<span id="filter-cnt-formula">2</span>)
+                <button class="pin-filter-btn factorio-btn-secondary px-2.5 py-1 rounded font-medium transition-colors cursor-pointer text-[#d6dcde]" data-filter="key_formula">
+                  ∑ FORMULA (<span id="filter-cnt-formula">2</span>)
                 </button>
               </div>
             </div>
@@ -872,23 +907,23 @@
           </div>
 
           <!-- Section 2: Collected Session Terminology Bridge -->
-          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-sm">
+          <div class="factorio-panel p-4 space-y-3 shadow-md">
             <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                <i data-lucide="git-compare" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i> Session Term Comparison Matrix
+              <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                <i data-lucide="git-compare" class="w-4 h-4 text-[#27ae60]" aria-hidden="true"></i> SESSION NOMENCLATURE MATRIX
               </h3>
-              <span id="bridges-count-badge" class="text-[10px] font-mono text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">3 Mappings</span>
+              <span id="bridges-count-badge" class="text-[10px] font-mono text-[#2ecc71] bg-[#18231c] border border-[#27ae60] px-2 py-0.5 rounded font-bold">3 Mappings</span>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border border-slate-800 rounded-xl overflow-hidden">
-                <thead class="bg-slate-900 text-slate-300 text-[10px] uppercase font-mono">
+              <table class="w-full text-left text-xs border border-[#333b3d] rounded factorio-inset overflow-hidden">
+                <thead class="bg-[#17191a] text-[#f59f38] text-[10px] uppercase font-mono">
                   <tr>
-                    <th class="p-2.5 border-b border-slate-800 font-bold">Lecture Term / Symbol</th>
-                    <th class="p-2.5 border-b border-slate-800 font-bold">What Other Videos Call It</th>
-                    <th class="p-2.5 border-b border-slate-800 font-bold">How They Connect</th>
+                    <th class="p-2.5 border-b border-[#333b3d] font-bold">Lecture Term / Symbol</th>
+                    <th class="p-2.5 border-b border-[#333b3d] font-bold">Standard Literature Term</th>
+                    <th class="p-2.5 border-b border-[#333b3d] font-bold">Functional Equivalence</th>
                   </tr>
                 </thead>
-                <tbody id="cheatsheet-bridge-body" class="divide-y divide-slate-800/80 text-slate-200">
+                <tbody id="cheatsheet-bridge-body" class="divide-y divide-[#2a3134] text-[#d6dcde] font-mono text-[11px]">
                   <!-- Populated dynamically -->
                 </tbody>
               </table>
@@ -896,12 +931,12 @@
           </div>
 
           <!-- Section 3: Targeted Revision: Missed Checkpoints -->
-          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-sm">
+          <div class="factorio-panel p-4 space-y-3 shadow-md">
             <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400" aria-hidden="true"></i> Targeted Revision: Questions to Review
+              <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                <i data-lucide="alert-circle" class="w-4 h-4 text-[#e59130]" aria-hidden="true"></i> FLAGGED FOR DEFECT REVISION (MISSED MCQS)
               </h3>
-              <span id="missed-count-badge" class="text-[10px] font-mono text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded font-bold">0 To Review</span>
+              <span id="missed-count-badge" class="text-[10px] font-mono text-[#ff8f8f] bg-[#2a1715] border border-[#b23b3b] px-2 py-0.5 rounded font-bold">0 To Review</span>
             </div>
             <div id="cheatsheet-missed-mcqs-container" class="space-y-2.5" aria-live="polite">
               <!-- Missed MCQs injected here, or empty celebratory card -->
@@ -917,122 +952,122 @@
   </main>
 
   <!-- MODAL 1: DROP PERSONAL PIN MODAL -->
-  <div id="pin-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-5 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h2 id="pin-modal-title" class="text-sm font-bold text-white flex items-center gap-2">
-          <i data-lucide="bookmark-plus" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Save Timestamp Note
+  <div id="pin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title">
+    <div class="factorio-panel border-[#4c585c] rounded w-full max-w-md p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[#3d484b] pb-3">
+        <h2 id="pin-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="bookmark-plus" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> SAVE TELEMETRY PIN
         </h2>
-        <button id="close-pin-modal-btn" class="text-slate-400 hover:text-white p-1 rounded cursor-pointer" aria-label="Close Modal">
+        <button id="close-pin-modal-btn" class="text-[#8a9699] hover:text-white p-1 rounded cursor-pointer" aria-label="Close Modal">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
         </button>
       </div>
 
-      <div class="space-y-3.5 text-xs">
+      <div class="space-y-3.5 text-xs font-mono">
         <div>
-          <label for="pin-time-input" class="block text-slate-200 font-semibold mb-1">Timestamp</label>
+          <label for="pin-time-input" class="block text-[#d6dcde] font-semibold mb-1 uppercase text-[11px]">Timestamp Index</label>
           <div class="flex items-center gap-2">
-            <input type="text" id="pin-time-input" readonly class="w-24 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 font-mono text-indigo-300 font-bold" />
-            <span class="text-slate-300 text-[11px]">(Locked to current video playback time)</span>
+            <input type="text" id="pin-time-input" readonly class="w-24 bg-[#121516] border border-[#3d484b] rounded px-3 py-2 font-mono text-[#f59f38] font-bold" />
+            <span class="text-[#8a9699] text-[11px]">(Locked to active playhead position)</span>
           </div>
         </div>
 
         <div>
-          <span class="block text-slate-200 font-semibold mb-1.5">Note Category</span>
+          <span class="block text-[#d6dcde] font-semibold mb-1.5 uppercase text-[11px]">Pin Categorization</span>
           <div class="grid grid-cols-3 gap-2">
-            <label class="cursor-pointer border border-slate-700 rounded-xl p-2.5 text-center hover:bg-slate-800 has-[:checked]:border-rose-500 has-[:checked]:bg-rose-950/40 transition-all">
+            <label class="cursor-pointer border border-[#3d484b] bg-[#1a1f21] rounded p-2.5 text-center hover:bg-[#252b2e] has-[:checked]:border-[#ff8f8f] has-[:checked]:bg-[#2a1715] transition-all">
               <input type="radio" name="pin-tag" value="exam_priority" checked class="hidden" />
-              <div class="text-rose-300 font-bold text-xs">★ Exam Important</div>
+              <div class="text-[#ff8f8f] font-bold text-xs">★ EXAM</div>
             </label>
-            <label class="cursor-pointer border border-slate-700 rounded-xl p-2.5 text-center hover:bg-slate-800 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-950/40 transition-all">
+            <label class="cursor-pointer border border-[#3d484b] bg-[#1a1f21] rounded p-2.5 text-center hover:bg-[#252b2e] has-[:checked]:border-[#f59f38] has-[:checked]:bg-[#292015] transition-all">
               <input type="radio" name="pin-tag" value="revisit" class="hidden" />
-              <div class="text-amber-300 font-bold text-xs">? Needs Review</div>
+              <div class="text-[#f59f38] font-bold text-xs">? REVIEW</div>
             </label>
-            <label class="cursor-pointer border border-slate-700 rounded-xl p-2.5 text-center hover:bg-slate-800 has-[:checked]:border-cyan-500 has-[:checked]:bg-cyan-950/40 transition-all">
+            <label class="cursor-pointer border border-[#3d484b] bg-[#1a1f21] rounded p-2.5 text-center hover:bg-[#252b2e] has-[:checked]:border-[#27ae60] has-[:checked]:bg-[#18231c] transition-all">
               <input type="radio" name="pin-tag" value="key_formula" class="hidden" />
-              <div class="text-cyan-300 font-bold text-xs">∑ Key Formula</div>
+              <div class="text-[#2ecc71] font-bold text-xs">∑ FORMULA</div>
             </label>
           </div>
         </div>
 
         <div>
-          <label for="pin-title-input" class="block text-slate-200 font-semibold mb-1">Note Title</label>
-          <input type="text" id="pin-title-input" placeholder="e.g., Dispersity formula derivation" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 min-h-[44px]" />
+          <label for="pin-title-input" class="block text-[#d6dcde] font-semibold mb-1 uppercase text-[11px]">Pin Label</label>
+          <input type="text" id="pin-title-input" placeholder="e.g., Dispersity formula derivation" class="w-full bg-[#121516] border border-[#3d484b] rounded px-3 py-2 text-white placeholder-[#687679] focus:outline-none focus:border-[#e59130] min-h-[44px]" />
         </div>
 
         <div>
-          <label for="pin-note-input" class="block text-slate-200 font-semibold mb-1">Personal Note / Formula Snippet (Optional)</label>
-          <textarea id="pin-note-input" rows="3" placeholder="Add study reminders, derivation cautions, or page references..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500"></textarea>
+          <label for="pin-note-input" class="block text-[#d6dcde] font-semibold mb-1 uppercase text-[11px]">Technical Note / Formula Snippet (Optional)</label>
+          <textarea id="pin-note-input" rows="3" placeholder="Add study reminders, derivation cautions, or page references..." class="w-full bg-[#121516] border border-[#3d484b] rounded px-3 py-2 text-white placeholder-[#687679] focus:outline-none focus:border-[#e59130]"></textarea>
         </div>
       </div>
 
-      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
-        <button id="cancel-pin-btn" class="min-h-[44px] px-4 py-2 text-xs text-slate-300 hover:text-white cursor-pointer font-medium">Cancel</button>
-        <button id="save-pin-btn" class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-colors flex items-center gap-1.5 cursor-pointer">
-          <i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i> Save Note
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#3d484b]">
+        <button id="cancel-pin-btn" class="factorio-btn-secondary min-h-[44px] px-4 py-2 text-xs font-mono cursor-pointer">CANCEL</button>
+        <button id="save-pin-btn" class="factorio-btn-primary min-h-[44px] px-4 py-2 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i> COMMIT PIN
         </button>
       </div>
     </div>
   </div>
 
   <!-- MODAL 2: ADD SUBJECT FOLDER MODAL -->
-  <div id="folder-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="folder-modal-title">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-sm p-5 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h2 id="folder-modal-title" class="text-sm font-bold text-white flex items-center gap-2">
-          <i data-lucide="folder-plus" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> New Subject Folder
+  <div id="folder-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="folder-modal-title">
+    <div class="factorio-panel border-[#4c585c] rounded w-full max-w-sm p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[#3d484b] pb-3">
+        <h2 id="folder-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="folder-plus" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> NEW SUBJECT DIRECTORY
         </h2>
-        <button id="close-folder-modal-btn" class="text-slate-400 hover:text-white p-1 rounded cursor-pointer" aria-label="Close Modal">
+        <button id="close-folder-modal-btn" class="text-[#8a9699] hover:text-white p-1 rounded cursor-pointer" aria-label="Close Modal">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
         </button>
       </div>
 
-      <div class="space-y-3 text-xs">
+      <div class="space-y-3 text-xs font-mono">
         <div>
-          <label for="new-folder-name" class="block text-slate-200 font-semibold mb-1">Folder Name</label>
-          <input type="text" id="new-folder-name" placeholder="e.g., Thermodynamics & Heat Transfer" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 min-h-[44px]" />
+          <label for="new-folder-name" class="block text-[#d6dcde] font-semibold mb-1 uppercase text-[11px]">Folder Designation</label>
+          <input type="text" id="new-folder-name" placeholder="e.g., Thermodynamics & Heat Transfer" class="w-full bg-[#121516] border border-[#3d484b] rounded px-3 py-2 text-white placeholder-[#687679] focus:outline-none focus:border-[#e59130] min-h-[44px]" />
         </div>
         <div>
-          <label for="new-folder-color" class="block text-slate-200 font-semibold mb-1">Color Theme</label>
-          <select id="new-folder-color" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none min-h-[44px]">
-            <option value="indigo">Indigo Violet</option>
-            <option value="cyan">Cyan Aqua</option>
-            <option value="emerald">Emerald Green</option>
-            <option value="amber">Amber Gold</option>
-            <option value="rose">Rose Red</option>
+          <label for="new-folder-color" class="block text-[#d6dcde] font-semibold mb-1 uppercase text-[11px]">Telemetry Accent</label>
+          <select id="new-folder-color" class="w-full bg-[#121516] border border-[#3d484b] rounded px-3 py-2 text-white focus:outline-none min-h-[44px]">
+            <option value="indigo">Factorio Orange (Primary)</option>
+            <option value="cyan">Circuit Cyan</option>
+            <option value="emerald">Uranium Emerald</option>
+            <option value="amber">Copper Amber</option>
+            <option value="rose">Signal Red</option>
           </select>
         </div>
       </div>
 
-      <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
-        <button id="cancel-folder-btn" class="min-h-[44px] px-4 py-2 text-xs text-slate-300 hover:text-white cursor-pointer font-medium">Cancel</button>
-        <button id="save-folder-btn" class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition-colors cursor-pointer">
-          Create Folder
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#3d484b]">
+        <button id="cancel-folder-btn" class="factorio-btn-secondary min-h-[44px] px-4 py-2 text-xs font-mono cursor-pointer">CANCEL</button>
+        <button id="save-folder-btn" class="factorio-btn-primary min-h-[44px] px-4 py-2 text-xs font-mono font-bold cursor-pointer">
+          INITIALIZE DIRECTORY
         </button>
       </div>
     </div>
   </div>
 
   <!-- MODAL: BROWSE FOLDER VIDEOS (MAIN STUDIO VIEW) -->
-  <div id="folder-videos-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="folder-videos-modal-title">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col p-5 shadow-2xl space-y-3.5 overflow-hidden">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+  <div id="folder-videos-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="folder-videos-modal-title">
+    <div class="factorio-panel border-[#4c585c] rounded w-full max-w-2xl max-h-[85vh] flex flex-col p-5 shadow-2xl space-y-3.5 overflow-hidden">
+      <div class="flex items-center justify-between border-b border-[#3d484b] pb-3">
         <div class="flex items-center space-x-2.5">
-          <div class="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+          <div class="w-8 h-8 rounded bg-[#1e2325] border border-[#e59130]/50 flex items-center justify-center text-[#f59f38]">
             <i data-lucide="folder" class="w-4 h-4" aria-hidden="true"></i>
           </div>
           <div>
-            <h2 id="folder-videos-modal-title" class="text-sm font-bold text-white">Engineering Chemistry: Polymers</h2>
-            <p id="folder-videos-modal-subtitle" class="text-[11px] text-slate-400 font-mono">Lectures saved in this subject folder</p>
+            <h2 id="folder-videos-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider">Engineering Chemistry: Polymers</h2>
+            <p id="folder-videos-modal-subtitle" class="text-[11px] text-[#8a9699] font-mono">Lectures indexed in this repository directory</p>
           </div>
         </div>
-        <button id="close-folder-videos-modal-btn" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 cursor-pointer" aria-label="Close Folder Videos">
+        <button id="close-folder-videos-modal-btn" class="text-[#8a9699] hover:text-white p-1 rounded hover:bg-[#252b2e] cursor-pointer" aria-label="Close Folder Videos">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
         </button>
       </div>
 
       <!-- Quick Folder Switcher Tabs inside Modal -->
-      <div id="modal-folder-tabs" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs" role="tablist" aria-label="Modal Folders">
+      <div id="modal-folder-tabs" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-mono" role="tablist" aria-label="Modal Folders">
         <!-- Injected dynamically -->
       </div>
 
@@ -1041,52 +1076,52 @@
         <!-- Injected dynamically -->
       </div>
 
-      <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-        <span>Click any lecture to load it into the studio timeline</span>
-        <button id="btn-close-folder-videos-bottom" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-semibold transition-colors cursor-pointer">Close</button>
+      <div class="pt-3 border-t border-[#3d484b] flex items-center justify-between text-xs font-mono text-[#8a9699]">
+        <span>SELECT ANY MODULE TO ENGAGE PLAYHEAD IN STUDIO</span>
+        <button id="btn-close-folder-videos-bottom" class="factorio-btn-secondary px-4 py-2 font-semibold transition-colors cursor-pointer">CLOSE</button>
       </div>
     </div>
   </div>
 
   <!-- MODAL 3: EXPORT SAVED NOTES MODAL -->
-  <div id="export-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col p-5 shadow-2xl space-y-3.5 overflow-hidden">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h2 id="export-modal-title" class="text-sm font-bold text-white flex items-center gap-2">
-          <i data-lucide="file-text" class="w-4 h-4 text-amber-400" aria-hidden="true"></i> Saved Notes & Study Guide (Print & Export)
+  <div id="export-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
+    <div class="factorio-panel border-[#4c585c] rounded w-full max-w-2xl max-h-[90vh] flex flex-col p-5 shadow-2xl space-y-3.5 overflow-hidden">
+      <div class="flex items-center justify-between border-b border-[#3d484b] pb-3">
+        <h2 id="export-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> EXPORT STUDY DOSSIER & CHEATSHEET
         </h2>
-        <button id="close-export-modal-btn" class="text-slate-400 hover:text-white p-1 rounded cursor-pointer" aria-label="Close Export Modal">
+        <button id="close-export-modal-btn" class="text-[#8a9699] hover:text-white p-1 rounded cursor-pointer" aria-label="Close Export Modal">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
         </button>
       </div>
 
       <!-- Mode Switcher -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
-          <button id="export-tab-view" class="px-3.5 py-1.5 rounded-lg font-bold bg-indigo-600 text-white transition-all cursor-pointer">📄 Visual Preview</button>
-          <button id="export-tab-raw" class="px-3.5 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition-all cursor-pointer">📝 Raw Markdown</button>
+      <div class="flex items-center justify-between font-mono">
+        <div class="flex items-center gap-1 bg-[#121516] p-1 rounded border border-[#3d484b] text-xs">
+          <button id="export-tab-view" class="px-3.5 py-1.5 rounded font-bold bg-[#e59130] text-black transition-all cursor-pointer">📄 VISUAL DOSSIER</button>
+          <button id="export-tab-raw" class="px-3.5 py-1.5 rounded font-medium text-[#b1bec1] hover:text-white transition-all cursor-pointer">📝 RAW MARKDOWN</button>
         </div>
-        <span class="text-[11px] text-slate-300">Ready for exam cramming</span>
+        <span class="text-[11px] text-[#8a9699]">READY FOR FIELD DEPLOYMENT</span>
       </div>
 
       <!-- Visual Preview Area -->
-      <div id="export-visual-preview" class="flex-1 overflow-y-auto p-4 bg-slate-950 rounded-xl border border-slate-800 text-xs text-slate-100 space-y-4 max-h-[50vh]">
+      <div id="export-visual-preview" class="flex-1 overflow-y-auto p-4 factorio-inset rounded border border-[#3d484b] text-xs font-mono text-[#d6dcde] space-y-4 max-h-[50vh]">
         <!-- Injected by JS -->
       </div>
 
       <!-- Raw Markdown Area -->
-      <textarea id="export-markdown-content" rows="12" readonly class="hidden flex-1 w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-slate-200 focus:outline-none max-h-[50vh]"></textarea>
+      <textarea id="export-markdown-content" rows="12" readonly class="hidden flex-1 w-full bg-[#121516] border border-[#3d484b] rounded p-3 font-mono text-xs text-[#d6dcde] focus:outline-none max-h-[50vh]"></textarea>
 
-      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
-        <button id="print-sheet-btn" class="min-h-[44px] bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 border border-slate-700 shadow-sm cursor-pointer">
-          <i data-lucide="printer" class="w-4 h-4 text-indigo-400" aria-hidden="true"></i> Print Friendly
+      <div class="flex items-center justify-between pt-3 border-t border-[#3d484b] font-mono">
+        <button id="print-sheet-btn" class="factorio-btn-secondary min-h-[44px] text-xs px-3.5 py-2 font-semibold flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="printer" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> PRINT HARDCOPY
         </button>
         <div class="flex items-center gap-2">
-          <button id="download-markdown-btn" class="min-h-[44px] bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 border border-slate-700 cursor-pointer">
-            <i data-lucide="download" class="w-4 h-4" aria-hidden="true"></i> Download .md
+          <button id="download-markdown-btn" class="factorio-btn-secondary min-h-[44px] text-xs px-3.5 py-2 font-semibold flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="download" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i> DOWNLOAD .MD
           </button>
-          <button id="copy-markdown-btn" class="min-h-[44px] bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow flex items-center gap-1.5 cursor-pointer">
-            <i data-lucide="copy" class="w-4 h-4" aria-hidden="true"></i> Copy to Clipboard
+          <button id="copy-markdown-btn" class="factorio-btn-primary min-h-[44px] text-xs font-bold px-4 py-2 flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="copy" class="w-4 h-4 text-white" aria-hidden="true"></i> COPY TO CLIPBOARD
           </button>
         </div>
       </div>
@@ -1095,13 +1130,13 @@
 
   <!-- MODAL 4: ALTERNATIVE VIDEO PREVIEW MODAL -->
   <div id="alt-video-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="alt-modal-title">
-    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col">
-      <div class="flex items-center justify-between p-3.5 border-b border-slate-800 bg-slate-950">
+    <div class="factorio-panel border-[#4c585c] rounded w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col">
+      <div class="flex items-center justify-between p-3.5 border-b border-[#3d484b] bg-[#17191a]">
         <div class="flex items-center gap-2">
-          <i data-lucide="youtube" class="w-4 h-4 text-rose-500" aria-hidden="true"></i>
-          <h2 id="alt-modal-title" class="text-xs sm:text-sm font-bold text-white truncate max-w-lg">Alternative Video Preview</h2>
+          <i data-lucide="youtube" class="w-4 h-4 text-[#ff8f8f]" aria-hidden="true"></i>
+          <h2 id="alt-modal-title" class="text-xs sm:text-sm font-bold text-white font-mono uppercase truncate max-w-lg">Alternative Video Preview</h2>
         </div>
-        <button id="close-alt-modal-btn" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Close Preview Modal">
+        <button id="close-alt-modal-btn" class="text-[#8a9699] hover:text-white p-1 rounded hover:bg-[#252b2e] transition-colors cursor-pointer" aria-label="Close Preview Modal">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
         </button>
       </div>
@@ -1112,48 +1147,48 @@
   </div>
 
   <!-- UNDO CONFIRMATION TOAST (FOR PIN DELETION) -->
-  <div id="undo-delete-toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900 border border-slate-700 text-slate-100 p-3.5 rounded-2xl shadow-2xl flex items-center gap-3 text-xs backdrop-blur-md" role="alert" aria-live="assertive">
-    <i data-lucide="info" class="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true"></i>
-    <span id="undo-delete-msg" class="font-medium">Saved note deleted.</span>
-    <button id="undo-delete-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl transition-colors cursor-pointer shadow">
-      Undo
+  <div id="undo-delete-toast" class="fixed bottom-6 right-6 z-50 hidden factorio-panel border-[#e59130] text-[#f0f2f2] p-3.5 rounded shadow-2xl flex items-center gap-3 text-xs font-mono backdrop-blur-md" role="alert" aria-live="assertive">
+    <i data-lucide="info" class="w-4 h-4 text-[#f59f38] shrink-0" aria-hidden="true"></i>
+    <span id="undo-delete-msg" class="font-medium">Pin telemetry index removed.</span>
+    <button id="undo-delete-btn" class="factorio-btn-primary font-bold px-3 py-1.5 rounded transition-colors cursor-pointer">
+      UNDO
     </button>
   </div>
 
   <!-- CONTEXTUAL ONBOARDING FEATURE GUIDE DIALOGUE BOX -->
   <div id="tour-overlay" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 hidden">
     <!-- Semi-transparent subtle backdrop -->
-    <div id="tour-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-[2px] pointer-events-auto"></div>
+    <div id="tour-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-[2px] pointer-events-auto"></div>
 
     <!-- Floating Contextual Dialogue Card -->
     <div 
       id="tour-dialog" 
-      class="fixed z-50 pointer-events-auto max-w-sm sm:max-w-md w-full bg-slate-900/95 border border-indigo-500/60 rounded-2xl shadow-2xl p-5 backdrop-blur-xl text-slate-100 transition-all duration-300 bottom-6 right-6 sm:bottom-8 sm:right-8"
+      class="fixed z-50 pointer-events-auto max-w-sm sm:max-w-md w-full factorio-panel border-[#e59130] rounded shadow-2xl p-5 backdrop-blur-xl text-white transition-all duration-300 bottom-6 right-6 sm:bottom-8 sm:right-8"
       role="dialog"
       aria-labelledby="tour-step-title"
       aria-describedby="tour-step-description"
     >
       <!-- Top Bar: Step Counter, Category Badge, and Close/Skip Controls -->
-      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div class="flex items-center justify-between pb-3 border-b border-[#3d484b]">
         <div class="flex items-center gap-2">
-          <span id="tour-step-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-            Step 1 of 5
+          <span id="tour-step-badge" class="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[#1e2325] text-[#f59f38] border border-[#e59130]/40">
+            STEP 1 OF 5
           </span>
-          <span id="tour-feature-tag" class="text-xs font-semibold text-slate-400">
-            Feature Tour
+          <span id="tour-feature-tag" class="text-xs font-mono text-[#8a9699] uppercase">
+            OPERATIONAL BRIEFING
           </span>
         </div>
-        <div class="flex items-center gap-1.5">
+        <div class="flex items-center gap-1.5 font-mono">
           <button 
             id="tour-skip-btn" 
-            class="text-[11px] text-slate-400 hover:text-slate-200 px-2 py-1 rounded hover:bg-slate-800 transition-colors cursor-pointer"
+            class="text-[11px] text-[#8a9699] hover:text-[#f59f38] px-2 py-1 rounded hover:bg-[#252b2e] transition-colors cursor-pointer"
             title="Skip onboarding tour"
           >
-            Skip Tour
+            SKIP BRIEFING
           </button>
           <button 
             id="tour-close-btn" 
-            class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            class="p-1 rounded text-[#8a9699] hover:text-white hover:bg-[#252b2e] transition-colors cursor-pointer"
             aria-label="Close Guide"
           >
             <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
@@ -1164,20 +1199,20 @@
       <!-- Dialogue Content -->
       <div class="py-3.5 space-y-2">
         <div class="flex items-center gap-2.5">
-          <div id="tour-icon-container" class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/30">
-            <i id="tour-step-icon" data-lucide="flame" class="w-4 h-4 text-amber-400" aria-hidden="true"></i>
+          <div id="tour-icon-container" class="w-8 h-8 rounded bg-[#1e2325] text-[#f59f38] flex items-center justify-center shrink-0 border border-[#e59130]/60">
+            <i id="tour-step-icon" data-lucide="flame" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
           </div>
-          <h3 id="tour-step-title" class="text-sm font-bold text-white tracking-tight">
-            1. Crowd Replay Heatmap
+          <h3 id="tour-step-title" class="text-sm font-bold text-white font-mono uppercase tracking-wide">
+            1. CROWD REPLAY HEATMAP
           </h3>
         </div>
-        <p id="tour-step-description" class="text-xs text-slate-300 leading-relaxed">
+        <p id="tour-step-description" class="text-xs text-[#d6dcde] leading-relaxed">
           This curve isn't audio volume—it's real YouTube crowd replay data. The peaks show where thousands of students hit rewind. Click any highlighted peak to jump directly to tricky derivations.
         </p>
       </div>
 
       <!-- Bottom Actions -->
-      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+      <div class="flex items-center justify-between pt-3 border-t border-[#3d484b] font-mono">
         <!-- Step Indicator Dots -->
         <div id="tour-step-dots" class="flex items-center gap-1.5">
           <!-- Dynamically populated dots -->
@@ -1186,15 +1221,15 @@
         <div class="flex items-center gap-2">
           <button 
             id="tour-prev-btn" 
-            class="hidden px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all cursor-pointer"
+            class="hidden px-3 py-1.5 factorio-btn-secondary text-xs font-semibold cursor-pointer"
           >
-            &larr; Back
+            &larr; BACK
           </button>
           <button 
             id="tour-next-btn" 
-            class="px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition-all flex items-center gap-1.5 cursor-pointer"
+            class="px-4 py-1.5 factorio-btn-primary text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
           >
-            <span>Next Step &rarr;</span>
+            <span>PROCEED &rarr;</span>
           </button>
         </div>
       </div>
