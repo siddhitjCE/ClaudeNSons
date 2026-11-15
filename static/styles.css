@@ -340,7 +340,8 @@ details {
   background-size: 24px 24px;
   border-radius: 0px !important;
 }
-#landing-page-view.hidden {
+#landing-page-view.hidden,
+html.in-workspace #landing-page-view {
   display: none !important;
 }
 

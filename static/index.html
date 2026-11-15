@@ -82,6 +82,18 @@
 
   <!-- Custom Factorio CSS -->
   <link rel="stylesheet" href="/static/styles.css" />
+
+  <!-- Standard SPA View & Refresh Routing State -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.has('v') || params.has('video') || (window.location.hash && window.location.hash.indexOf('v=') !== -1)) {
+          document.documentElement.classList.add('in-workspace');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="bg-[#151819] text-[#e2e4e5] min-h-screen flex flex-col font-sans antialiased selection:bg-[#e59130] selection:text-white rounded-none">
 
@@ -229,22 +241,29 @@
           <span>&larr; Courses</span>
         </button>
 
-        <div class="w-9 h-9 rounded-none bg-[#25292b] border border-[#e59130] shadow-sm flex items-center justify-center">
-          <i data-lucide="cog" class="w-4 h-4 text-[#f59f38] animate-[spin_10s_linear_infinite]" aria-hidden="true"></i>
-        </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <span class="text-lg font-black tracking-wider text-white">
-              SYNC<span class="text-[#f59f38]">LEARN</span>
-            </span>
-            <span class="text-[10px] px-2 py-0.5 rounded-none bg-[#2b3336] border border-[#e59130]/50 text-[#f59f38] font-mono font-bold uppercase tracking-wider">
-              STUDY STUDIO
-            </span>
+        <button 
+          id="workspace-logo-btn"
+          type="button"
+          class="flex items-center space-x-2 text-left cursor-pointer bg-transparent border-0 p-0 text-inherit hover:opacity-90"
+          title="Return to Course Library"
+        >
+          <div class="w-9 h-9 rounded-none bg-[#25292b] border border-[#e59130] shadow-sm flex items-center justify-center">
+            <i data-lucide="cog" class="w-4 h-4 text-[#f59f38] animate-[spin_10s_linear_infinite]" aria-hidden="true"></i>
           </div>
-          <p class="text-[11px] text-[#8f9ea2] font-mono flex items-center gap-1">
-            Learn step-by-step from video lectures • Team ClaudeNSons
-          </p>
-        </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-lg font-black tracking-wider text-white">
+                SYNC<span class="text-[#f59f38]">LEARN</span>
+              </span>
+              <span class="text-[10px] px-2 py-0.5 rounded-none bg-[#2b3336] border border-[#e59130]/50 text-[#f59f38] font-mono font-bold uppercase tracking-wider">
+                STUDY STUDIO
+              </span>
+            </div>
+            <p class="text-[11px] text-[#8f9ea2] font-mono flex items-center gap-1">
+              Learn step-by-step from video lectures • Team ClaudeNSons
+            </p>
+          </div>
+        </button>
       </div>
 
       <!-- Center: Personal Subject Folder Dropdown & Browse Videos Button -->

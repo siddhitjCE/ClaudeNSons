@@ -75,6 +75,64 @@ async function safeFetchJSON(url, options = {}, timeoutMs = 8000) {
   }
 }
 
+const DEFAULT_FOLDERS = [
+  { id: 1, name: "Engineering Chemistry: Polymers", color: "violet", icon: "flask-conical" },
+  { id: 2, name: "Intro to Mechatronics", color: "cyan", icon: "cpu" },
+  { id: 3, name: "Digital Electronics", color: "emerald", icon: "binary" }
+];
+
+const DEFAULT_SAVED_VIDEOS = [
+  {
+    video_id: "fnF67w6rDpg",
+    title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
+    folder_id: 1,
+    duration_sec: 2700,
+    thumbnail_url: "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
+  },
+  {
+    video_id: "lFlu60qs7_4",
+    title: "The line that broke mathematicians for 2000 years",
+    folder_id: 1,
+    duration_sec: 1871,
+    thumbnail_url: "https://img.youtube.com/vi/lFlu60qs7_4/hqdefault.jpg"
+  },
+  {
+    video_id: "Y-W-w8yNiKU",
+    title: "Why is there antimatter?",
+    folder_id: 1,
+    duration_sec: 2123,
+    thumbnail_url: "https://img.youtube.com/vi/Y-W-w8yNiKU/hqdefault.jpg"
+  },
+  {
+    video_id: "fEjvSbI_PT4",
+    title: "Dying Is Complicated",
+    folder_id: 1,
+    duration_sec: 840,
+    thumbnail_url: "https://img.youtube.com/vi/fEjvSbI_PT4/hqdefault.jpg"
+  },
+  {
+    video_id: "KfODG5REyss",
+    title: "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
+    folder_id: 2,
+    duration_sec: 3955,
+    thumbnail_url: "https://img.youtube.com/vi/KfODG5REyss/hqdefault.jpg"
+  },
+  {
+    video_id: "lyfx8CL7AkI",
+    title: "This CHIP Changed the WORLD! MOSFET (ElectroBOOM101 - 012)",
+    folder_id: 3,
+    duration_sec: 738,
+    thumbnail_url: "https://img.youtube.com/vi/lyfx8CL7AkI/hqdefault.jpg"
+  },
+  {
+    video_id: "OSCKBmkrH_g",
+    title: "The Ultimate Component: OpAmp (ElectroBOOM101 – 013)",
+    folder_id: 3,
+    duration_sec: 754,
+    thumbnail_url: "https://img.youtube.com/vi/OSCKBmkrH_g/hqdefault.jpg"
+  }
+];
+
 const StorageManager = {
   get(key, defaultValue = null) {
     try {
@@ -102,7 +160,12 @@ const StorageManager = {
 
   // Videos
   getSavedVideos() {
-    return this.get("videos", []);
+    const saved = this.get("videos", null);
+    if (!saved || !Array.isArray(saved) || saved.length === 0) {
+      this.set("videos", DEFAULT_SAVED_VIDEOS);
+      return [...DEFAULT_SAVED_VIDEOS];
+    }
+    return saved;
   },
   saveVideo(videoRecord) {
     if (!videoRecord || !videoRecord.video_id) return;
@@ -114,6 +177,11 @@ const StorageManager = {
       list.unshift(videoRecord);
     }
     this.set("videos", list);
+  },
+  deleteVideo(videoId) {
+    const list = this.getSavedVideos().filter(v => v.video_id !== videoId);
+    this.set("videos", list);
+    return list;
   },
 
   // Pins
@@ -142,9 +210,12 @@ const StorageManager = {
 
   // Folders
   getFolders() {
-    return this.get("folders", [
-      { id: 1, name: "Engineering Chemistry: Polymers", color: "indigo", icon: "folder", video_count: 1 }
-    ]);
+    const folders = this.get("folders", null);
+    if (!folders || !Array.isArray(folders) || folders.length === 0) {
+      this.set("folders", DEFAULT_FOLDERS);
+      return [...DEFAULT_FOLDERS];
+    }
+    return folders;
   },
   saveFolder(folder) {
     if (!folder) return;
@@ -574,8 +645,30 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSubjectFolders();
   renderCheatSheetBridges();
   renderCheatSheetMissedMCQs();
-  loadVideoStudio(state.currentVideoId);
   OnboardingTour.init();
+
+  // Listen to browser Back/Forward navigation
+  window.addEventListener("popstate", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const vId = urlParams.get("v") || urlParams.get("video") || extractYouTubeId(window.location.hash);
+    if (vId) {
+      navigateToWorkspace(vId, null, false);
+    } else {
+      navigateToLanding(false);
+    }
+  });
+
+  // Check URL parameters for active video (handles refreshes on workspace or direct links)
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramVideoId = urlParams.get("v") || urlParams.get("video") || extractYouTubeId(window.location.hash);
+
+  if (paramVideoId) {
+    // If user refreshed while on workspace or followed direct video link:
+    navigateToWorkspace(paramVideoId, null, false);
+  } else {
+    // Standard site entry: Always open on Landing Page!
+    navigateToLanding(false);
+  }
 });
 
 // ==========================================
@@ -895,8 +988,93 @@ function jumpToTime(seconds, triggerAnalysis = true) {
 }
 
 // ==========================================
-// 2. VIDEO STUDIO LOADING & DYNAMIC SWITCHING
+// 2. VIEW NAVIGATION & ROUTING (BULLETPROOF SPA)
 // ==========================================
+
+async function navigateToWorkspace(videoId, customTitle = null, pushHistory = true) {
+  if (!videoId) return;
+  state.currentVideoId = videoId;
+  if (customTitle) state.currentVideoTitle = customTitle;
+
+  // 1. Maintain Browser History & Query Parameters (e.g. ?v=...)
+  if (pushHistory) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("v", videoId);
+      window.history.pushState({ view: "workspace", videoId }, "", url.toString());
+    } catch (_) {}
+  }
+  try {
+    sessionStorage.setItem("synclearn_view", "workspace");
+    sessionStorage.setItem("synclearn_video_id", videoId);
+    document.documentElement.classList.add("in-workspace");
+  } catch (_) {}
+
+  // 2. Hide Landing Page Overlay smoothly
+  const landingView = document.getElementById("landing-page-view");
+  if (landingView) {
+    landingView.classList.add("opacity-0", "pointer-events-none");
+    setTimeout(() => {
+      landingView.classList.add("hidden");
+      if (window._checkTourTrigger) window._checkTourTrigger();
+    }, 200);
+  }
+
+  // 3. Update top navbar URL input to reflect active video
+  const navbarInput = document.getElementById("youtube-url-input");
+  if (navbarInput) {
+    navbarInput.value = `https://www.youtube.com/watch?v=${videoId}`;
+  }
+
+  // 4. Restore active tab if previously chosen in this session
+  try {
+    const savedTab = sessionStorage.getItem("synclearn_active_tab");
+    if (savedTab && document.getElementById(savedTab)) {
+      switchTab(savedTab);
+    }
+  } catch (_) {}
+
+  // 5. Load Studio & Video
+  await loadVideoStudio(videoId, customTitle);
+}
+
+function navigateToLanding(pushHistory = true) {
+  // 1. Pause video player if running
+  if (state.player && typeof state.player.pauseVideo === "function") {
+    try {
+      state.player.pauseVideo();
+    } catch (_) {}
+  }
+
+  // 2. Maintain Browser History (clear ?v= so refresh stays on Landing Page)
+  if (pushHistory) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("v");
+      url.searchParams.delete("video");
+      window.history.pushState({ view: "landing" }, "", url.pathname + (url.search ? url.search : ""));
+    } catch (_) {}
+  }
+  try {
+    sessionStorage.setItem("synclearn_view", "landing");
+    document.documentElement.classList.remove("in-workspace");
+  } catch (_) {}
+
+  // 3. Display Landing Page Overlay
+  const landingView = document.getElementById("landing-page-view");
+  if (landingView) {
+    landingView.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      landingView.classList.remove("opacity-0", "pointer-events-none");
+    });
+  }
+
+  // 4. Focus input and re-render folder pills & videos
+  const landingInput = document.getElementById("landing-url-input");
+  if (landingInput) landingInput.focus();
+
+  loadSubjectFolders();
+}
 
 async function loadVideoStudio(videoId, customTitle = null) {
   try {
@@ -2193,17 +2371,20 @@ function renderCheatSheetMissedMCQs() {
 
 function switchTab(tabPaneId) {
   state.activeTab = tabPaneId;
+  try {
+    sessionStorage.setItem("synclearn_active_tab", tabPaneId);
+  } catch (_) {}
 
   document.querySelectorAll(".tab-btn").forEach(btn => {
     const isTarget = btn.getAttribute("data-target") === tabPaneId;
     if (isTarget) {
-      btn.classList.add("active", "text-indigo-300", "bg-slate-800", "border-indigo-500/40");
-      btn.classList.remove("text-slate-300", "border-transparent");
+      btn.classList.add("active", "text-[#f59f38]", "bg-[#24292b]", "border-[#e59130]");
+      btn.classList.remove("text-[#8a9699]", "border-transparent");
       btn.setAttribute("aria-selected", "true");
       btn.setAttribute("tabindex", "0");
     } else {
-      btn.classList.remove("active", "text-indigo-300", "bg-slate-800", "border-indigo-500/40");
-      btn.classList.add("text-slate-300", "border-transparent");
+      btn.classList.remove("active", "text-[#f59f38]", "bg-[#24292b]", "border-[#e59130]");
+      btn.classList.add("text-[#8a9699]", "border-transparent");
       btn.setAttribute("aria-selected", "false");
       btn.setAttribute("tabindex", "-1");
     }
@@ -2405,8 +2586,18 @@ function initUIEventListeners() {
         // c) Fetch video title in browser from noembed & oEmbed directly
         const clientTitle = await fetchClientVideoTitle(videoId);
 
-        // Immediately load studio, player, and local peaks
-        await loadVideoStudio(videoId, clientTitle);
+        // Save new video to StorageManager under currently selected folder
+        const activeFolderId = state.currentFolderId && state.currentFolderId !== "all" ? state.currentFolderId : 1;
+        StorageManager.saveVideo({
+          video_id: videoId,
+          title: clientTitle || `Lecture (${videoId})`,
+          folder_id: activeFolderId,
+          duration_sec: 2700,
+          thumbnail_url: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+        });
+
+        // Immediately route to workspace and load video studio
+        await navigateToWorkspace(videoId, clientTitle, true);
 
         // Post to backend asynchronously in parallel
         safeFetchJSON("/api/load-video", {
@@ -2414,7 +2605,7 @@ function initUIEventListeners() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             url_or_id: val,
-            folder_id: state.currentFolderId,
+            folder_id: activeFolderId,
             custom_title: clientTitle,
             title: clientTitle
           })
@@ -2509,14 +2700,15 @@ function initLandingPageListeners() {
 
   // Handle Landing Form Submission
   if (landingForm) {
-    landingForm.addEventListener("submit", (e) => {
+    landingForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!landingInput) return;
 
       const val = landingInput.value.trim();
 
       // Step A: Validate YouTube URL
-      if (!val || !isValidYouTubeUrl(val)) {
+      const videoId = extractYouTubeId(val);
+      if (!val || !videoId) {
         if (landingError) landingError.classList.remove("hidden");
         landingInput.classList.add("border-rose-500", "ring-1", "ring-rose-500");
         landingInput.focus();
@@ -2526,55 +2718,67 @@ function initLandingPageListeners() {
       if (landingError) landingError.classList.add("hidden");
       landingInput.classList.remove("border-rose-500", "ring-1", "ring-rose-500");
 
-      // Step B: Change button text to Loading Workspace...
+      // Step B: Feedback on Button
       if (landingBtn) {
         landingBtn.disabled = true;
-        landingBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin" aria-hidden="true"></i><span>Loading Workspace...</span>`;
+        landingBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin" aria-hidden="true"></i><span>Opening Studio...</span>`;
         lucide.createIcons();
       }
 
-      // Step C: Copy value directly to existing top navbar input
-      if (navbarInput) {
-        navbarInput.value = val;
-      }
+      try {
+        // Step C: Fetch video title
+        const clientTitle = await fetchClientVideoTitle(videoId);
 
-      // Step D: Smoothly hide landing page overlay
-      landingView.classList.add("opacity-0", "pointer-events-none");
-      setTimeout(() => {
-        landingView.classList.add("hidden");
+        // Save new video to StorageManager under currently selected folder
+        const activeFolderId = state.currentFolderId && state.currentFolderId !== "all" ? state.currentFolderId : 1;
+        StorageManager.saveVideo({
+          video_id: videoId,
+          title: clientTitle || `Lecture (${videoId})`,
+          folder_id: activeFolderId,
+          duration_sec: 2700,
+          thumbnail_url: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+        });
+
+        // Background server sync
+        safeFetchJSON("/api/load-video", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url_or_id: val,
+            folder_id: activeFolderId,
+            custom_title: clientTitle,
+            title: clientTitle
+          })
+        });
+
+        // Clear input
+        landingInput.value = "";
+
+        // Route to Workspace (updates URL query to ?v=..., hides overlay, loads player & studio)
+        await navigateToWorkspace(videoId, clientTitle, true);
+      } catch (err) {
+        console.warn("Landing submit error:", err);
+      } finally {
         if (landingBtn) {
           landingBtn.disabled = false;
-          landingBtn.innerHTML = `<span>Start Studying This Video &rarr;</span>`;
+          landingBtn.innerHTML = `<i data-lucide="play" class="w-4 h-4 fill-current" aria-hidden="true"></i><span>START LEARNING &rarr;</span>`;
           lucide.createIcons();
         }
-      }, 300);
-
-      // Trigger the existing navbar "Load" button handler to enter the study studio
-      if (navbarLoadBtn) {
-        navbarLoadBtn.click();
       }
     });
   }
 
-  // Step 3: Handle "← Home" Button in Existing Top Navbar
+  // Step 3: Handle "← Courses" & Logo Button in Workspace Navbar
   if (backHomeBtn) {
     backHomeBtn.addEventListener("click", () => {
-      // Pause YouTube player if active
-      if (state.player && typeof state.player.pauseVideo === "function") {
-        try {
-          state.player.pauseVideo();
-        } catch (_) {}
-      }
+      navigateToLanding(true);
+    });
+  }
 
-      // Show landing page overlay again
-      landingView.classList.remove("hidden");
-      requestAnimationFrame(() => {
-        landingView.classList.remove("opacity-0", "pointer-events-none");
-      });
-
-      if (landingInput) {
-        landingInput.focus();
-      }
+  const logoBtn = document.getElementById("workspace-logo-btn");
+  if (logoBtn) {
+    logoBtn.addEventListener("click", () => {
+      navigateToLanding(true);
     });
   }
 }
@@ -2869,11 +3073,11 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   if (isLanding) {
     return `
-      <div class="landing-video-card group factorio-panel border-[#3d484b] hover:border-[#e59130] rounded p-3.5 transition-all flex flex-col justify-between cursor-pointer shadow-lg hover:-translate-y-1" data-video-id="${v.video_id}">
+      <div class="landing-video-card group factorio-panel border-[#3d484b] hover:border-[#e59130] rounded-none p-3.5 transition-none flex flex-col justify-between cursor-pointer shadow-lg" data-video-id="${v.video_id}">
         <div class="space-y-2.5">
-          <div class="relative w-full aspect-video rounded overflow-hidden bg-[#121516] border border-[#3d484b]">
-            <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-            <span class="absolute bottom-1.5 right-1.5 bg-[#121516]/90 backdrop-blur-md text-[10px] font-mono px-2 py-0.5 rounded text-[#f59f38] font-bold border border-[#3d484b]">
+          <div class="relative w-full aspect-video rounded-none overflow-hidden bg-[#121516] border border-[#3d484b]">
+            <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
+            <span class="absolute bottom-1.5 right-1.5 bg-[#121516]/90 backdrop-blur-md text-[10px] font-mono px-2 py-0.5 rounded-none text-[#f59f38] font-bold border border-[#3d484b]">
               ${durStr}
             </span>
           </div>
@@ -2883,9 +3087,9 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
         </div>
         <div class="pt-3 mt-3 border-t border-[#3d484b] flex items-center justify-between">
           <span class="text-[10px] font-mono text-[#8a9699]">ID: ${v.video_id}</span>
-          <button class="factorio-btn-primary px-3 py-1 text-xs font-mono font-bold flex items-center gap-1 shadow-sm transition-all pointer-events-none">
+          <button class="factorio-btn-primary px-3 py-1 text-xs font-mono font-bold rounded-none flex items-center gap-1 shadow-none transition-none pointer-events-none">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
-            <span>INITIALIZE</span>
+            <span>Start Learning</span>
           </button>
         </div>
       </div>
@@ -2894,11 +3098,11 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   // Inside Main Page Modal
   return `
-    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded border ${isActiveVideo ? 'bg-[#292015] border-[#e59130] shadow-md' : 'bg-[#171a1b] border-[#333b3d] hover:border-[#e59130] hover:bg-[#1e2325]'} transition-all cursor-pointer font-mono" data-video-id="${v.video_id}">
+    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded-none border ${isActiveVideo ? 'bg-[#292015] border-[#e59130] shadow-md' : 'bg-[#171a1b] border-[#333b3d] hover:border-[#e59130] hover:bg-[#1e2325]'} transition-none cursor-pointer font-mono" data-video-id="${v.video_id}">
       <div class="flex items-center space-x-3 overflow-hidden">
-        <div class="relative w-28 aspect-video rounded overflow-hidden bg-[#121516] shrink-0 border border-[#3d484b]">
-          <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-          <span class="absolute bottom-1 right-1 bg-[#121516]/95 font-mono text-[9px] px-1.5 py-0.5 rounded text-[#f59f38] font-bold">${durStr}</span>
+        <div class="relative w-28 aspect-video rounded-none overflow-hidden bg-[#121516] shrink-0 border border-[#3d484b]">
+          <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
+          <span class="absolute bottom-1 right-1 bg-[#121516]/95 font-mono text-[9px] px-1.5 py-0.5 rounded-none text-[#f59f38] font-bold">${durStr}</span>
         </div>
         <div class="min-w-0 pr-3">
           <h4 class="text-xs font-bold ${isActiveVideo ? 'text-[#f59f38]' : 'text-white group-hover:text-[#f59f38]'} truncate transition-colors">
@@ -2928,42 +3132,63 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 // ------------------------------------------
 function renderLandingFolders(folders) {
   const pillsContainer = document.getElementById("landing-folder-pills");
-  if (!pillsContainer || !folders || folders.length === 0) return;
+  if (!pillsContainer) return;
 
   pillsContainer.innerHTML = "";
-  let activeId = state.currentFolderId || folders[0].id;
+  const allSavedVideos = StorageManager.getSavedVideos();
 
-  folders.forEach(f => {
+  // Create an "All Subjects" pill first
+  const folderList = [
+    { id: "all", name: "All Subjects", icon: "layers", video_count: allSavedVideos.length },
+    ...(folders || []).map(f => ({
+      ...f,
+      video_count: allSavedVideos.filter(v => v.folder_id === f.id || String(v.folder_id) === String(f.id)).length
+    }))
+  ];
+
+  const storedFolder = localStorage.getItem("synclearn_landing_folder");
+  let activeId = state.currentFolderId || storedFolder || "all";
+  if (activeId !== "all" && !folderList.some(f => String(f.id) === String(activeId))) {
+    activeId = "all";
+  }
+  state.currentFolderId = activeId;
+
+  folderList.forEach(f => {
     const btn = document.createElement("button");
-    const isActive = f.id === activeId;
+    const isActive = String(f.id) === String(activeId);
     btn.type = "button";
-    btn.className = `px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
+    btn.className = `px-3.5 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap transition-none flex items-center gap-2 cursor-pointer border ${
       isActive 
-        ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400/40 font-bold" 
-        : "bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800"
+        ? "bg-[#24292b] border-[#e59130] text-[#f59f38] shadow-[0_0_8px_rgba(229,145,48,0.3)]" 
+        : "bg-[#171a1b] border-[#333b3d] text-[#8a9699] hover:text-white hover:bg-[#1e2325] hover:border-[#556367]"
     }`;
     btn.innerHTML = `
-      <i data-lucide="folder" class="w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-indigo-400'}" aria-hidden="true"></i>
+      <i data-lucide="${f.icon || 'folder'}" class="w-3.5 h-3.5 ${isActive ? 'text-[#f59f38]' : 'text-[#8a9699]'}" aria-hidden="true"></i>
       <span>${f.name}</span>
-      <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono ${isActive ? 'bg-indigo-800 text-indigo-100' : 'bg-slate-800 text-slate-400'}">${f.video_count || 0}</span>
+      <span class="px-1.5 py-0.2 rounded-none text-[10px] font-mono ${isActive ? 'bg-[#3d2b15] text-[#f59f38] border border-[#e59130]/40' : 'bg-[#121516] text-[#8a9699] border border-[#2b3336]'}">${f.video_count !== undefined ? f.video_count : 0}</span>
     `;
 
     btn.addEventListener("click", () => {
-      document.querySelectorAll("#landing-folder-pills button").forEach(b => {
-        b.className = "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800";
-        const icon = b.querySelector("i");
-        if (icon) icon.className = "w-3.5 h-3.5 text-indigo-400";
-      });
-      btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-400/40 font-bold";
-      const activeIcon = btn.querySelector("i");
-      if (activeIcon) activeIcon.className = "w-3.5 h-3.5 text-white";
-
       state.currentFolderId = f.id;
+      localStorage.setItem("synclearn_landing_folder", f.id);
+      renderLandingFolders(folders);
       loadLandingFolderVideos(f.id);
     });
 
     pillsContainer.appendChild(btn);
   });
+
+  // + New Subject button on Landing Page
+  const addFolderBtn = document.createElement("button");
+  addFolderBtn.type = "button";
+  addFolderBtn.id = "landing-add-folder-btn";
+  addFolderBtn.className = "px-3 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap bg-[#171a1b] border border-dashed border-[#556367] text-[#8a9699] hover:text-[#f59f38] hover:border-[#e59130] cursor-pointer flex items-center gap-1.5 transition-none";
+  addFolderBtn.innerHTML = `<i data-lucide="folder-plus" class="w-3.5 h-3.5 text-[#f59f38]"></i><span>+ New Subject</span>`;
+  addFolderBtn.addEventListener("click", () => {
+    const folderModal = document.getElementById("folder-modal");
+    if (folderModal) folderModal.classList.remove("hidden");
+  });
+  pillsContainer.appendChild(addFolderBtn);
 
   lucide.createIcons();
   loadLandingFolderVideos(activeId);
@@ -2976,10 +3201,10 @@ async function loadLandingFolderVideos(folderId) {
   function renderGridVideos(videosList) {
     if (!videosList || videosList.length === 0) {
       grid.innerHTML = `
-        <div class="col-span-full py-8 text-center text-xs text-slate-400 bg-slate-900/40 border border-dashed border-slate-800 rounded-2xl space-y-2 p-6">
-          <i data-lucide="folder-open" class="w-7 h-7 text-slate-600 mx-auto" aria-hidden="true"></i>
-          <p class="font-medium text-slate-300">No lectures saved in this folder yet.</p>
-          <p class="text-[11px] text-slate-400">Paste any YouTube lecture URL above to add a video into this folder!</p>
+        <div class="col-span-full py-8 text-center text-xs text-[#8a9699] bg-[#17191a] border border-dashed border-[#3d484b] rounded-none space-y-2 p-6">
+          <i data-lucide="folder-open" class="w-7 h-7 text-[#8a9699] mx-auto" aria-hidden="true"></i>
+          <p class="font-bold text-slate-200">No lectures in this subject yet.</p>
+          <p class="text-[11px] text-[#8a9699]">Paste any YouTube lecture link above to add a video into this subject!</p>
         </div>
       `;
       lucide.createIcons();
@@ -2993,18 +3218,12 @@ async function loadLandingFolderVideos(folderId) {
       const card = cardWrapper.firstElementChild;
 
       card.addEventListener("click", async () => {
-        const landingView = document.getElementById("landing-page-view");
-        if (landingView) {
-          landingView.classList.add("opacity-0", "pointer-events-none");
-          setTimeout(() => {
-            landingView.classList.add("hidden");
-            if (window._checkTourTrigger) window._checkTourTrigger();
-          }, 300);
+        if (folderId !== "all") {
+          state.currentFolderId = folderId;
+          const folderSelect = document.getElementById("folder-select");
+          if (folderSelect) folderSelect.value = folderId;
         }
-        state.currentFolderId = folderId;
-        const folderSelect = document.getElementById("folder-select");
-        if (folderSelect) folderSelect.value = folderId;
-        await loadVideoStudio(v.video_id, v.title);
+        await navigateToWorkspace(v.video_id, v.title, true);
       });
 
       grid.appendChild(card);
@@ -3014,25 +3233,26 @@ async function loadLandingFolderVideos(folderId) {
 
   // 1. Instant local render from StorageManager
   const allSaved = StorageManager.getSavedVideos();
-  let localVideos = allSaved.filter(v => !v.folder_id || v.folder_id === folderId || String(v.folder_id) === String(folderId));
-  if (localVideos.length === 0 && (folderId === 1 || folderId === "1")) {
-    const defaultVid = {
-      video_id: "fnF67w6rDpg",
-      title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-      folder_id: 1,
-      duration_sec: 2700,
-      thumbnail_url: "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
-    };
-    StorageManager.saveVideo(defaultVid);
-    localVideos = [defaultVid];
+  let localVideos;
+  if (!folderId || folderId === "all") {
+    localVideos = allSaved;
+  } else {
+    localVideos = allSaved.filter(v => v.folder_id === folderId || String(v.folder_id) === String(folderId));
   }
   renderGridVideos(localVideos);
 
   // 2. Resilient background sync with server
-  const data = await safeFetchJSON(`/api/videos?folder_id=${folderId}`);
+  const endpoint = (!folderId || folderId === "all") ? "/api/videos" : `/api/videos?folder_id=${folderId}`;
+  const data = await safeFetchJSON(endpoint);
   if (data && data.videos && data.videos.length > 0) {
     data.videos.forEach(sv => StorageManager.saveVideo(sv));
-    const updated = StorageManager.getSavedVideos().filter(v => !v.folder_id || v.folder_id === folderId || String(v.folder_id) === String(folderId));
+    const updatedAll = StorageManager.getSavedVideos();
+    let updated;
+    if (!folderId || folderId === "all") {
+      updated = updatedAll;
+    } else {
+      updated = updatedAll.filter(v => v.folder_id === folderId || String(v.folder_id) === String(folderId));
+    }
     renderGridVideos(updated);
   }
 }
@@ -3062,10 +3282,10 @@ async function openFolderVideosModal(targetFolderId) {
       const tabBtn = document.createElement("button");
       const isSel = f.id === currentId;
       tabBtn.type = "button";
-      tabBtn.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+      tabBtn.className = `px-3 py-1.5 rounded-none text-xs font-mono font-bold transition-none whitespace-nowrap cursor-pointer flex items-center gap-1.5 border ${
         isSel 
-          ? "bg-indigo-600 text-white font-bold shadow-sm" 
-          : "bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700"
+          ? "bg-[#24292b] border-[#e59130] text-[#f59f38] shadow-sm" 
+          : "bg-[#171a1b] border-[#333b3d] text-[#8a9699] hover:text-white hover:bg-[#1e2325]"
       }`;
       tabBtn.innerHTML = `<span>${f.name}</span><span class="text-[10px] opacity-75 font-mono">(${f.video_count || 0})</span>`;
       tabBtn.addEventListener("click", () => {
@@ -3082,10 +3302,10 @@ async function openFolderVideosModal(targetFolderId) {
 
     if (!videosList || videosList.length === 0) {
       listContainer.innerHTML = `
-        <div class="py-12 text-center text-xs text-slate-400 bg-slate-950/40 border border-dashed border-slate-800 rounded-xl space-y-2 p-6">
-          <i data-lucide="folder-open" class="w-8 h-8 text-slate-600 mx-auto" aria-hidden="true"></i>
-          <p class="font-medium text-slate-300">No lectures saved in this folder yet.</p>
-          <p class="text-[11px] text-slate-400">Use the top URL bar to paste any educational YouTube lecture and save it here!</p>
+        <div class="py-12 text-center text-xs text-[#8a9699] bg-[#121516] border border-dashed border-[#3d484b] rounded-none space-y-2 p-6">
+          <i data-lucide="folder-open" class="w-8 h-8 text-[#8a9699] mx-auto" aria-hidden="true"></i>
+          <p class="font-bold text-slate-200">No lectures saved in this folder yet.</p>
+          <p class="text-[11px] text-[#8a9699]">Use the top URL bar to paste any educational YouTube lecture and save it here!</p>
         </div>
       `;
       lucide.createIcons();
@@ -3102,7 +3322,7 @@ async function openFolderVideosModal(targetFolderId) {
         modal.classList.add("hidden");
         const folderSelect = document.getElementById("folder-select");
         if (folderSelect) folderSelect.value = currentId;
-        await loadVideoStudio(v.video_id, v.title);
+        await navigateToWorkspace(v.video_id, v.title, true);
       });
 
       listContainer.appendChild(card);
@@ -3115,17 +3335,6 @@ async function openFolderVideosModal(targetFolderId) {
   // 1. Instant local render
   const allSaved = StorageManager.getSavedVideos();
   let localList = allSaved.filter(v => !v.folder_id || v.folder_id === currentId || String(v.folder_id) === String(currentId));
-  if (localList.length === 0 && (currentId === 1 || currentId === "1")) {
-    const defaultVid = {
-      video_id: "fnF67w6rDpg",
-      title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-      folder_id: 1,
-      duration_sec: 2700,
-      thumbnail_url: "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
-    };
-    StorageManager.saveVideo(defaultVid);
-    localList = [defaultVid];
-  }
   renderModalVideos(localList);
 
   // 2. Resilient background sync with server
