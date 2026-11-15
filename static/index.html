@@ -159,7 +159,7 @@
         </div>
         <p id="landing-url-error" class="hidden text-xs text-rose-400 font-mono pl-1 flex items-center gap-1.5" role="alert">
           <i data-lucide="alert-triangle" class="w-3.5 h-3.5 shrink-0 text-amber-400" aria-hidden="true"></i>
-          <span>Please enter a valid YouTube video link (e.g. https://www.youtube.com/watch?v=fnF67w6rDpg).</span>
+          <span>Please enter a valid YouTube video link (e.g. https://www.youtube.com/watch?v=...).</span>
         </p>
       </form>
 
@@ -315,7 +315,6 @@
               placeholder="Paste any YouTube lecture link..." 
               aria-label="Paste YouTube Lecture Link"
               class="w-full bg-[#17191a] border border-[#3d484b] rounded-none pl-9 pr-3 py-2 text-xs text-[#f0f2f2] placeholder-[#6f8084] focus:outline-none focus:border-[#e59130] focus:ring-1 focus:ring-[#e59130] font-mono"
-              value="https://www.youtube.com/watch?v=fnF67w6rDpg"
             />
             <button 
               id="load-video-btn" 
@@ -631,7 +630,7 @@
           >
             <i data-lucide="bookmark-check" class="w-4 h-4 text-[#f1c40f]" aria-hidden="true"></i>
             <span class="truncate">3. YOUR STUDY GUIDE</span>
-            <span id="pins-count-badge" class="ml-0.5 px-2 py-0.5 rounded-none bg-[#17191a] text-[10px] text-[#f59f38] font-mono font-bold border border-[#3d484b]">4</span>
+            <span id="pins-count-badge" class="ml-0.5 px-2 py-0.5 rounded-none bg-[#17191a] text-[10px] text-[#f59f38] font-mono font-bold border border-[#3d484b]">0</span>
           </button>
         </div>
 
@@ -673,7 +672,7 @@
               <div class="flex items-center justify-between gap-2">
                 <span class="text-xs font-bold text-[#f59f38] uppercase font-mono tracking-wider flex items-center gap-1.5">
                   <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#f59f38]" aria-hidden="true"></i>
-                  FOCUS WINDOW: <span id="rescue-window-time" class="font-mono text-white ml-1">08:00 – 12:00</span>
+                  FOCUS WINDOW: <span id="rescue-window-time" class="font-mono text-white ml-1">00:00 – 00:00</span>
                 </span>
                 <button 
                   id="btn-autosave-summary-pin" 
@@ -689,7 +688,7 @@
                   ★ CORE CONCEPT
                 </span>
                 <h2 id="rescue-title" class="text-xs font-bold text-white font-mono truncate max-w-sm">
-                  Degree of Polymerization &amp; Molecular Weight Distribution (PDI)
+                  Ready to Explain Any Lecture Moment
                 </h2>
               </div>
             </div>
@@ -704,7 +703,7 @@
                   <span class="text-[10px] font-mono text-[#f59f38] font-bold bg-[#1e2325] border border-[#e59130]/40 px-2 py-0.5 rounded-none">CORE INTUITION</span>
                 </div>
                 <p id="rescue-why-struggle" class="text-xs text-[#d6dcde] leading-relaxed">
-                  Students struggle with discrete summations and fail to recognize why weight-average (Mw) squares individual chain masses while number-average (Mn) weights them linearly.
+                  Pause at any tricky spot or click any peak above to see plain English breakdowns, real-world analogies, and core formulas.
                 </p>
               </div>
 
@@ -841,7 +840,7 @@
               </span>
             </div>
             <h2 id="diagram-title" class="text-sm font-bold text-white font-mono mt-1.5">
-              Practice: Polydispersity Index &amp; Molecular Weight Formulas
+              Active Recall &amp; Checkpoint Practice
             </h2>
           </div>
 
@@ -914,16 +913,16 @@
               <!-- Filter Pills (Non-Color Relying) -->
               <div class="flex items-center gap-1.5 text-xs font-mono">
                 <button class="pin-filter-btn active bg-[#e59130] text-black font-bold px-2.5 py-1 rounded-none transition-colors cursor-pointer border border-[#f59f38]" data-filter="all">
-                  ALL (<span id="filter-cnt-all">4</span>)
+                  ALL (<span id="filter-cnt-all">0</span>)
                 </button>
                 <button class="pin-filter-btn factorio-btn-secondary px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-[#d6dcde]" data-filter="exam_priority">
-                  ★ EXAM (<span id="filter-cnt-exam">1</span>)
+                  ★ EXAM (<span id="filter-cnt-exam">0</span>)
                 </button>
                 <button class="pin-filter-btn factorio-btn-secondary px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-[#d6dcde]" data-filter="revisit">
-                  ? REVIEW (<span id="filter-cnt-revisit">1</span>)
+                  ? REVIEW (<span id="filter-cnt-revisit">0</span>)
                 </button>
                 <button class="pin-filter-btn factorio-btn-secondary px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-[#d6dcde]" data-filter="key_formula">
-                  ∑ FORMULA (<span id="filter-cnt-formula">2</span>)
+                  ∑ FORMULA (<span id="filter-cnt-formula">0</span>)
                 </button>
               </div>
             </div>
@@ -940,7 +939,7 @@
               <h3 class="text-xs font-bold text-[#f59f38] flex items-center gap-1.5 font-mono uppercase tracking-wider">
                 <i data-lucide="git-compare" class="w-4 h-4 text-[#27ae60]" aria-hidden="true"></i> TERM CROSS-REFERENCE MATRIX
               </h3>
-              <span id="bridges-count-badge" class="text-[10px] font-mono text-[#2ecc71] bg-[#18231c] border border-[#27ae60] px-2 py-0.5 rounded-none font-bold">3 Mappings</span>
+              <span id="bridges-count-badge" class="text-[10px] font-mono text-[#2ecc71] bg-[#18231c] border border-[#27ae60] px-2 py-0.5 rounded-none font-bold">0 Mappings</span>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs border border-[#333b3d] rounded-none factorio-inset overflow-hidden">
@@ -1265,6 +1264,6 @@
   </div>
 
   <!-- SyncLearn Main JavaScript -->
-  <script src="/static/app.js"></script>
+  <script src="/static/app.js?v=2.3_clean"></script>
 </body>
 </html>

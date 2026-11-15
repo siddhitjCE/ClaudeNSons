@@ -164,7 +164,7 @@ def get_folders():
         return {"folders": folders}
     except Exception as e:
         logger.warning(f"get_folders resilient fallback: {e}")
-        return {"folders": [{"id": 1, "name": "Engineering Chemistry: Polymers", "color": "indigo", "icon": "folder", "video_count": 1}]}
+        return {"folders": []}
 
 
 @app.post("/api/folders")

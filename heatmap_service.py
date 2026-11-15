@@ -28,63 +28,8 @@ def get_proxy_url() -> Optional[str]:
     proxy = (os.getenv("YTDLP_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY") or "").strip()
     return proxy if proxy else None
 
-DEFAULT_VIDEO_ID = "fnF67w6rDpg"
-DEFAULT_DURATION = 2700  # 45 minutes
-
 # In-memory cache for fast subsequent lookups
 _HEATMAP_CACHE: Dict[str, Dict[str, Any]] = {}
-
-SEEDED_PEAKS = [
-    {
-        "id": "peak-1",
-        "start_sec": 480,   # 08:00
-        "end_sec": 720,     # 12:00
-        "peak_sec": 590,    # ~09:50
-        "intensity": 0.94,
-        "label": "Degree of Polymerization & Molecular Weight Distribution (PDI)",
-        "description": "High crowd replay peak: Students repeatedly review derivations for Number-Average (Mn) vs Weight-Average (Mw) and Polydispersity Index (PDI = Mw/Mn)."
-    },
-    {
-        "id": "peak-2",
-        "start_sec": 1290,  # 21:30
-        "end_sec": 1470,    # 24:30
-        "peak_sec": 1360,   # ~22:40
-        "intensity": 0.89,
-        "label": "Ziegler-Natta Catalysis & Stereospecific Mechanism",
-        "description": "High replay cluster: Coordination polymerisation mechanism between TiCl4 and Al(C2H5)3, focusing on monometallic vs bimetallic active sites."
-    },
-    {
-        "id": "peak-3",
-        "start_sec": 2160,  # 36:00
-        "end_sec": 2370,    # 39:30
-        "peak_sec": 2260,   # ~37:40
-        "intensity": 0.82,
-        "label": "Vulcanization, Cross-Linking & Viscoelastic Transition",
-        "description": "Critical exam section: Sulfur bridge crosslinking percentage vs polymer chain mobility, contrasting soft tire elastomer with rigid ebonite."
-    }
-]
-
-
-def _generate_seeded_intensity_points(duration_sec: int = 2700, num_points: int = 120) -> List[Dict[str, Any]]:
-    """Generates smooth normalized points matching the pre-seeded Chemistry lecture peaks."""
-    points = []
-    def gaussian(t, mean, std, amp):
-        return amp * math.exp(-0.5 * ((t - mean) / std) ** 2)
-
-    for i in range(num_points):
-        t = (i / (num_points - 1)) * duration_sec
-        pct = round((t / duration_sec) * 100, 2)
-        base = 0.22 + 0.12 * math.exp(-t / 300) + 0.05 * math.sin(t / 250)
-        p1 = gaussian(t, 590, 85, 0.68)
-        p2 = gaussian(t, 1360, 75, 0.62)
-        p3 = gaussian(t, 2260, 80, 0.55)
-        intensity = min(1.0, max(0.08, base + p1 + p2 + p3))
-        points.append({
-            "time_sec": round(t, 1),
-            "percentage": pct,
-            "intensity": round(intensity, 4)
-        })
-    return points
 
 
 def _extract_via_yt_dlp(video_id: str) -> Optional[Dict[str, Any]]:
@@ -267,13 +212,21 @@ def _generate_synthetic_points(duration_sec: int, num_points: int = 100) -> List
 
 def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None, client_title: Optional[str] = None) -> Dict[str, Any]:
     """
-    Main public API hook required by specification:
+    Main public API hook:
     Returns normalized replay intensity points, detected peak windows, and video metadata.
-    
-    If video_id matches the seeded lecture, returns the seeded dataset.
-    Otherwise extracts live heatmap via yt-dlp, with caching and graceful fallback.
+    Extracts live heatmap via yt-dlp with graceful algorithmic fallback if blocked.
     """
-    clean_id = video_id.strip()
+    clean_id = (video_id or "").strip()
+    if not clean_id:
+        return {
+            "video_id": "",
+            "title": "No Video Selected",
+            "duration_sec": 1800,
+            "chapters": [],
+            "intensity_points": [],
+            "peaks": [],
+            "source": "none"
+        }
 
     # Check cache
     if clean_id in _HEATMAP_CACHE:
@@ -282,42 +235,7 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None, client_
             cached["title"] = client_title
         return cached
 
-    # 1. Default seeded lecture
-    if clean_id in (DEFAULT_VIDEO_ID, "default", "", "chemistry_polymers"):
-        duration = DEFAULT_DURATION
-        result = {
-            "video_id": DEFAULT_VIDEO_ID,
-            "title": "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-            "duration_sec": duration,
-            "chapters": [
-                {"start_time": 0, "end_time": 720, "title": "Polymers & Molecular Weight Distribution"},
-                {"start_time": 720, "end_time": 1800, "title": "Ziegler-Natta Catalysis & Stereospecific Mechanism"},
-                {"start_time": 1800, "end_time": 2700, "title": "Vulcanization & Viscoelastic Properties"}
-            ],
-            "intensity_points": _generate_seeded_intensity_points(duration, num_points=120),
-            "peaks": SEEDED_PEAKS,
-            "source": "pre_seeded_curated"
-        }
-        _HEATMAP_CACHE[clean_id] = result
-        return result
-
-    # 2. Pre-seeded high-fidelity data for Veritasium's Antimatter lecture
-    if clean_id == "Y-W-w8yNiKU":
-        extracted = _extract_via_yt_dlp(clean_id)
-        if extracted:
-            _HEATMAP_CACHE[clean_id] = extracted
-            return extracted
-        v_file = os.path.join(os.path.dirname(__file__), "veritasium_heatmap.json")
-        if os.path.exists(v_file):
-            try:
-                with open(v_file, "r", encoding="utf-8") as f:
-                    v_data = json.load(f)
-                    _HEATMAP_CACHE[clean_id] = v_data
-                    return v_data
-            except Exception as e:
-                logger.warning(f"Failed to load seeded veritasium data: {e}")
-
-    # 3. Extract live data using yt-dlp (uses YTDLP_PROXY if set)
+    # 1. Extract live data using yt-dlp (uses YTDLP_PROXY if set)
     logger.info(f"Extracting live YouTube heatmap for {clean_id} via yt-dlp...")
     extracted = _extract_via_yt_dlp(clean_id)
     if extracted:
@@ -326,7 +244,7 @@ def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None, client_
         _HEATMAP_CACHE[clean_id] = extracted
         return extracted
 
-    # 4. Fallback to algorithmic generator scaled to provided duration
+    # 2. Fallback to algorithmic generator scaled to provided duration
     duration = duration_sec or 1800
     points = _generate_synthetic_points(duration, num_points=100)
     peaks = _detect_peaks_from_points(points, duration)

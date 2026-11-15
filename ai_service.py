@@ -614,8 +614,8 @@ def _build_schema_fallback(
             "has_live_transcript": has_live_transcript
         }
 
-    # --- CASE B: POLYMERS & CHEMISTRY (ONLY for polymer lectures or default video) ---
-    if any(k in t_lower for k in ["polymer", "molecular", "pdi", "viscoelastic", "chemistry"]) or video_id == "fnF67w6rDpg":
+    # --- CASE B: POLYMERS & CHEMISTRY ---
+    if any(k in t_lower for k in ["polymer", "molecular", "pdi", "viscoelastic", "chemistry"]):
         return {
             "segment_window": segment_window,
             "section_classification": "Potentially Difficult Mathematical Derivation",
@@ -826,12 +826,12 @@ CURATED_EDUCATIONAL_ALT_VIDEOS = [
     },
     # Chemistry / Polymers
     {
-        "video_id": "fnF67w6rDpg",
+        "video_id": "8X0B3jH2a7Q",
         "title": "Polymer Molecular Weights: Mn, Mw & Polydispersity Index",
         "channel": "MIT OpenCourseWare (3.091)",
-        "thumbnail": "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg",
+        "thumbnail": "https://img.youtube.com/vi/8X0B3jH2a7Q/hqdefault.jpg",
         "description": "Clear derivation of first vs second distribution moments, explaining why squaring Mi biases Mw rightward.",
-        "url": "https://www.youtube.com/watch?v=fnF67w6rDpg",
+        "url": "https://www.youtube.com/watch?v=8X0B3jH2a7Q",
         "duration": "9:42",
         "tag": "Exact Notation Match"
     },

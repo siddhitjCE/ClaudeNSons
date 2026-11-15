@@ -6,9 +6,9 @@
 
 // Global Application State
 const state = {
-  currentVideoId: "fnF67w6rDpg", // Default Engineering Chemistry lecture
-  currentVideoTitle: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-  durationSec: 2700,
+  currentVideoId: null,
+  currentVideoTitle: "",
+  durationSec: 1800,
   currentTimeSec: 0,
   previousTimeSec: 0,
   player: null,
@@ -19,7 +19,7 @@ const state = {
   activeQuiz: null,
   activeFilter: "all",
   activeTab: "tab-content-rescue",
-  currentFolderId: 1,
+  currentFolderId: "all",
   // User-Centred Settings
   analysisWindowSeconds: 240, // Default ±2m (240s window)
   autoPauseEnabled: true,
@@ -28,23 +28,7 @@ const state = {
   pendingDeleteTimeout: null,
   pendingDeletedPin: null,
   // Session Learning Data
-  sessionTerminologyBridges: [
-    {
-      prof_term: "\\bar{M}_n \\text{ vs } \\bar{M}_w",
-      alt_video_term: "Number-Avg vs Weight-Avg Molar Mass",
-      clarification: "Mn linear chains count; Mw squares chain weight reflecting mechanical toughness."
-    },
-    {
-      prof_term: "\\text{PDI} = \\frac{\\bar{M}_w}{\\bar{M}_n}",
-      alt_video_term: "Dispersity Index (Đ)",
-      clarification: "IUPAC standard dispersity. PDI = 1.0 indicates strictly monodisperse chains."
-    },
-    {
-      prof_term: "\\text{DP}_n",
-      alt_video_term: "Chain Length / Degree of Polymerization",
-      clarification: "Average number of repeat monomer units per polymer macromolecule."
-    }
-  ],
+  sessionTerminologyBridges: [],
   missedQuizQuestions: [],
   conceptMastery: { total: 0, unlocked: 0 }
 };
@@ -75,66 +59,27 @@ async function safeFetchJSON(url, options = {}, timeoutMs = 8000) {
   }
 }
 
-const DEFAULT_FOLDERS = [
-  { id: 1, name: "Engineering Chemistry: Polymers", color: "violet", icon: "flask-conical" },
-  { id: 2, name: "Intro to Mechatronics", color: "cyan", icon: "cpu" },
-  { id: 3, name: "Digital Electronics", color: "emerald", icon: "binary" }
-];
-
-const DEFAULT_SAVED_VIDEOS = [
-  {
-    video_id: "fnF67w6rDpg",
-    title: "Engineering Chemistry: Polymers, Molecular Weight Distribution & Stereochemistry",
-    folder_id: 1,
-    duration_sec: 2700,
-    thumbnail_url: "https://img.youtube.com/vi/fnF67w6rDpg/hqdefault.jpg"
-  },
-  {
-    video_id: "lFlu60qs7_4",
-    title: "The line that broke mathematicians for 2000 years",
-    folder_id: 1,
-    duration_sec: 1871,
-    thumbnail_url: "https://img.youtube.com/vi/lFlu60qs7_4/hqdefault.jpg"
-  },
-  {
-    video_id: "Y-W-w8yNiKU",
-    title: "Why is there antimatter?",
-    folder_id: 1,
-    duration_sec: 2123,
-    thumbnail_url: "https://img.youtube.com/vi/Y-W-w8yNiKU/hqdefault.jpg"
-  },
-  {
-    video_id: "fEjvSbI_PT4",
-    title: "Dying Is Complicated",
-    folder_id: 1,
-    duration_sec: 840,
-    thumbnail_url: "https://img.youtube.com/vi/fEjvSbI_PT4/hqdefault.jpg"
-  },
-  {
-    video_id: "KfODG5REyss",
-    title: "I finally saw quantum mechanics with my own eyes... (It's spookier than I expected)",
-    folder_id: 2,
-    duration_sec: 3955,
-    thumbnail_url: "https://img.youtube.com/vi/KfODG5REyss/hqdefault.jpg"
-  },
-  {
-    video_id: "lyfx8CL7AkI",
-    title: "This CHIP Changed the WORLD! MOSFET (ElectroBOOM101 - 012)",
-    folder_id: 3,
-    duration_sec: 738,
-    thumbnail_url: "https://img.youtube.com/vi/lyfx8CL7AkI/hqdefault.jpg"
-  },
-  {
-    video_id: "OSCKBmkrH_g",
-    title: "The Ultimate Component: OpAmp (ElectroBOOM101 – 013)",
-    folder_id: 3,
-    duration_sec: 754,
-    thumbnail_url: "https://img.youtube.com/vi/OSCKBmkrH_g/hqdefault.jpg"
-  }
-];
+const STORAGE_CLEAN_VERSION = "2.1_clean_no_seed";
 
 const StorageManager = {
+  _migrated: false,
+  checkVersion() {
+    if (this._migrated) return;
+    this._migrated = true;
+    try {
+      const ver = localStorage.getItem("synclearn_clean_version");
+      if (ver !== STORAGE_CLEAN_VERSION) {
+        localStorage.removeItem("synclearn_videos");
+        localStorage.removeItem("synclearn_folders");
+        localStorage.removeItem("synclearn_pins");
+        localStorage.removeItem("synclearn_analyses");
+        localStorage.removeItem("synclearn_landing_folder");
+        localStorage.setItem("synclearn_clean_version", STORAGE_CLEAN_VERSION);
+      }
+    } catch (_) {}
+  },
   get(key, defaultValue = null) {
+    this.checkVersion();
     try {
       const val = localStorage.getItem(`synclearn_${key}`);
       return val ? JSON.parse(val) : defaultValue;
@@ -144,6 +89,7 @@ const StorageManager = {
     }
   },
   set(key, value) {
+    this.checkVersion();
     try {
       localStorage.setItem(`synclearn_${key}`, JSON.stringify(value));
       return true;
@@ -160,12 +106,8 @@ const StorageManager = {
 
   // Videos
   getSavedVideos() {
-    const saved = this.get("videos", null);
-    if (!saved || !Array.isArray(saved) || saved.length === 0) {
-      this.set("videos", DEFAULT_SAVED_VIDEOS);
-      return [...DEFAULT_SAVED_VIDEOS];
-    }
-    return saved;
+    const list = this.get("videos", []);
+    return Array.isArray(list) ? list : [];
   },
   saveVideo(videoRecord) {
     if (!videoRecord || !videoRecord.video_id) return;
@@ -186,6 +128,7 @@ const StorageManager = {
 
   // Pins
   getPins(videoId) {
+    if (!videoId) return [];
     const allPins = this.get("pins", []);
     return allPins.filter(p => p.video_id === videoId);
   },
@@ -210,12 +153,8 @@ const StorageManager = {
 
   // Folders
   getFolders() {
-    const folders = this.get("folders", null);
-    if (!folders || !Array.isArray(folders) || folders.length === 0) {
-      this.set("folders", DEFAULT_FOLDERS);
-      return [...DEFAULT_FOLDERS];
-    }
-    return folders;
+    const list = this.get("folders", []);
+    return Array.isArray(list) ? list : [];
   },
   saveFolder(folder) {
     if (!folder) return;
@@ -483,7 +422,7 @@ const OnboardingTour = {
       description: "Save notes and key formulas anytime with Alt + S. In Tab 3, everything you save is automatically organized into a clean 1-page study guide ready to print for exams!",
       actionText: "Finish Tour & Start Learning! 🎉",
       onEnter: () => {
-        switchTab("tab-content-notes");
+        switchTab("tab-content-cheatsheet");
       }
     }
   ],
@@ -639,8 +578,8 @@ const OnboardingTour = {
   }
 };
 
-// Initialize Application on DOM Ready
-document.addEventListener("DOMContentLoaded", () => {
+// Initialize Application on DOM Ready (Safe for both pre- and post-DOMContentLoaded execution)
+function initSyncLearnApp() {
   initUIEventListeners();
   loadSubjectFolders();
   renderCheatSheetBridges();
@@ -669,7 +608,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // Standard site entry: Always open on Landing Page!
     navigateToLanding(false);
   }
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initSyncLearnApp);
+} else {
+  initSyncLearnApp();
+}
 
 // ==========================================
 // 1. YOUTUBE IFRAME PLAYER INTEGRATION (BULLETPROOF)
@@ -683,10 +628,9 @@ function initYouTubePlayer() {
 
   try {
     if (window.YT && window.YT.Player) {
-      state.player = new YT.Player("youtube-player", {
+      const cfg = {
         height: "100%",
         width: "100%",
-        videoId: state.currentVideoId,
         playerVars: {
           enablejsapi: 1,
           playsinline: 1,
@@ -698,13 +642,19 @@ function initYouTubePlayer() {
           onStateChange: onPlayerStateChange,
           onError: onPlayerError
         }
-      });
-    } else {
+      };
+      if (state.currentVideoId) {
+        cfg.videoId = state.currentVideoId;
+      }
+      state.player = new YT.Player("youtube-player", cfg);
+    } else if (state.currentVideoId) {
       fallbackToDirectIframe();
     }
   } catch (err) {
     console.warn("YT.Player initialization notice:", err);
-    fallbackToDirectIframe();
+    if (state.currentVideoId) {
+      fallbackToDirectIframe();
+    }
   }
 }
 
@@ -732,7 +682,7 @@ setTimeout(() => {
     loader.style.opacity = "0";
     setTimeout(() => loader.classList.add("hidden"), 300);
   }
-  if (!state.isPlayerReady) {
+  if (!state.isPlayerReady && state.currentVideoId) {
     fallbackToDirectIframe();
   }
 }, 2200);
@@ -743,6 +693,13 @@ function onPlayerReady(event) {
   if (loader) {
     loader.style.opacity = "0";
     setTimeout(() => loader.classList.add("hidden"), 300);
+  }
+
+  // Load active video if one was queued
+  if (state.currentVideoId && state.player && typeof state.player.loadVideoById === "function") {
+    try {
+      state.player.loadVideoById(state.currentVideoId);
+    } catch (_) {}
   }
 
   // Client-Side Extraction: Grab real title from YouTube player session
@@ -780,10 +737,13 @@ function onPlayerReady(event) {
 
 function onPlayerError(event) {
   console.warn("YouTube Player error event:", event);
-  fallbackToDirectIframe();
+  if (state.currentVideoId) {
+    fallbackToDirectIframe();
+  }
 }
 
 function fallbackToDirectIframe() {
+  if (!state.currentVideoId) return;
   const container = document.getElementById("youtube-player");
   if (container && (!state.player || !state.isPlayerReady)) {
     container.innerHTML = `
@@ -1089,6 +1049,8 @@ async function loadVideoStudio(videoId, customTitle = null) {
       } catch (e) {
         fallbackToDirectIframe();
       }
+    } else if (window.YT && window.YT.Player) {
+      initYouTubePlayer();
     } else {
       fallbackToDirectIframe();
     }
@@ -1119,7 +1081,7 @@ async function loadVideoStudio(videoId, customTitle = null) {
         resolvedTitle = matchSaved.title;
       }
     }
-    if (!resolvedTitle && videoId !== "fnF67w6rDpg") {
+    if (!resolvedTitle) {
       resolvedTitle = await fetchClientVideoTitle(videoId);
     }
     if (resolvedTitle) {
@@ -1129,10 +1091,8 @@ async function loadVideoStudio(videoId, customTitle = null) {
     }
 
     // Reset session bridges and missed questions for a new video
-    if (videoId !== "fnF67w6rDpg") {
-      state.sessionTerminologyBridges = [];
-      state.missedQuizQuestions = [];
-    }
+    state.sessionTerminologyBridges = [];
+    state.missedQuizQuestions = [];
     renderCheatSheetBridges();
     renderCheatSheetMissedMCQs();
 
@@ -1381,12 +1341,9 @@ function initTimelineInteractions() {
 
 async function loadPins(videoId) {
   // 1. Immediately load from localStorage (instant 0 ms load)
-  const localPins = StorageManager.getPins(videoId);
-  if (localPins && localPins.length > 0) {
-    state.pins = localPins;
-    renderTimelinePins();
-    renderCheatSheetPins();
-  }
+  state.pins = StorageManager.getPins(videoId) || [];
+  renderTimelinePins();
+  renderCheatSheetPins();
 
   // 2. Synchronize with backend in background
   try {
@@ -3158,16 +3115,14 @@ function populateFolderSelect(folders) {
 
 async function loadSubjectFolders() {
   // 1. Instant local render from StorageManager (0 ms latency)
-  const localFolders = StorageManager.getFolders();
-  if (localFolders && localFolders.length > 0) {
-    state.folders = localFolders;
-    populateFolderSelect(localFolders);
-    renderLandingFolders(localFolders);
-  }
+  const localFolders = StorageManager.getFolders() || [];
+  state.folders = localFolders;
+  populateFolderSelect(localFolders);
+  renderLandingFolders(localFolders);
 
   // 2. Background sync with serverless endpoint
   const data = await safeFetchJSON("/api/folders");
-  if (data && data.folders && data.folders.length > 0) {
+  if (data && Array.isArray(data.folders) && data.folders.length > 0) {
     data.folders.forEach(sf => StorageManager.saveFolder(sf));
     const mergedFolders = StorageManager.getFolders();
     state.folders = mergedFolders;
@@ -3315,8 +3270,8 @@ async function loadLandingFolderVideos(folderId) {
       grid.innerHTML = `
         <div class="col-span-full py-8 text-center text-xs text-[#8a9699] bg-[#17191a] border border-dashed border-[#3d484b] rounded-none space-y-2 p-6">
           <i data-lucide="folder-open" class="w-7 h-7 text-[#8a9699] mx-auto" aria-hidden="true"></i>
-          <p class="font-bold text-slate-200">No lectures in this subject yet.</p>
-          <p class="text-[11px] text-[#8a9699]">Paste any YouTube lecture link above to add a video into this subject!</p>
+          <p class="font-bold text-slate-200">${(!folderId || folderId === 'all') ? 'No lectures in your library yet.' : 'No lectures in this subject yet.'}</p>
+          <p class="text-[11px] text-[#8a9699]">${(!folderId || folderId === 'all') ? 'Paste any YouTube lecture link above to start studying!' : 'Paste any YouTube lecture link above to add a video into this subject!'}</p>
         </div>
       `;
       lucide.createIcons();

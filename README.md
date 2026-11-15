@@ -14,11 +14,8 @@
 
 ### 1. Top Navigation Bar
 - **App Branding:** `SyncLearn | Personal Interactive Study Studio` (by Team ClaudeNSons).
-- **Personal Subject Folder Dropdown:** Pre-populated with user-curated folders:
-  - *Engineering Chemistry: Polymers* (Active default)
-  - *Intro to Mechatronics*
-  - *Digital Electronics*
-  - `+ Add To Personal Library` (Modal to create custom folders with colors & icons).
+- **Personal Subject Folder Dropdown:**
+  - Create and organize custom study subjects with colors & icons (`+ Add To Personal Library`).
 - **Universal YouTube Lecture Input:** Paste any educational YouTube URL (e.g., `https://www.youtube.com/watch?v=...`) or video ID to instantly load it into your study studio.
 
 ### 2. Main Split-Screen Studio Layout
@@ -58,11 +55,10 @@
 
 A dedicated file `heatmap_service.py` is included with the signature:
 ```python
-def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None) -> dict:
+def get_video_heatmap(video_id: str, duration_sec: Optional[int] = None, client_title: Optional[str] = None) -> dict:
 ```
-- For the pre-seeded default lecture (`fnF67w6rDpg`), it provides a high-fidelity 120-point normalized dataset with major peaks at `08:00–12:00`, `21:30–24:30`, and `36:00–39:30`.
-- Includes a dedicated teammate hook to paste custom extraction code (such as `yt-most-replayed` / Lemnoslife / Apify scraper).
-- Falls back to algorithmic Fourier/Gaussian peaks so the studio never breaks when offline.
+- Extracts live crowd replay intensity data and detected peak zones dynamically for any YouTube video via `yt-dlp`.
+- Gracefully falls back to algorithmic synthetic peaks so the timeline scrubber and tricky spot navigator always work smoothly even under datacenter IP restrictions.
 
 ---
 
