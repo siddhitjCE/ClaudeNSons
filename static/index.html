@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SyncLearn | Interactive Video Learning &amp; Deep Understanding</title>
   
-  <!-- Yamauchi No.10 Google Fonts (Press Start 2P, Share Tech Mono, Inter) -->
+  <!-- Google Fonts (Press Start 2P, Share Tech Mono, Inter) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN with Yamauchi No.10 Palette -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -64,7 +64,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
-  <!-- Yamauchi No.10 Theme CSS -->
+  <!-- Theme CSS -->
   <link rel="stylesheet" href="/static/styles.css" />
 
   <!-- Standard SPA View & Refresh Routing State -->
@@ -84,13 +84,13 @@
   <!-- Retro Arcade CRT Scanlines Overlay -->
   <div class="yn10-scanlines-overlay" aria-hidden="true"></div>
 
-  <!-- 0. FULL-SCREEN LANDING PAGE OVERLAY (YAMAUCHI NO.10 / Y-N10 AESTHETICS) -->
+  <!-- 0. FULL-SCREEN LANDING PAGE OVERLAY -->
   <div id="landing-page-view" class="fixed inset-0 z-50 bg-[#0a0b0d] flex flex-col justify-between overflow-y-auto p-6 sm:p-10 rounded-none relative">
     
-    <!-- 3D Floating Voxels & Clusters in Background (Yamauchi No.10 3D Pixel Universe) -->
+    <!-- 3D Floating Voxels & Clusters in Background -->
     <div class="yn10-scene-3d absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
       <!-- 1. Red 3D Voxel (Top Left) -->
-      <div class="yn10-floating-voxel top-12 left-16" title="3D Voxel // 立体画素">
+      <div class="yn10-floating-voxel top-12 left-16" title="3D Voxel">
         <div class="yn10-voxel v-red v-lg tumble-a">
           <div class="v-face v-top"></div><div class="v-face v-front"></div>
           <div class="v-face v-right"></div><div class="v-face v-left"></div>
@@ -99,7 +99,7 @@
       </div>
 
       <!-- 2. Cyan & Yellow 3D Voxel L-Cluster (Top Right) -->
-      <div class="yn10-floating-voxel top-16 right-24" title="3D Voxel Cluster // 集合体">
+      <div class="yn10-floating-voxel top-16 right-24" title="3D Voxel Cluster">
         <div class="yn10-voxel-cluster tumble-b">
           <div class="yn10-voxel v-cyan v-md" style="margin-right: -4px;">
             <div class="v-face v-top"></div><div class="v-face v-front"></div>
@@ -115,7 +115,7 @@
       </div>
 
       <!-- 3. Yellow 3D Voxel (Bottom Left) -->
-      <div class="yn10-floating-voxel bottom-36 left-20" title="3D Voxel // 立体画素">
+      <div class="yn10-floating-voxel bottom-36 left-20" title="3D Voxel">
         <div class="yn10-voxel v-yellow v-md spin-step">
           <div class="v-face v-top"></div><div class="v-face v-front"></div>
           <div class="v-face v-right"></div><div class="v-face v-left"></div>
@@ -124,7 +124,7 @@
       </div>
 
       <!-- 4. Green 3D Voxel (Bottom Right) -->
-      <div class="yn10-floating-voxel bottom-24 right-20" title="3D Voxel // 立体画素">
+      <div class="yn10-floating-voxel bottom-24 right-20" title="3D Voxel">
         <div class="yn10-voxel v-green v-lg tumble-b">
           <div class="v-face v-top"></div><div class="v-face v-front"></div>
           <div class="v-face v-right"></div><div class="v-face v-left"></div>
@@ -133,7 +133,7 @@
       </div>
 
       <!-- 5. White / Metallic 3D Voxel (Mid Left) -->
-      <div class="yn10-floating-voxel top-1/2 left-8" title="3D Voxel // 立体画素">
+      <div class="yn10-floating-voxel top-1/2 left-8" title="3D Voxel">
         <div class="yn10-voxel v-white v-sm tumble-a">
           <div class="v-face v-top"></div><div class="v-face v-front"></div>
           <div class="v-face v-right"></div><div class="v-face v-left"></div>
@@ -142,7 +142,7 @@
       </div>
 
       <!-- 6. Cyan 3D Voxel (Mid Right) -->
-      <div class="yn10-floating-voxel top-1/3 right-10" title="3D Voxel // 立体画素">
+      <div class="yn10-floating-voxel top-1/3 right-10" title="3D Voxel">
         <div class="yn10-voxel v-cyan v-md spin-iso">
           <div class="v-face v-top"></div><div class="v-face v-front"></div>
           <div class="v-face v-right"></div><div class="v-face v-left"></div>
@@ -151,7 +151,7 @@
       </div>
 
       <!-- 7. Dual Red-Green Voxel Pair (Bottom Center) -->
-      <div class="yn10-floating-voxel bottom-12 left-1/3" title="3D Voxel Pair // 対話">
+      <div class="yn10-floating-voxel bottom-12 left-1/3" title="3D Voxel Pair">
         <div class="yn10-voxel-cluster tumble-a">
           <div class="yn10-voxel v-red v-sm">
             <div class="v-face v-top"></div><div class="v-face v-front"></div>
@@ -170,18 +170,18 @@
     <!-- Top Header HUD -->
     <header class="max-w-6xl mx-auto w-full flex items-center justify-between pb-4 border-b border-[#22272b] relative z-10">
       <div class="flex items-center space-x-3.5">
-        <!-- y-n10 Pixel Logo Box -->
+        <!-- Retro Pixel Logo Box -->
         <div class="w-10 h-10 bg-[#14171a] border-2 border-white flex flex-col justify-between p-1 shadow-[3px_3px_0px_#ffffff] select-none">
           <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#e60012]"></span><span class="w-1.5 h-1.5 bg-[#0080ff]"></span></div>
-          <div class="text-[9px] font-mono font-black text-center text-white leading-none">Nº10</div>
+          <div class="text-[9px] font-mono font-black text-center text-white leading-none">SYNC</div>
           <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#ffe600]"></span><span class="w-1.5 h-1.5 bg-[#00d050]"></span></div>
         </div>
         <div>
           <span class="text-lg font-black tracking-tight text-white block leading-tight">
-            SYNC<span class="text-[#e60012]">.10</span>
+            SYNC<span class="text-[#e60012]">LEARN</span>
           </span>
           <span class="text-[10px] text-[#889296] font-mono tracking-widest uppercase block">
-            STUDY STUDIO // 学習研究所
+            INTERACTIVE STUDY STUDIO
           </span>
         </div>
       </div>
@@ -213,18 +213,18 @@
               <div class="v-face v-back"></div><div class="v-face v-bottom"></div>
             </div>
           </div>
-          <span>STAGE 01 // 理念</span>
+          <span>01 • COURSE LIBRARY</span>
         </div>
       </div>
     </header>
 
-    <!-- Centered Hero Section (Yamauchi No.10 Marquee & Manifesto) -->
+    <!-- Centered Hero Section (Marquee & Concept Headline) -->
     <main class="max-w-4xl mx-auto w-full py-8 my-auto text-center space-y-6 relative z-10">
       
       <!-- Central Pixel Art Marquee Sign with Flanking 3D Voxels -->
       <div class="relative max-w-2xl mx-auto flex items-center justify-center">
         <!-- Left Flanking 3D Voxel -->
-        <div class="hidden sm:block absolute -left-10 yn10-scene-3d yn10-floating-voxel cursor-pointer" title="Click me! // 3D画素">
+        <div class="hidden sm:block absolute -left-10 yn10-scene-3d yn10-floating-voxel cursor-pointer" title="Click to interact">
           <div class="yn10-voxel v-red v-md spin-step">
             <div class="v-face v-top"></div><div class="v-face v-front"></div>
             <div class="v-face v-right"></div><div class="v-face v-left"></div>
@@ -242,7 +242,7 @@
                 <div class="v-face v-back"></div><div class="v-face v-bottom"></div>
               </div>
             </div>
-            <span class="text-[#ffe600]">Nº10</span>
+            <span class="text-[#ffe600]">STUDY</span>
             <div class="yn10-scene-3d inline-block">
               <div class="yn10-voxel v-cyan v-xs spin-iso">
                 <div class="v-face v-top"></div><div class="v-face v-front"></div>
@@ -254,13 +254,13 @@
           </div>
           <div class="flex items-center justify-center gap-2.5 mt-2.5">
             <span class="w-2 h-2 bg-[#00d050]"></span>
-            <span class="text-[11px] font-mono tracking-[0.2em] text-[#889296] uppercase">INTERACTIVE ROAD MOVIE // 動画学習の旅</span>
+            <span class="text-[11px] font-mono tracking-[0.2em] text-[#889296] uppercase">FIRST-PRINCIPLES ACTIVE LEARNING</span>
             <span class="w-2 h-2 bg-[#e60012]"></span>
           </div>
         </div>
 
         <!-- Right Flanking 3D Voxel -->
-        <div class="hidden sm:block absolute -right-10 yn10-scene-3d yn10-floating-voxel cursor-pointer" title="Click me! // 3D画素">
+        <div class="hidden sm:block absolute -right-10 yn10-scene-3d yn10-floating-voxel cursor-pointer" title="Click to interact">
           <div class="yn10-voxel v-cyan v-md spin-step">
             <div class="v-face v-top"></div><div class="v-face v-front"></div>
             <div class="v-face v-right"></div><div class="v-face v-left"></div>
@@ -269,25 +269,25 @@
         </div>
       </div>
 
-      <!-- Manifesto Headline -->
+      <!-- Brilliant-Style Encouraging Concept Headline -->
       <div class="space-y-2">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-[#14171a] border border-[#ffffff]/30 text-white text-xs font-mono font-bold tracking-widest uppercase">
-          <span>DREAM. LEAP. LEARN. // 思考。跳躍。習得。</span>
+          <span>THINK. EXPLORE. MASTER.</span>
         </div>
 
         <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight max-w-3xl mx-auto uppercase">
-          Seeking passive watching <span class="text-[#ffe600] underline decoration-[#e60012] decoration-4 underline-offset-8">only clouds your soul.</span>
+          Master difficult concepts <span class="text-[#ffe600] underline decoration-[#e60012] decoration-4 underline-offset-8">through active intuition.</span>
         </h1>
 
         <p class="text-[#b0bac0] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed pt-1">
-          Paste any lecture. SyncLearn highlights where students get stuck, unpacks complex derivations in plain English, and helps you test your intuition with interactive recall checkpoints.
+          Paste any lecture. SyncLearn uncovers exactly where students hit stumbling blocks, unpacks chalkboard math with simple first-principles analogies, and lets you master each idea through hands-on practice.
         </p>
       </div>
 
-      <!-- URL Form (y-n10 Tactile Form) -->
+      <!-- URL Form (Tactile Form) -->
       <form id="landing-url-form" class="max-w-2xl mx-auto text-left pt-2 space-y-2">
         <label for="landing-url-input" class="block text-xs font-mono uppercase tracking-wider text-[#a0abb0] ml-1 flex items-center justify-between">
-          <span>ENTER LECTURE URL // 動画講義リンクを入力</span>
+          <span>PASTE ANY LECTURE LINK</span>
           <span class="text-[10px] text-[#637077]">PRESS ENTER ➔</span>
         </label>
         <div class="flex flex-col sm:flex-row gap-2.5">
@@ -296,7 +296,7 @@
             <input 
               type="text" 
               id="landing-url-input" 
-              placeholder="e.g. https://www.youtube.com/watch?v=..." 
+              placeholder="Paste any YouTube lecture link to explore (e.g. MIT OCW, 3Blue1Brown)..." 
               class="w-full min-h-[52px] bg-[#0e1113] border-2 border-[#384045] focus:border-white rounded-none pl-11 pr-4 text-sm text-white placeholder-[#5d686e] focus:outline-none font-mono"
               autocomplete="off"
             />
@@ -306,7 +306,7 @@
             id="landing-submit-btn" 
             class="yn10-btn-primary min-h-[52px] px-8 rounded-none text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
           >
-            <span>ENTER &rarr;</span>
+            <span>START LEARNING &rarr;</span>
           </button>
         </div>
         <p id="landing-url-error" class="hidden text-xs text-rose-400 font-mono pl-1 flex items-center gap-1.5" role="alert">
@@ -320,9 +320,9 @@
         <div class="flex items-center justify-between border-b border-[#272c30] pb-2.5">
           <h2 class="text-xs sm:text-sm font-mono uppercase tracking-wider text-white flex items-center gap-2">
             <span class="w-2.5 h-2.5 bg-[#ffe600] inline-block"></span>
-            <span>01 • SAVED COURSES &amp; LECTURES // 学習ライブラリ</span>
+            <span>01 • EXPLORE STUDY SUBJECTS &amp; LECTURES</span>
           </h2>
-          <span class="text-xs text-[#889296] font-mono hidden sm:inline">COORDS: X-10 Y-20 • READY</span>
+          <span class="text-xs text-[#889296] font-mono hidden sm:inline">STATUS: READY • CHOOSE A TOPIC</span>
         </div>
 
         <!-- Folder Pills on Landing Page -->
@@ -336,7 +336,7 @@
         </div>
       </div>
 
-      <!-- 3-Column Feature Highlights (y-n10 3D Voxel Cards) -->
+      <!-- 3-Column Feature Highlights (3D Voxel Cards) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 text-left max-w-4xl mx-auto">
         <div class="p-5 rounded-none yn10-pixel-box space-y-2">
           <div class="flex items-center justify-between mb-3">
@@ -351,9 +351,9 @@
               </div>
             </div>
           </div>
-          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">01 REPLAY HEATMAP // 難所熱線</h2>
+          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">01 REPLAY HEATMAP</h2>
           <p class="text-xs text-[#889296] leading-relaxed">
-            See where thousands of students hit rewind. Jump straight into the trickiest explanations without searching.
+            Find tricky moments instantly. See where students rewind most, and jump directly into the concepts that require the deepest intuition.
           </p>
         </div>
 
@@ -370,9 +370,9 @@
               </div>
             </div>
           </div>
-          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">02 INTUITION ENGINE // 直感解説</h2>
+          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">02 INTUITION ENGINE</h2>
           <p class="text-xs text-[#889296] leading-relaxed">
-            Complex derivations explained in plain English, using the instructor's exact terms and chalkboard formulas.
+            Chalkboard math made simple. Every complex derivation is translated into visual, first-principles reasoning using the instructor's exact terms.
           </p>
         </div>
 
@@ -389,80 +389,82 @@
               </div>
             </div>
           </div>
-          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">03 ACTIVE RECALL // 記憶定着</h2>
+          <h2 class="text-sm font-bold text-white uppercase font-mono tracking-wide">03 ACTIVE PRACTICE</h2>
           <p class="text-xs text-[#889296] leading-relaxed">
-            Don't just watch passively. Fill in missing steps and solve checkpoint puzzles to lock in your understanding.
+            Learn by doing, not watching. Solve quick interactive checkpoints and fill-in-the-blank concept puzzles to prove you truly understand.
           </p>
         </div>
       </div>
     </main>
 
-    <!-- Continuous Retro Scrolling Ticker Band (Yamauchi No.10 Ticker) -->
+    <!-- Continuous Retro Scrolling Ticker Band -->
     <div class="yn10-ticker-band my-4" aria-hidden="true">
       <div class="yn10-ticker-content">
-        <span>[ SYNCLEARN STUDIO ]</span>
-        <span>理念 // PHILOSOPHY &amp; PEDAGOGY</span>
-        <span>STAGE 01: COURSE SELECTION</span>
-        <span>STAGE 02: ACTIVE LECTURE PLAYBACK</span>
-        <span>HEATMAP ROAD MOVIE タイムライン</span>
-        <span>8-BIT RETRO INTERACTIVE SYNTHESIZER</span>
-        <span>CLAUDENSONS ARCHIVE // 2026</span>
-        <span>[ SYNCLEARN STUDIO ]</span>
-        <span>理念 // PHILOSOPHY &amp; PEDAGOGY</span>
-        <span>STAGE 01: COURSE SELECTION</span>
-        <span>STAGE 02: ACTIVE LECTURE PLAYBACK</span>
-        <span>HEATMAP ROAD MOVIE タイムライン</span>
-        <span>8-BIT RETRO INTERACTIVE SYNTHESIZER</span>
-        <span>CLAUDENSONS ARCHIVE // 2026</span>
+        <span>[ ACTIVE LEARNING STUDIO ]</span>
+        <span>FIRST-PRINCIPLES INTUITION</span>
+        <span>STEP-BY-STEP CONCEPT BREAKDOWNS</span>
+        <span>INTERACTIVE PROBLEM SOLVING</span>
+        <span>BITE-SIZED PUZZLE CHECKPOINTS</span>
+        <span>MASTER MATH, SCIENCE &amp; ENGINEERING</span>
+        <span>BUILT FOR DEEP RETENTION</span>
+        <span>THINK. EXPLORE. MASTER.</span>
+        <span>[ ACTIVE LEARNING STUDIO ]</span>
+        <span>FIRST-PRINCIPLES INTUITION</span>
+        <span>STEP-BY-STEP CONCEPT BREAKDOWNS</span>
+        <span>INTERACTIVE PROBLEM SOLVING</span>
+        <span>BITE-SIZED PUZZLE CHECKPOINTS</span>
+        <span>MASTER MATH, SCIENCE &amp; ENGINEERING</span>
+        <span>BUILT FOR DEEP RETENTION</span>
+        <span>THINK. EXPLORE. MASTER.</span>
       </div>
     </div>
 
     <!-- Bottom Footer -->
     <footer class="max-w-6xl mx-auto w-full pt-4 border-t border-[#2d3437] text-center text-xs text-[#8f9ea2] font-mono flex items-center justify-between">
-      <span>SYNCLEARN • INTERACTIVE STUDY STUDIO</span>
-      <span>BUILT FOR DEEP INTUITION • TEAM CLAUDENSONS</span>
+      <span>SYNCLEARN • FIRST-PRINCIPLES STUDY STUDIO</span>
+      <span>ACTIVE LEARNING THAT ACTUALLY STICKS • TEAM CLAUDENSONS</span>
     </footer>
   </div>
 
-  <!-- TOP YAMAUCHI NO.10 CONSOLE BAR // 制御コンソール -->
+  <!-- TOP CONSOLE BAR -->
   <header class="sticky top-0 z-40 bg-[#0a0b0d]/98 backdrop-blur-md border-b-2 border-[#272c30] px-4 lg:px-6 py-2.5 shadow-xl rounded-none">
     <div class="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-3">
       
       <!-- Brand & Team + Home Button -->
       <div class="flex items-center space-x-3">
         <button 
-          id="back-to-landing-btn"
-          type="button"
-          class="yn10-btn min-h-[38px] px-3.5 py-1.5 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer uppercase tracking-wider"
+          id="back-to-landing-btn" 
+          type="button" 
+          class="yn10-btn min-h-[38px] px-3.5 py-1.5 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer uppercase tracking-wider" 
           title="Return to Course Library"
         >
           <i data-lucide="arrow-left" class="w-3.5 h-3.5" aria-hidden="true"></i>
-          <span>&larr; COURSES // 一覧</span>
+          <span>&larr; COURSES</span>
         </button>
 
         <button 
-          id="workspace-logo-btn"
-          type="button"
-          class="flex items-center space-x-2 text-left cursor-pointer bg-transparent border-0 p-0 text-inherit hover:opacity-90"
+          id="workspace-logo-btn" 
+          type="button" 
+          class="flex items-center space-x-2 text-left cursor-pointer bg-transparent border-0 p-0 text-inherit hover:opacity-90" 
           title="Return to Course Library"
         >
-          <!-- Yamauchi No.10 Pixel Logo Box -->
+          <!-- Retro Pixel Logo Box -->
           <div class="w-9 h-9 bg-[#14171a] border-2 border-white flex flex-col justify-between p-1 shadow-[2px_2px_0px_#ffffff] select-none">
             <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#e60012]"></span><span class="w-1.5 h-1.5 bg-[#0080ff]"></span></div>
-            <div class="text-[8px] font-mono font-black text-center text-white leading-none">Nº10</div>
+            <div class="text-[8px] font-mono font-black text-center text-white leading-none">SYNC</div>
             <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#ffe600]"></span><span class="w-1.5 h-1.5 bg-[#00d050]"></span></div>
           </div>
           <div>
             <div class="flex items-center space-x-2">
               <span class="text-base font-black tracking-tight text-white">
-                SYNC<span class="text-[#e60012]">.10</span>
+                SYNC<span class="text-[#e60012]">LEARN</span>
               </span>
               <span class="text-[9px] px-1.5 py-0.5 rounded-none bg-[#14171a] border border-[#ffffff]/40 text-[#ffe600] font-mono font-bold uppercase tracking-wider">
-                STUDIO // 学習研究所
+                STUDY LAB
               </span>
             </div>
             <p class="text-[10px] text-[#889296] font-mono flex items-center gap-1">
-              DREAM. LEAP. LEARN. • Team ClaudeNSons
+              THINK. EXPLORE. MASTER. • Active Learning
             </p>
           </div>
         </button>
@@ -471,7 +473,7 @@
       <!-- Center: Personal Subject Folder Dropdown & Browse Videos Button -->
       <div class="flex items-center space-x-2 bg-[#0e1113] border-2 border-[#272c30] rounded-none px-3 py-1.5">
         <span class="w-2 h-2 bg-[#ffe600] inline-block"></span>
-        <label for="folder-select" class="text-xs text-[#889296] font-mono font-bold hidden sm:inline">SUBJECT // 項目:</label>
+        <label for="folder-select" class="text-xs text-[#889296] font-mono font-bold hidden sm:inline">SUBJECT:</label>
         <select 
           id="folder-select" 
           aria-label="Select Subject Study Folder"
@@ -490,7 +492,7 @@
           title="Browse lectures in this subject"
         >
           <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-[#00e5ff]" aria-hidden="true"></i>
-          <span>LECTURES // 講義</span>
+          <span>LECTURES</span>
         </button>
       </div>
 
@@ -521,7 +523,7 @@
           title="Open interactive step-by-step study guide"
         >
           <i data-lucide="help-circle" class="w-3.5 h-3.5 text-[#ffe600]" aria-hidden="true"></i>
-          <span>TOUR // 案内</span>
+          <span>GUIDE</span>
         </button>
       </div>
 
@@ -534,7 +536,7 @@
             <input 
               type="text" 
               id="youtube-url-input" 
-              placeholder="Paste any YouTube lecture link..." 
+              placeholder="Paste any YouTube lecture link to explore..." 
               aria-label="Paste YouTube Lecture Link"
               class="w-full bg-[#0e1113] border-2 border-[#272c30] rounded-none pl-9 pr-3 py-2 text-xs text-white placeholder-[#545e63] focus:outline-none focus:border-white font-mono"
             />
@@ -543,7 +545,7 @@
               class="yn10-btn-primary min-h-[40px] text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-none flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
             >
               <i data-lucide="play" class="w-3.5 h-3.5 fill-current" aria-hidden="true"></i>
-              <span>LOAD ➔</span>
+              <span>ANALYZE ➔</span>
             </button>
           </div>
         </div>
@@ -563,7 +565,7 @@
     <!-- LEFT COLUMN (60% width = 7/12 cols in LG) -->
     <div class="lg:col-span-7 flex flex-col space-y-3.5">
       
-      <!-- Video Player Card (Yamauchi No.10 Pixel Studio Frame) -->
+      <!-- Video Player Card (Pixel Studio Frame) -->
       <div class="yn10-pixel-box rounded-none p-3.5 shadow-2xl overflow-hidden bg-[#111417]">
         
         <!-- Lecture Header Banner -->
@@ -577,7 +579,7 @@
                   <div class="v-face v-back"></div><div class="v-face v-bottom"></div>
                 </div>
               </div>
-              <span>STAGE 02 // 講義映像</span>
+              <span>STAGE 02 • LECTURE</span>
             </span>
             <h1 id="video-title" class="text-sm font-bold text-white truncate font-mono">
               Engineering Chemistry: Polymers, Molecular Weight Distribution &amp; Stereochemistry
@@ -588,11 +590,11 @@
           </span>
         </div>
 
-        <!-- Auto-Pause Toast Notification Banner (Yamauchi Checkpoint Alert) -->
+        <!-- Auto-Pause Toast Notification Banner -->
         <div id="autopause-toast" class="hidden mb-2.5 p-3 rounded-none bg-[#14171a] border-2 border-[#ffe600] shadow-[3px_3px_0px_#ffe600] flex items-center justify-between text-xs text-[#ffe600]" role="status" aria-live="polite">
           <div class="flex items-center gap-2 font-mono">
             <span class="w-2.5 h-2.5 bg-[#e60012] inline-block animate-pulse"></span>
-            <span id="autopause-toast-msg" class="font-bold">⚡ CHECKPOINT REACHED // 一時停止: テストで理解を確認しましょう！</span>
+            <span id="autopause-toast-msg" class="font-bold">⚡ CHECKPOINT REACHED: Test your understanding with an interactive puzzle!</span>
           </div>
           <button id="dismiss-autopause-toast-btn" class="text-[#ffe600] hover:text-white p-1 rounded-none cursor-pointer" aria-label="Dismiss Notification">
             <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
@@ -605,7 +607,7 @@
           <!-- Loading placeholder if player initializing -->
           <div id="player-loader" class="absolute inset-0 bg-[#0a0b0d]/95 flex flex-col items-center justify-center text-[#889296] text-xs gap-2 pointer-events-none font-mono">
             <i data-lucide="loader-2" class="w-6 h-6 animate-spin text-[#00e5ff]" aria-hidden="true"></i>
-            <span>INITIALIZING PLAYBACK MATRIX... // 準備中</span>
+            <span>INITIALIZING VIDEO PLAYER...</span>
           </div>
         </div>
 
@@ -627,7 +629,7 @@
           </div>
 
           <div class="flex items-center space-x-2 font-mono">
-            <label for="playback-speed-select" class="text-xs text-[#889296] font-bold">SPEED // 速度:</label>
+            <label for="playback-speed-select" class="text-xs text-[#889296] font-bold">SPEED:</label>
             <select id="playback-speed-select" aria-label="Playback Speed" class="bg-[#0e1113] border border-[#272c30] rounded-none px-2 py-1 text-xs text-white focus:outline-none cursor-pointer">
               <option value="0.75">0.75x</option>
               <option value="1" selected>1.0x</option>
@@ -638,14 +640,14 @@
           </div>
         </div>
 
-        <!-- DUAL-SIGNAL SCRUBBER & HEATMAP TIMELINE (y-n10 ROAD MOVIE TRACK) -->
+        <!-- DUAL-SIGNAL SCRUBBER & HEATMAP TIMELINE -->
         <div class="mt-3.5 pt-3 border-t border-[#272c30]">
           
           <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-1.5 gap-1.5 text-xs">
             <div class="flex items-center space-x-2 flex-wrap">
               <span class="font-bold text-white text-xs font-mono uppercase tracking-wider flex items-center gap-1.5">
                 <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span>
-                <span>ROAD MOVIE REPLAY TRACK // 再生軌跡</span>
+                <span>REPLAY INTENSITY &amp; HEATMAP TRACK</span>
               </span>
               <span id="timeline-peak-count" class="text-[10px] text-white font-mono bg-[#e60012] border border-[#ffffff]/40 px-2 py-0.5 rounded-none font-bold">
                 ⚡ 3 TRICKY SPOTS
@@ -664,7 +666,7 @@
             MILESTONE PEAKS SHOW WHERE LEARNERS HIT REWIND. CLICK ANY RED SPIKE TO JUMP TO THAT EXPLANATION.
           </p>
 
-          <!-- Interactive Timeline Scrubber Container (y-n10 Road Movie Isometric Track) -->
+          <!-- Interactive Timeline Scrubber Container -->
           <div 
             id="timeline-container" 
             role="slider"
@@ -721,28 +723,28 @@
 
           <!-- Timeline Time Markers -->
           <div class="flex justify-between items-center text-[10px] text-[#889296] font-mono mt-1 px-1">
-            <span>MILE 00:00</span>
+            <span>START 00:00</span>
             <div id="timeline-peaks-label-container" class="flex items-center gap-3 overflow-hidden">
               <!-- Populated dynamically with active video peaks -->
             </div>
-            <span>MILE <span id="timeline-end-time">45:00</span> // END</span>
+            <span><span id="timeline-end-time">45:00</span> END</span>
           </div>
 
         </div>
 
-        <!-- ACTION BAR (YAMAUCHI NO.10 TACTILE BUTTONS) -->
+        <!-- ACTION BAR -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mt-3.5 pt-3.5 border-t border-[#272c30] items-center">
           
           <!-- Primary CTA + Advanced Settings -->
           <div class="md:col-span-7 flex items-center gap-2">
-            <!-- Button 1: Explain This Part Simply -->
+            <!-- Button 1: Explain This Step Simply -->
             <button 
               id="btn-confused-rescue" 
               class="yn10-btn-primary flex-1 min-h-[48px] px-4 py-3 rounded-none text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
-              title="Breaks down the current 4-minute section in plain English (Alt + E)"
+              title="Breaks down the current concept step-by-step with clear physical intuition (Alt + E)"
             >
               <i data-lucide="sparkles" class="w-4 h-4 text-white shrink-0" aria-hidden="true"></i>
-              <span class="truncate">EXPLAIN THIS PART // 直感解説</span>
+              <span class="truncate">EXPLAIN THIS STEP</span>
               <span class="text-[10px] font-mono text-black bg-[#ffe600] px-1.5 py-0.5 rounded-none hidden sm:inline font-bold">Alt + E</span>
             </button>
 
@@ -765,7 +767,7 @@
               >
                 <div class="flex items-center justify-between border-b border-[#272c30] pb-2">
                   <span class="text-xs font-bold text-white uppercase flex items-center gap-1.5">
-                    <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SETTINGS // 設定
+                    <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SETTINGS
                   </span>
                   <button id="close-advanced-settings-btn" class="text-[#889296] hover:text-white p-0.5 rounded-none cursor-pointer" aria-label="Close Settings">
                     <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i>
@@ -773,7 +775,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-[11px] font-bold text-white mb-1 uppercase">EXPLANATION WINDOW // 範囲:</label>
+                  <label class="block text-[11px] font-bold text-white mb-1 uppercase">EXPLANATION WINDOW:</label>
                   <div class="grid grid-cols-3 gap-1">
                     <button class="window-size-btn text-[11px] font-mono py-1.5 rounded-none border border-[#272c30] bg-[#0e1113] text-[#889296] hover:text-white cursor-pointer" data-window="120">±1 min</button>
                     <button class="window-size-btn active text-[11px] font-mono py-1.5 rounded-none border-2 border-[#ffe600] bg-[#ffe600]/20 text-[#ffe600] font-bold cursor-pointer" data-window="240">±2m (Def)</button>
@@ -797,10 +799,10 @@
             <button 
               id="btn-drop-pin" 
               class="yn10-btn w-full min-h-[48px] px-4 py-3 rounded-none text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
-              title="Save a study note at this timestamp (Alt + S)"
+              title="Save a formula card or key intuition note at this timestamp (Alt + S)"
             >
               <i data-lucide="bookmark-plus" class="w-4 h-4 text-[#ffe600] shrink-0" aria-hidden="true"></i>
-              <span class="truncate">SAVE A NOTE // 記録</span>
+              <span class="truncate">SAVE KEY INSIGHT</span>
               <span class="text-[10px] font-mono text-[#889296] hidden sm:inline ml-1 font-bold">Alt + S</span>
             </button>
           </div>
@@ -809,10 +811,10 @@
 
       </div>
 
-      <!-- Quick Peak Jump Navigator Bar (Yamauchi Road Milestones) -->
+      <!-- Quick Peak Jump Navigator Bar -->
       <div id="quick-peaks-container" class="bg-[#111417] border-2 border-[#272c30] rounded-none p-3 flex items-center gap-2 overflow-x-auto text-xs font-mono">
         <span class="text-[#ffe600] text-xs font-bold whitespace-nowrap flex items-center gap-1.5 shrink-0 uppercase tracking-wider">
-          <span class="w-2 h-2 bg-[#e60012] inline-block"></span> TRICKY SPOTS // 難所地点:
+          <span class="w-2 h-2 bg-[#e60012] inline-block"></span> KEY CHECKPOINTS:
         </span>
         <div id="quick-peaks-buttons" class="flex items-center gap-2">
           <!-- Dynamically populated buttons -->
@@ -824,10 +826,10 @@
     <!-- RIGHT COLUMN (40% width = 5/12 cols in LG) -->
     <div class="lg:col-span-5 flex flex-col space-y-3.5">
       
-      <!-- Studio Tabs Card Container (Yamauchi No.10 Pixel Studio Frame) -->
+      <!-- Studio Tabs Card Container -->
       <div class="bg-[#111417] border-2 border-[#272c30] rounded-none shadow-2xl flex flex-col h-[calc(100vh-100px)] min-h-[620px] overflow-hidden">
         
-        <!-- Tab Navigation Headers with Yamauchi No.10 Styling -->
+        <!-- Tab Navigation Headers -->
         <div class="flex items-center border-b-2 border-[#272c30] bg-[#0a0b0d] p-1.5 gap-1.5" role="tablist" aria-label="Studio Study Views">
           <button 
             id="tab-btn-rescue" 
@@ -839,7 +841,7 @@
             data-target="tab-content-rescue"
           >
             <span class="w-2 h-2 bg-[#ffe600] inline-block"></span>
-            <span class="truncate">01. EXPLANATION // 直感解説</span>
+            <span class="truncate">01. INTUITION</span>
           </button>
           
           <button 
@@ -852,7 +854,7 @@
             data-target="tab-content-recall"
           >
             <span class="w-2 h-2 bg-[#00d050] inline-block"></span>
-            <span class="truncate">02. RECALL // 記憶定着</span>
+            <span class="truncate">02. ACTIVE PRACTICE</span>
           </button>
 
           <button 
@@ -865,7 +867,7 @@
             data-target="tab-content-cheatsheet"
           >
             <span class="w-2 h-2 bg-[#0080ff] inline-block"></span>
-            <span class="truncate">03. DOSSIER // 記録</span>
+            <span class="truncate">03. STUDY DOSSIER</span>
             <span id="pins-count-badge" class="ml-0.5 px-2 py-0.5 rounded-none bg-[#0a0b0d] text-[10px] text-white font-mono font-bold border border-[#ffffff]/40">0</span>
           </button>
         </div>
@@ -877,20 +879,20 @@
           <div id="rescue-loading-skeleton" class="hidden p-5 yn10-pixel-box bg-[#111417] space-y-4" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-[#00e5ff] font-mono font-bold">
               <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-[#00e5ff]" aria-hidden="true"></i>
-              <span id="skeleton-status-text">CALCULATING INTUITION ENGINE... // 思考展開中</span>
+              <span id="skeleton-status-text">UNPACKING FIRST-PRINCIPLES INTUITION...</span>
             </div>
             <div class="space-y-2 text-xs font-mono text-white">
               <div id="sk-step-1" class="flex items-center gap-2 text-[#ffe600] font-medium">
                 <span class="w-2 h-2 bg-[#ffe600] animate-ping"></span>
-                <span>01. Reading transcript &amp; formulas around milestone...</span>
+                <span>01. Analyzing mathematical terms &amp; formulas around milestone...</span>
               </div>
               <div id="sk-step-2" class="flex items-center gap-2 text-[#889296]">
                 <span class="w-2 h-2 bg-[#272c30]"></span>
-                <span>02. Unpacking core derivation into plain English...</span>
+                <span>02. Translating derivation into first-principles intuition &amp; analogies...</span>
               </div>
               <div id="sk-step-3" class="flex items-center gap-2 text-[#889296]">
                 <span class="w-2 h-2 bg-[#272c30]"></span>
-                <span>03. Formulating interactive recall checkpoint puzzles...</span>
+                <span>03. Crafting bite-sized practice puzzle checkpoints...</span>
               </div>
             </div>
             <div class="space-y-2 pt-2">
@@ -908,7 +910,7 @@
               <div class="flex items-center justify-between gap-2">
                 <span class="text-xs font-bold text-[#ffe600] uppercase font-mono tracking-wider flex items-center gap-1.5">
                   <span class="w-2 h-2 bg-[#ffe600] inline-block"></span>
-                  FOCUS WINDOW // 解析範囲: <span id="rescue-window-time" class="font-mono text-white ml-1">00:00 – 00:00</span>
+                  CONCEPT FOCUS: <span id="rescue-window-time" class="font-mono text-white ml-1">00:00 – 00:00</span>
                 </span>
                 <button 
                   id="btn-autosave-summary-pin" 
@@ -916,7 +918,7 @@
                   title="Save this explanation as a study note"
                 >
                   <i data-lucide="bookmark-plus" class="w-3.5 h-3.5 text-[#ffe600]" aria-hidden="true"></i>
-                  <span>SAVE AS NOTE // 記録</span>
+                  <span>SAVE INSIGHT</span>
                 </button>
               </div>
               <div class="flex items-center gap-2 mt-2 flex-wrap">
@@ -934,19 +936,19 @@
               <div class="space-y-1.5">
                 <div class="flex items-center justify-between">
                   <h3 class="text-xs font-bold text-white flex items-center gap-2 font-mono uppercase tracking-wider">
-                    <span class="w-2 h-2 bg-[#e60012] inline-block"></span> 01 MOTIVATION // なぜ躓くのか
+                    <span class="w-2 h-2 bg-[#e60012] inline-block"></span> 01 WHY THIS MATTERS
                   </h3>
-                  <span class="text-[10px] font-mono text-[#ffe600] font-bold bg-[#0a0b0d] border border-[#ffe600]/40 px-2 py-0.5 rounded-none">CORE INTUITION</span>
+                  <span class="text-[10px] font-mono text-[#ffe600] font-bold bg-[#0a0b0d] border border-[#ffe600]/40 px-2 py-0.5 rounded-none">FIRST PRINCIPLES</span>
                 </div>
                 <p id="rescue-why-struggle" class="text-xs text-[#b0bac0] leading-relaxed">
-                  Pause at any tricky spot or click any peak above to see plain English breakdowns, real-world analogies, and core formulas.
+                  Click any peak on the timeline or press "Explain This Step" to unpack the intuition, real-world analogies, and step-by-step derivations behind any lecture moment.
                 </p>
               </div>
 
               <!-- Key Takeaways (Concepts & Pills) -->
               <div class="pt-3 border-t border-[#272c30] space-y-2">
                 <h4 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                  <span class="w-2 h-2 bg-[#00d050] inline-block"></span> KEY IDEAS TO REMEMBER // 要点
+                  <span class="w-2 h-2 bg-[#00d050] inline-block"></span> KEY IDEAS TO MASTER
                 </h4>
                 <div id="rescue-concept-pills" class="flex flex-wrap gap-1.5">
                   <!-- Dynamically populated pills -->
@@ -958,9 +960,9 @@
             <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-2.5 shadow-md">
               <div class="flex items-center justify-between">
                 <h3 class="text-xs font-bold text-white flex items-center gap-2 font-mono uppercase tracking-wider">
-                  <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> 02 INTUITION ENGINE // 直感展開
+                  <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> 02 STEP-BY-STEP INTUITION
                 </h3>
-                <span class="text-[10px] text-[#00d050] font-mono font-bold bg-[#0a0b0d] border border-[#00d050]/40 px-2 py-0.5 rounded-none">FORMULAS VERIFIED</span>
+                <span class="text-[10px] text-[#00d050] font-mono font-bold bg-[#0a0b0d] border border-[#00d050]/40 px-2 py-0.5 rounded-none">FIRST-PRINCIPLES PROOF</span>
               </div>
               <div id="rescue-explanation" class="text-xs text-[#d6dcde] leading-relaxed space-y-2.5 font-sans">
                 <!-- KaTeX rendered equations & step-by-step intuition -->
@@ -972,7 +974,7 @@
               <summary class="p-4 text-xs font-bold text-white font-mono uppercase tracking-wider flex items-center justify-between cursor-pointer hover:bg-[#181c20] select-none transition-colors">
                 <div class="flex items-center gap-2.5">
                   <span class="w-2 h-2 bg-[#0080ff] inline-block"></span>
-                  <span>03 TERMINOLOGY MATRIX // 術語照合 &amp; 研究論文</span>
+                  <span>03 FORMULA &amp; TERMINOLOGY TRANSLATOR</span>
                 </div>
                 <i data-lucide="chevron-down" class="w-4 h-4 text-[#889296] transition-transform group-open:rotate-180" aria-hidden="true"></i>
               </summary>
@@ -981,15 +983,15 @@
                 <!-- Term Comparison Table -->
                 <div class="space-y-2">
                   <h4 class="text-xs font-semibold text-white font-mono uppercase flex items-center gap-1.5">
-                    <i data-lucide="columns-2" class="w-3.5 h-3.5 text-[#00e5ff]" aria-hidden="true"></i> TERM COMPARISON (HOW DIFFERENT PROFESSORS NAME THIS)
+                    <i data-lucide="columns-2" class="w-3.5 h-3.5 text-[#00e5ff]" aria-hidden="true"></i> FORMULA &amp; TERMINOLOGY TRANSLATOR (HOW DIFFERENT PROFESSORS WRITE THIS)
                   </h4>
                   <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border border-[#272c30] rounded-none overflow-hidden">
                       <thead class="bg-[#0a0b0d] text-[#ffe600] text-[10px] uppercase font-mono">
                         <tr>
                           <th class="p-2 border-b border-[#272c30] font-bold">Lecture Term / Symbol</th>
-                          <th class="p-2 border-b border-[#272c30] font-bold">Standard Textbook Name</th>
-                          <th class="p-2 border-b border-[#272c30] font-bold">How They Connect</th>
+                          <th class="p-2 border-b border-[#272c30] font-bold">Standard Textbook Term</th>
+                          <th class="p-2 border-b border-[#272c30] font-bold">The Intuitive Connection</th>
                         </tr>
                       </thead>
                       <tbody id="rescue-terminology-bridge-body" class="divide-y divide-[#272c30] text-[#d6dcde] font-mono text-[11px]">
@@ -1026,32 +1028,32 @@
               <summary class="p-4 text-xs font-bold text-white font-mono uppercase tracking-wider flex items-center justify-between cursor-pointer hover:bg-[#181c20] select-none transition-colors">
                 <div class="flex items-center gap-2.5">
                   <span class="w-2 h-2 bg-[#ffe600] inline-block"></span>
-                  <span>04 ORACLE QUERY // 質問応答</span>
+                  <span>04 ASK A SOCRATIC QUESTION</span>
                 </div>
                 <i data-lucide="chevron-down" class="w-4 h-4 text-[#889296] transition-transform group-open:rotate-180" aria-hidden="true"></i>
               </summary>
               <div class="p-4 pt-2 border-t border-[#272c30] space-y-3">
                 <label for="ai-question-input" class="text-xs font-mono text-[#889296] block">
-                  WHAT WOULD YOU LIKE CLARIFIED ABOUT THIS MOMENT? // 疑問点を入力
+                  WHAT PART OF THIS CONCEPT WOULD YOU LIKE TO UNPACK FURTHER?
                 </label>
                 <div class="flex items-center gap-2">
                   <input 
                     type="text" 
                     id="ai-question-input" 
-                    placeholder="e.g., Why does the virtual ground not draw current?" 
+                    placeholder="e.g., Can you explain why the virtual ground doesn't draw current using an analogy?" 
                     class="flex-1 bg-[#0a0b0d] border-2 border-[#272c30] rounded-none px-3 py-2 text-xs font-mono text-white placeholder-[#545e63] focus:outline-none focus:border-white min-h-[44px]"
                   />
                   <button 
                     id="ai-ask-btn" 
                     class="yn10-btn-primary min-h-[44px] px-5 py-2 text-xs font-mono font-bold cursor-pointer rounded-none"
                   >
-                    ASK ➔
+                    ASK TUTOR ➔
                   </button>
                 </div>
                 <!-- AI Response Box -->
                 <div id="ai-response-box" class="hidden text-xs text-white bg-[#0a0b0d] p-3.5 rounded-none border-2 border-white leading-relaxed font-mono shadow-[3px_3px_0px_#ffffff]" aria-live="polite">
                   <div class="flex items-center gap-1.5 text-[#ffe600] font-bold mb-1.5 uppercase">
-                    <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> ORACLE INTUITION // 解答:
+                    <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> TUTOR INTUITION:
                   </div>
                   <div id="ai-response-content"></div>
                 </div>
@@ -1069,14 +1071,14 @@
           <div class="p-4 bg-[#14171a] border-2 border-white shadow-[3px_3px_0px_#ffffff]">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-[#00d050] uppercase font-mono tracking-wider flex items-center gap-1.5">
-                <span class="w-2 h-2 bg-[#00d050] inline-block"></span> PRACTICE // 理解度判定
+                <span class="w-2 h-2 bg-[#00d050] inline-block"></span> ACTIVE PRACTICE
               </span>
               <span id="recall-score-badge" class="text-xs font-mono font-bold text-white bg-[#00d050] px-2.5 py-0.5 rounded-none shadow-[2px_2px_0px_#ffffff]">
                 0 / 5 MASTERED
               </span>
             </div>
             <h2 id="diagram-title" class="text-sm font-bold text-white font-mono mt-1.5">
-              Active Recall &amp; Checkpoint Practice
+              Bite-Sized Puzzles &amp; Conceptual Checkpoints
             </h2>
           </div>
 
@@ -1084,9 +1086,9 @@
           <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
             <div class="flex items-center justify-between">
               <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> CONCEPT FLOW // 思考遷移
+                <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> CONCEPT PATHWAY
               </h3>
-              <span class="text-[11px] font-mono text-[#889296]">Fill in the missing step</span>
+              <span class="text-[11px] font-mono text-[#889296]">Fill in the missing step to complete the mental model</span>
             </div>
 
             <!-- Interactive Flow Nodes Container -->
@@ -1099,10 +1101,10 @@
           <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
             <div class="flex items-center justify-between">
               <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#e60012] inline-block"></span> CHECKPOINTS // 確認問題
+                <span class="w-2 h-2 bg-[#e60012] inline-block"></span> CONCEPT CHECKPOINTS
               </h3>
               <button id="reset-quiz-btn" class="text-xs text-[#889296] hover:text-[#ffe600] underline font-mono cursor-pointer">
-                TRY AGAIN // 再挑戦
+                TRY AGAIN
               </button>
             </div>
 
@@ -1123,12 +1125,12 @@
               <div class="flex items-center gap-2">
                 <h2 class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-1.5">
                   <span class="w-2 h-2 bg-[#0080ff] inline-block"></span>
-                  STUDY DOSSIER &amp; CHEAT SHEET // 学習記録
+                  STUDY DOSSIER &amp; FORMULA CHEAT SHEET
                 </h2>
-                <span class="text-[10px] px-2 py-0.5 rounded-none bg-[#0a0b0d] border border-[#ffe600] text-[#ffe600] font-mono font-bold">1-PAGE EXAM PREP</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-none bg-[#0a0b0d] border border-[#ffe600] text-[#ffe600] font-mono font-bold">EXAM READY</span>
               </div>
               <p class="text-[11px] text-[#889296] font-mono mt-1">
-                Your saved formulas, notes, and key terms organized for quick revision
+                Your saved formulas, key insights, and concept flashcards ready for quick revision
               </p>
             </div>
             <button 
@@ -1136,7 +1138,7 @@
               class="yn10-btn-primary min-h-[44px] px-4 py-2 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer rounded-none"
             >
               <i data-lucide="file-down" class="w-4 h-4 text-white" aria-hidden="true"></i>
-              <span>EXPORT DOSSIER ➔</span>
+              <span>EXPORT STUDY GUIDE ➔</span>
             </button>
           </div>
 
@@ -1144,7 +1146,7 @@
           <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SAVED NOTES &amp; FORMULAS // 記録一覧
+                <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SAVED INSIGHTS &amp; FORMULAS
               </h3>
               <!-- Filter Pills -->
               <div class="flex items-center gap-1.5 text-xs font-mono">
@@ -1173,7 +1175,7 @@
           <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3 shadow-md">
             <div class="flex items-center justify-between">
               <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> TERM MATRIX // 術語照合表
+                <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> TERM MATRIX
               </h3>
               <span id="bridges-count-badge" class="text-[10px] font-mono text-[#00d050] bg-[#0a0b0d] border border-[#00d050] px-2 py-0.5 rounded-none font-bold">0 Mappings</span>
             </div>
@@ -1197,7 +1199,7 @@
           <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3 shadow-md">
             <div class="flex items-center justify-between">
               <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#e60012] inline-block"></span> MISSED CHECKPOINTS // 復習課題
+                <span class="w-2 h-2 bg-[#e60012] inline-block"></span> MISSED CHECKPOINTS
               </h3>
               <span id="missed-count-badge" class="text-[10px] font-mono text-white bg-[#e60012] px-2 py-0.5 rounded-none font-bold">0 To Review</span>
             </div>
@@ -1219,7 +1221,7 @@
     <div class="bg-[#111417] border-2 border-white rounded-none w-full max-w-md p-5 shadow-[6px_6px_0px_#000000] space-y-4">
       <div class="flex items-center justify-between border-b border-[#272c30] pb-3">
         <h2 id="pin-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-          <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SAVE STUDY NOTE // 記録保存
+          <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SAVE STUDY NOTE
         </h2>
         <button id="close-pin-modal-btn" class="text-[#889296] hover:text-white p-1 rounded-none cursor-pointer" aria-label="Close Modal">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
@@ -1228,7 +1230,7 @@
 
       <div class="space-y-3.5 text-xs font-mono">
         <div>
-          <label for="pin-time-input" class="block text-white font-semibold mb-1 uppercase text-[11px]">Timestamp Index // 時間軸</label>
+          <label for="pin-time-input" class="block text-white font-semibold mb-1 uppercase text-[11px]">Timestamp Index</label>
           <div class="flex items-center gap-2">
             <input type="text" id="pin-time-input" readonly class="w-24 bg-[#0a0b0d] border-2 border-[#272c30] rounded-none px-3 py-2 font-mono text-[#00e5ff] font-bold" />
             <span class="text-[#889296] text-[11px]">(Locked to active video playback time)</span>
@@ -1236,7 +1238,7 @@
         </div>
 
         <div>
-          <span class="block text-white font-semibold mb-1.5 uppercase text-[11px]">Note Category // 分類</span>
+          <span class="block text-white font-semibold mb-1.5 uppercase text-[11px]">Note Category</span>
           <div class="grid grid-cols-3 gap-2">
             <label class="cursor-pointer border-2 border-[#272c30] bg-[#0e1113] rounded-none p-2.5 text-center hover:bg-[#181c20] has-[:checked]:border-[#e60012] has-[:checked]:bg-[#1e0a0c] transition-all">
               <input type="radio" name="pin-tag" value="exam_priority" checked class="hidden" />
@@ -1254,12 +1256,12 @@
         </div>
 
         <div>
-          <label for="pin-title-input" class="block text-white font-semibold mb-1 uppercase text-[11px]">Note Title // 表題</label>
+          <label for="pin-title-input" class="block text-white font-semibold mb-1 uppercase text-[11px]">Note Title</label>
           <input type="text" id="pin-title-input" placeholder="e.g., Dispersity formula derivation" class="w-full bg-[#0a0b0d] border-2 border-[#272c30] rounded-none px-3 py-2 text-white placeholder-[#545e63] focus:outline-none focus:border-white min-h-[44px]" />
         </div>
 
         <div>
-          <label for="pin-note-input" class="block text-white font-semibold mb-1 uppercase text-[11px]">Personal Note / Formula Snippet (Optional) // メモ</label>
+          <label for="pin-note-input" class="block text-white font-semibold mb-1 uppercase text-[11px]">Personal Note / Formula Snippet (Optional)</label>
           <textarea id="pin-note-input" rows="3" placeholder="Add key takeaways, intuition notes, or formula reminders..." class="w-full bg-[#0a0b0d] border-2 border-[#272c30] rounded-none px-3 py-2 text-white placeholder-[#545e63] focus:outline-none focus:border-white"></textarea>
         </div>
       </div>
@@ -1267,7 +1269,7 @@
       <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#272c30]">
         <button id="cancel-pin-btn" class="yn10-btn min-h-[44px] px-4 py-2 text-xs font-mono cursor-pointer rounded-none">CANCEL</button>
         <button id="save-pin-btn" class="yn10-btn-primary min-h-[44px] px-4 py-2 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer rounded-none">
-          <i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i> SAVE NOTE // 保存
+          <i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i> SAVE NOTE
         </button>
       </div>
     </div>
@@ -1278,7 +1280,7 @@
     <div class="bg-[#111417] border-2 border-white rounded-none w-full max-w-sm p-5 shadow-[6px_6px_0px_#000000] space-y-4">
       <div class="flex items-center justify-between border-b border-[#272c30] pb-3">
         <h2 id="folder-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-          <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> NEW SUBJECT FOLDER // 新規項目
+          <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> NEW SUBJECT FOLDER
         </h2>
         <button id="close-folder-modal-btn" class="text-[#889296] hover:text-white p-1 rounded-none cursor-pointer" aria-label="Close Modal">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
@@ -1287,11 +1289,11 @@
 
       <div class="space-y-3 text-xs font-mono">
         <div>
-          <label for="new-folder-name" class="block text-white font-semibold mb-1 uppercase text-[11px]">Folder Name // 項目名</label>
+          <label for="new-folder-name" class="block text-white font-semibold mb-1 uppercase text-[11px]">Folder Name</label>
           <input type="text" id="new-folder-name" placeholder="e.g., Thermodynamics & Heat Transfer" class="w-full bg-[#0a0b0d] border-2 border-[#272c30] rounded-none px-3 py-2 text-white placeholder-[#545e63] focus:outline-none focus:border-white min-h-[44px]" />
         </div>
         <div>
-          <label for="new-folder-color" class="block text-white font-semibold mb-1 uppercase text-[11px]">Color Theme // 配色</label>
+          <label for="new-folder-color" class="block text-white font-semibold mb-1 uppercase text-[11px]">Color Theme</label>
           <select id="new-folder-color" class="w-full bg-[#0a0b0d] border-2 border-[#272c30] rounded-none px-3 py-2 text-white focus:outline-none min-h-[44px]">
             <option value="indigo">Famicom Red (Primary)</option>
             <option value="cyan">Circuit Cyan</option>
@@ -1351,7 +1353,7 @@
     <div class="bg-[#111417] border-2 border-white rounded-none w-full max-w-2xl max-h-[90vh] flex flex-col p-5 shadow-[6px_6px_0px_#000000] space-y-3.5 overflow-hidden">
       <div class="flex items-center justify-between border-b border-[#272c30] pb-3">
         <h2 id="export-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-          <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> STUDY DOSSIER &amp; CHEAT SHEET // 学習記録
+          <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> STUDY DOSSIER &amp; CHEAT SHEET
         </h2>
         <button id="close-export-modal-btn" class="text-[#889296] hover:text-white p-1 rounded-none cursor-pointer" aria-label="Close Export Modal">
           <i data-lucide="x" class="w-4 h-4" aria-hidden="true"></i>
@@ -1423,7 +1425,7 @@
     <!-- Semi-transparent subtle backdrop -->
     <div id="tour-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-[2px] pointer-events-auto"></div>
 
-    <!-- Floating Contextual Dialogue Card (Yamauchi No.10 Pixel Dialogue Box) -->
+    <!-- Floating Contextual Dialogue Card -->
     <div 
       id="tour-dialog" 
       class="fixed z-50 pointer-events-auto max-w-sm sm:max-w-md w-full bg-[#111417] border-2 border-white rounded-none shadow-[6px_6px_0px_#ffe600] p-5 text-white bottom-6 right-6 sm:bottom-8 sm:right-8"
@@ -1438,7 +1440,7 @@
             STEP 1 OF 5
           </span>
           <span id="tour-feature-tag" class="text-xs font-mono text-[#889296] uppercase">
-            QUICK TOUR // 案内
+            QUICK TOUR
           </span>
         </div>
         <div class="flex items-center gap-1.5 font-mono">
@@ -1466,11 +1468,11 @@
             <i id="tour-step-icon" data-lucide="flame" class="w-4 h-4 text-[#ffe600]" aria-hidden="true"></i>
           </div>
           <h3 id="tour-step-title" class="text-sm font-bold text-white font-mono uppercase tracking-wide">
-            1. STUDENT REPLAY HEATMAP
+            1. REPLAY HEATMAP &amp; TRICKY PEAKS
           </h3>
         </div>
         <p id="tour-step-description" class="text-xs text-[#d6dcde] leading-relaxed">
-          The glowing peaks show where thousands of students hit rewind to understand a tricky derivation. Click any highlighted peak to jump directly into the explanation!
+          The glowing peaks pinpoint where students rewind most to understand tricky mathematical derivations and physical principles. Click any peak to jump straight into the intuitive breakdown!
         </p>
       </div>
 
