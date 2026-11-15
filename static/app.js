@@ -1857,60 +1857,124 @@ function renderTab1AIRescue(data, timestampSec) {
     };
   }
 
-  // Fetch and render Alternative Videos
+  // Fetch and render Alternative Resources (Videos & Research Papers)
   const query = (data.recommended_search_queries && data.recommended_search_queries[0]) ||
                 (data.identified_concepts && data.identified_concepts[0]?.name) ||
+                state.currentVideoTitle ||
                 "lecture concept visual intuition";
-  loadAlternativeVideos(query);
+  loadAlternativeResources(query);
 }
 
-async function loadAlternativeVideos(query) {
+let currentAlternativeResources = {
+  videos: [],
+  papers: [],
+  filter: "all"
+};
+
+async function loadAlternativeResources(query) {
   const altsContainer = document.getElementById("rescue-alt-videos");
   if (!altsContainer) return;
 
+  const allCountEl = document.getElementById("res-all-count");
+  const videoCountEl = document.getElementById("res-video-count");
+  const paperCountEl = document.getElementById("res-paper-count");
+
   altsContainer.innerHTML = `
-    <div class="text-xs text-slate-300 flex items-center gap-2 p-3 bg-slate-900 rounded-xl">
-      <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-indigo-400" aria-hidden="true"></i>
-      <span>Finding intuitive animations and visual explanations for "${query}"...</span>
+    <div class="text-xs text-[#8a9699] font-mono flex items-center gap-2 p-3 bg-[#121516] border border-[#2b3336] rounded-none">
+      <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-[#f59f38]" aria-hidden="true"></i>
+      <span>Finding clear explanations, visual animations, and academic research papers for "${query}"...</span>
     </div>
   `;
   lucide.createIcons();
 
   try {
-    const data = await safeFetchJSON(`/api/alternative-videos?q=${encodeURIComponent(query)}&max_results=4`);
+    const data = await safeFetchJSON(`/api/alternative-resources?q=${encodeURIComponent(query)}&max_results=4`);
     const videos = (data && data.videos) || [];
+    const papers = (data && data.papers) || [];
 
-    if (videos.length === 0) {
-      altsContainer.innerHTML = `<div class="text-xs text-slate-400 py-2">No other videos found for this topic.</div>`;
-      return;
-    }
+    currentAlternativeResources.videos = videos;
+    currentAlternativeResources.papers = papers;
+    currentAlternativeResources.filter = "all";
 
-    altsContainer.innerHTML = "";
+    if (allCountEl) allCountEl.textContent = videos.length + papers.length;
+    if (videoCountEl) videoCountEl.textContent = videos.length;
+    if (paperCountEl) paperCountEl.textContent = papers.length;
+
+    renderAlternativeResourcesList();
+    initResourceFilterButtons();
+
+  } catch (err) {
+    console.error("Failed to load alternative resources:", err);
+    altsContainer.innerHTML = `<div class="text-xs text-rose-300 py-1 font-mono">Failed to load additional learning resources.</div>`;
+  }
+}
+
+function initResourceFilterButtons() {
+  document.querySelectorAll(".res-filter-btn").forEach(btn => {
+    btn.onclick = () => {
+      const filter = btn.getAttribute("data-filter");
+      currentAlternativeResources.filter = filter;
+
+      document.querySelectorAll(".res-filter-btn").forEach(b => {
+        const isTarget = b.getAttribute("data-filter") === filter;
+        if (isTarget) {
+          b.className = "res-filter-btn px-2.5 py-1 rounded-none bg-[#24292b] text-[#f59f38] border border-[#e59130] font-bold cursor-pointer";
+        } else {
+          b.className = "res-filter-btn px-2.5 py-1 rounded-none bg-[#171a1b] text-[#8a9699] border border-[#333b3d] hover:text-white hover:bg-[#202527] cursor-pointer";
+        }
+      });
+
+      renderAlternativeResourcesList();
+    };
+  });
+}
+
+function renderAlternativeResourcesList() {
+  const altsContainer = document.getElementById("rescue-alt-videos");
+  if (!altsContainer) return;
+
+  const { videos, papers, filter } = currentAlternativeResources;
+  const showVideos = filter === "all" || filter === "videos";
+  const showPapers = filter === "all" || filter === "papers";
+
+  if (videos.length === 0 && papers.length === 0) {
+    altsContainer.innerHTML = `<div class="text-xs text-[#8a9699] font-mono py-2">No additional resources found for this topic.</div>`;
+    return;
+  }
+
+  altsContainer.innerHTML = "";
+
+  // Render Videos
+  if (showVideos && videos.length > 0) {
     videos.forEach(v => {
       const card = document.createElement("div");
-      card.className = "flex items-start gap-3 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-3 transition-all group";
+      card.className = "flex flex-col sm:flex-row items-start gap-3 bg-[#17191a] border border-[#2d3437] hover:border-[#e59130] rounded-none p-3 transition-none group factorio-panel";
       card.innerHTML = `
-        <div class="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 border border-slate-800 cursor-pointer alt-video-thumb">
-          <img src="${v.thumbnail}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
+        <div class="relative w-full sm:w-28 aspect-video rounded-none overflow-hidden shrink-0 border border-[#3d484b] bg-[#121516] cursor-pointer alt-video-thumb">
+          <img src="${v.thumbnail}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
           <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <i data-lucide="play" class="w-5 h-5 text-white fill-current" aria-hidden="true"></i>
           </div>
-          <span class="absolute bottom-1 right-1 bg-black/80 text-[9px] font-mono px-1 rounded text-white">${v.duration || "Visual"}</span>
+          <span class="absolute bottom-1 right-1 bg-black/85 text-[9px] font-mono px-1 rounded-none text-[#f59f38] font-bold border border-[#3d484b]">${v.duration || "Visual"}</span>
         </div>
         <div class="flex-1 min-w-0 space-y-1">
           <div class="flex items-center justify-between gap-1">
-            <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 truncate">${v.tag || "Visual Animation"}</span>
-            <span class="text-[10px] text-slate-400 truncate">${v.channel}</span>
+            <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-none bg-[#242b2d] text-[#f59f38] border border-[#e59130]/40 truncate">
+              <i data-lucide="film" class="w-2.5 h-2.5 inline mr-1"></i>${v.tag || "Visual Explanation"}
+            </span>
+            <span class="text-[10px] text-[#8a9699] font-mono truncate">${v.channel}</span>
           </div>
-          <h5 class="text-xs font-bold text-slate-100 line-clamp-1 group-hover:text-indigo-300 transition-colors cursor-pointer alt-video-title">${v.title}</h5>
-          <p class="text-[11px] text-slate-300 line-clamp-2 font-serif">${v.description || "Intuitive visual breakdown of this exact concept."}</p>
+          <h5 class="text-xs font-bold text-slate-100 font-mono line-clamp-1 group-hover:text-[#f59f38] transition-colors cursor-pointer alt-video-title">${v.title}</h5>
+          <p class="text-[11px] text-[#b1bec1] line-clamp-2 font-serif">${v.description || "Intuitive visual breakdown of this exact concept."}</p>
         </div>
-        <div class="flex flex-col gap-1 shrink-0">
-          <button class="preview-alt-btn min-h-[36px] min-w-[36px] p-2 rounded-lg bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white transition-colors cursor-pointer flex items-center justify-center" title="Preview inside studio" aria-label="Preview video: ${v.title}">
-            <i data-lucide="play" class="w-3.5 h-3.5" aria-hidden="true"></i>
+        <div class="flex sm:flex-col gap-1.5 shrink-0 w-full sm:w-auto justify-end pt-1 sm:pt-0">
+          <button class="preview-alt-btn factorio-btn-primary min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none cursor-pointer flex items-center justify-center gap-1 shadow-none" title="Preview inside studio" aria-label="Preview video: ${v.title}">
+            <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
+            <span class="sm:hidden">Preview</span>
           </button>
-          <a href="${v.url || `https://www.youtube.com/watch?v=${v.video_id}`}" target="_blank" rel="noopener noreferrer" class="min-h-[36px] min-w-[36px] p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center justify-center" title="Open on YouTube" aria-label="Open on YouTube: ${v.title}">
-            <i data-lucide="external-link" class="w-3.5 h-3.5" aria-hidden="true"></i>
+          <a href="${v.url || `https://www.youtube.com/watch?v=${v.video_id}`}" target="_blank" rel="noopener noreferrer" class="factorio-btn-secondary min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none flex items-center justify-center gap-1" title="Open on YouTube" aria-label="Open on YouTube: ${v.title}">
+            <i data-lucide="external-link" class="w-3 h-3" aria-hidden="true"></i>
+            <span class="sm:hidden">YouTube</span>
           </a>
         </div>
       `;
@@ -1922,13 +1986,61 @@ async function loadAlternativeVideos(query) {
 
       altsContainer.appendChild(card);
     });
-
-    lucide.createIcons();
-
-  } catch (err) {
-    console.error("Failed to load alternative videos:", err);
-    altsContainer.innerHTML = `<div class="text-xs text-rose-300 py-1">Failed to load other videos.</div>`;
   }
+
+  // Render Research Papers
+  if (showPapers && papers.length > 0) {
+    papers.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "flex flex-col sm:flex-row items-start gap-3 bg-[#15191b] border border-[#2d373a] hover:border-[#27ae60] rounded-none p-3 transition-none group factorio-panel";
+      card.innerHTML = `
+        <div class="w-10 h-10 rounded-none bg-[#101314] border border-[#3d484b] flex items-center justify-center text-[#2ecc71] shrink-0">
+          <i data-lucide="file-text" class="w-5 h-5 text-[#2ecc71]" aria-hidden="true"></i>
+        </div>
+        <div class="flex-1 min-w-0 space-y-1">
+          <div class="flex items-center justify-between gap-1">
+            <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-none bg-[#16291e] text-[#2ecc71] border border-[#27ae60]/40 truncate">
+              <i data-lucide="book-open" class="w-2.5 h-2.5 inline mr-1"></i>${p.badge || "Research Paper"}
+            </span>
+            <span class="text-[10px] text-[#8a9699] font-mono truncate">${p.authors} (${p.year || "Foundational"})</span>
+          </div>
+          <h5 class="text-xs font-bold text-white font-mono line-clamp-1 group-hover:text-[#2ecc71] transition-colors">${p.title}</h5>
+          <p class="text-[11px] text-[#b1bec1] line-clamp-2 font-serif">${p.summary || ""}</p>
+          <div class="text-[10px] text-[#718286] font-mono truncate italic">${p.journal || ""}</div>
+        </div>
+        <div class="flex sm:flex-col gap-1.5 shrink-0 w-full sm:w-auto justify-end pt-1 sm:pt-0">
+          <a href="${p.scholar_url || `https://scholar.google.com/scholar?q=${encodeURIComponent(p.title)}`}" target="_blank" rel="noopener noreferrer" class="min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none bg-[#1e2a22] hover:bg-[#27ae60] text-[#2ecc71] hover:text-white border border-[#27ae60]/40 flex items-center justify-center gap-1.5 transition-none cursor-pointer" title="Search on Google Scholar">
+            <i data-lucide="external-link" class="w-3 h-3" aria-hidden="true"></i>
+            <span>Scholar</span>
+          </a>
+          <button class="copy-citation-btn min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none bg-[#1b2022] hover:bg-[#283033] text-[#8a9699] hover:text-white border border-[#3d484b] flex items-center justify-center gap-1.5 transition-none cursor-pointer" title="Copy APA Citation">
+            <i data-lucide="copy" class="w-3 h-3" aria-hidden="true"></i>
+            <span class="citation-label">Cite</span>
+          </button>
+        </div>
+      `;
+
+      // Copy Citation Event
+      const copyBtn = card.querySelector(".copy-citation-btn");
+      const citationText = p.citation || `${p.authors} (${p.year || "n.d."}). ${p.title}. ${p.journal || ""}.`;
+      if (copyBtn) {
+        copyBtn.addEventListener("click", () => {
+          navigator.clipboard.writeText(citationText);
+          const label = copyBtn.querySelector(".citation-label");
+          if (label) label.textContent = "Copied!";
+          copyBtn.classList.add("text-emerald-400", "border-emerald-500/50");
+          setTimeout(() => {
+            if (label) label.textContent = "Cite";
+            copyBtn.classList.remove("text-emerald-400", "border-emerald-500/50");
+          }, 1800);
+        });
+      }
+
+      altsContainer.appendChild(card);
+    });
+  }
+
+  lucide.createIcons();
 }
 
 function openAltVideoModal(video) {

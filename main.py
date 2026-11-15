@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 
 from database import init_db, get_db_connection
 from heatmap_service import get_video_heatmap
-from ai_service import analyze_segment_ai, search_alternative_videos, ask_segment_doubt
+from ai_service import analyze_segment_ai, search_alternative_videos, search_alternative_papers, ask_segment_doubt
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("synclearn.main")
@@ -509,15 +509,18 @@ def analyze_segment_endpoint(req: SegmentAnalysisRequest):
 
 
 @app.get("/api/alternative-videos")
-def get_alternative_videos(
+@app.get("/api/alternative-resources")
+def get_alternative_resources(
     q: str = Query(..., description="Search query derived from lecture topic"),
     max_results: int = Query(default=4, ge=1, le=10)
 ):
     """
-    Returns alternative visual/intuitive videos via YouTube Data API v3 (or curated playable fallback).
+    Returns alternative visual/intuitive videos AND academic research papers for the active lecture topic.
     """
-    videos = search_alternative_videos(query=q, max_results=max_results)
-    return {"query": q, "videos": videos}
+    clean_q = (q or "").strip()
+    videos = search_alternative_videos(query=clean_q, max_results=max_results)
+    papers = search_alternative_papers(query=clean_q, max_results=3)
+    return {"query": clean_q, "videos": videos, "papers": papers}
 
 
 @app.post("/api/analysis/followup")
