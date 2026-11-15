@@ -34,6 +34,186 @@ const state = {
 };
 
 // ==========================================
+// YAMAUCHI NO.10 RETRO 8-BIT SOUND SYNTHESIZER
+// ==========================================
+const yn10Audio = {
+  ctx: null,
+  enabled: false,
+
+  init() {
+    try {
+      const stored = localStorage.getItem("yn10_sound_enabled");
+      this.enabled = stored === "true";
+      this.updateUI();
+    } catch (_) {}
+  },
+
+  getAudioContext() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        this.ctx = new AudioCtx();
+      }
+    }
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+    return this.ctx;
+  },
+
+  toggle() {
+    this.enabled = !this.enabled;
+    try {
+      localStorage.setItem("yn10_sound_enabled", this.enabled ? "true" : "false");
+    } catch (_) {}
+    this.updateUI();
+    if (this.enabled) {
+      this.playIntro();
+    }
+    return this.enabled;
+  },
+
+  updateUI() {
+    const landingLabel = document.getElementById("yn10-sound-label");
+    const landingIndicator = document.getElementById("yn10-sound-indicator");
+    const workspaceLabel = document.getElementById("workspace-sound-label");
+    const workspaceIndicator = document.getElementById("workspace-sound-indicator");
+
+    [landingLabel, workspaceLabel].forEach(el => {
+      if (el) el.textContent = this.enabled ? "ON" : "OFF";
+    });
+    [landingIndicator, workspaceIndicator].forEach(el => {
+      if (el) {
+        if (this.enabled) {
+          el.classList.add("active");
+        } else {
+          el.classList.remove("active");
+        }
+      }
+    });
+  },
+
+  // 1. Retro Power-On / Intro Arpeggio
+  playIntro() {
+    if (!this.enabled) return;
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99]; // C4, E4, G4, C5, E5, G5
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+      gain.gain.setValueAtTime(0.08, now + idx * 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.12);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + idx * 0.06);
+      osc.stop(now + idx * 0.06 + 0.13);
+    });
+  },
+
+  // 2. Tactile Blip (Tab switch, subtle interaction)
+  playBlip() {
+    if (!this.enabled) return;
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.04);
+    gain.gain.setValueAtTime(0.06, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  },
+
+  // 3. Coin / Note Saved Chime
+  playCoin() {
+    if (!this.enabled) return;
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    [987.77, 1318.51].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+      gain.gain.setValueAtTime(0.08, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.26);
+    });
+  },
+
+  // 4. Seek / Milestone Jump Tick
+  playSeek() {
+    if (!this.enabled) return;
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(587.33, now);
+    osc.frequency.setValueAtTime(880.00, now + 0.03);
+    gain.gain.setValueAtTime(0.07, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.09);
+  },
+
+  // 5. Correct MCQ Answer Fanfare
+  playSuccess() {
+    if (!this.enabled) return;
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+      gain.gain.setValueAtTime(0.09, now + idx * 0.09);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.18);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + idx * 0.09);
+      osc.stop(now + idx * 0.09 + 0.2);
+    });
+  },
+
+  // 6. Incorrect MCQ Answer Buzz
+  playError() {
+    if (!this.enabled) return;
+    const ctx = this.getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(140, now);
+    osc.frequency.linearRampToValueAtTime(90, now + 0.2);
+    gain.gain.setValueAtTime(0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.23);
+  }
+};
+
+// ==========================================
 // 0. BULLETPROOF CLIENT-SIDE STORAGE & NETWORK RESILIENCE (OPTION A)
 // Eliminates read-only filesystem crashes and network unhandled halts on Vercel
 // ==========================================
@@ -580,6 +760,7 @@ const OnboardingTour = {
 
 // Initialize Application on DOM Ready (Safe for both pre- and post-DOMContentLoaded execution)
 function initSyncLearnApp() {
+  yn10Audio.init();
   initUIEventListeners();
   loadSubjectFolders();
   renderCheatSheetBridges();
@@ -916,6 +1097,7 @@ function syncPlayhead() {
 
 function jumpToTime(seconds, triggerAnalysis = true) {
   state.previousTimeSec = seconds;
+  yn10Audio.playSeek();
   if (state.isPlayerReady && state.player && typeof state.player.seekTo === "function") {
     try {
       state.player.seekTo(seconds, true);
@@ -1180,7 +1362,7 @@ function renderDynamicPeaksUI(heatmap) {
   const peaks = heatmap.peaks || [];
 
   if (peakCountBadge) {
-    peakCountBadge.textContent = `⚡ ${peaks.length} Tricky Spots Found`;
+    peakCountBadge.textContent = `⚡ ${peaks.length} TRICKY SPOTS`;
   }
 
   // Render bottom timeline peak labels
@@ -1191,7 +1373,7 @@ function renderDynamicPeaksUI(heatmap) {
       const endStr = formatTime(p.end_sec);
       const cleanLabel = (p.label || "").split("(")[0].trim();
       const span = document.createElement("span");
-      span.className = "text-amber-300 hover:text-amber-200 cursor-pointer truncate max-w-[200px] font-medium";
+      span.className = "text-[#ffe600] hover:text-white cursor-pointer truncate max-w-[200px] font-mono font-medium";
       span.title = p.description || p.label;
       span.textContent = `${startStr} - ${endStr} (${cleanLabel})`;
       span.addEventListener("click", () => jumpToTime(p.peak_sec || p.start_sec, true));
@@ -1199,7 +1381,7 @@ function renderDynamicPeaksUI(heatmap) {
     });
   }
 
-  // Render Quick Peak Jump Navigator Bar
+  // Render Quick Peak Jump Navigator Bar (Yamauchi Road Milestone Pills)
   if (buttonsContainer) {
     buttonsContainer.innerHTML = "";
     peaks.forEach(p => {
@@ -1208,10 +1390,10 @@ function renderDynamicPeaksUI(heatmap) {
       const intensityPct = Math.round((p.intensity || 0.8) * 100);
 
       const btn = document.createElement("button");
-      btn.className = "peak-jump-btn min-h-[38px] bg-[#1e2325] hover:bg-[#252b2e] hover:border-[#e59130] border border-[#3d484b] px-3 py-1.5 rounded text-[#f0f2f2] transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-mono text-xs font-bold";
+      btn.className = "peak-jump-btn yn10-peak-pill min-h-[38px] px-3 py-1.5 rounded-none text-white whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-mono text-xs font-bold";
       btn.innerHTML = `
-        <span class="w-2 h-2 rounded-full bg-[#f59f38] shrink-0"></span>
-        <span class="truncate max-w-[190px]">${formatTime(peakTime)} • ${cleanLabel} (${intensityPct}% replayed)</span>
+        <span class="w-2 h-2 bg-[#e60012] shrink-0 inline-block"></span>
+        <span class="truncate max-w-[210px]">MILE ${formatTime(peakTime)} • ${cleanLabel} (${intensityPct}%)</span>
       `;
       btn.addEventListener("click", () => jumpToTime(peakTime, true));
       buttonsContainer.appendChild(btn);
@@ -1450,29 +1632,29 @@ function renderCheatSheetPins() {
   container.innerHTML = "";
   filtered.forEach(pin => {
     const card = document.createElement("div");
-    card.className = "factorio-panel border-[#3d484b] hover:border-[#e59130] rounded p-3.5 space-y-2 transition-all font-mono";
+    card.className = "p-3.5 bg-[#14171a] border border-[#272c30] hover:border-white rounded-none space-y-2 font-mono transition-none";
 
-    let tagBadge = `<span class="px-2 py-0.5 rounded bg-[#2a1715] border border-[#b23b3b] text-[#ff8f8f] text-[10px] font-bold">★ EXAM IMPORTANT</span>`;
+    let tagBadge = `<span class="px-2 py-0.5 rounded-none bg-[#e60012] text-white text-[10px] font-bold">★ EXAM IMPORTANT</span>`;
     if (pin.tag === "revisit") {
-      tagBadge = `<span class="px-2 py-0.5 rounded bg-[#292015] border border-[#e59130] text-[#f59f38] text-[10px] font-bold">? NEEDS REVIEW</span>`;
+      tagBadge = `<span class="px-2 py-0.5 rounded-none bg-[#14171a] border border-[#ffe600] text-[#ffe600] text-[10px] font-bold">? NEEDS REVIEW</span>`;
     } else if (pin.tag === "key_formula") {
-      tagBadge = `<span class="px-2 py-0.5 rounded bg-[#18231c] border border-[#27ae60] text-[#2ecc71] text-[10px] font-bold">∑ KEY FORMULA</span>`;
+      tagBadge = `<span class="px-2 py-0.5 rounded-none bg-[#14171a] border border-[#00d050] text-[#00d050] text-[10px] font-bold">∑ KEY FORMULA</span>`;
     }
 
     card.innerHTML = `
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2">
           ${tagBadge}
-          <button class="pin-jump-btn font-mono text-[11px] font-bold text-[#f59f38] hover:text-white bg-[#1e2325] border border-[#e59130]/50 px-2.5 py-1 rounded flex items-center gap-1.5 transition-colors cursor-pointer" data-time="${pin.timestamp_sec}">
-            <i data-lucide="play" class="w-3 h-3 fill-current text-[#f59f38]" aria-hidden="true"></i> ${formatTime(pin.timestamp_sec)}
+          <button class="pin-jump-btn font-mono text-[11px] font-bold text-white bg-[#0e1113] border border-white px-2.5 py-1 rounded-none flex items-center gap-1.5 cursor-pointer shadow-[2px_2px_0px_#ffffff]" data-time="${pin.timestamp_sec}">
+            <i data-lucide="play" class="w-3 h-3 fill-current text-[#ffe600]" aria-hidden="true"></i> ${formatTime(pin.timestamp_sec)}
           </button>
         </div>
-        <button class="delete-pin-btn min-h-[36px] min-w-[36px] text-[#8a9699] hover:text-[#ff8f8f] p-1.5 transition-colors cursor-pointer rounded hover:bg-[#252b2e]" data-id="${pin.id}" title="Delete Saved Note" aria-label="Delete saved note: ${pin.title}">
+        <button class="delete-pin-btn min-h-[36px] min-w-[36px] text-[#8a9699] hover:text-[#ff8f8f] p-1.5 cursor-pointer rounded-none hover:bg-[#181c20]" data-id="${pin.id}" title="Delete Saved Note" aria-label="Delete saved note: ${pin.title}">
           <i data-lucide="trash-2" class="w-4 h-4" aria-hidden="true"></i>
         </button>
       </div>
       <h4 class="text-xs font-bold text-white">${pin.title}</h4>
-      ${pin.note ? `<p class="text-xs text-[#d6dcde] leading-relaxed factorio-inset p-2.5 rounded border border-[#3d484b]">${pin.note}</p>` : ""}
+      ${pin.note ? `<p class="text-xs text-[#d6dcde] leading-relaxed bg-[#0a0b0d] p-2.5 rounded-none border border-[#272c30]">${pin.note}</p>` : ""}
     `;
 
     card.querySelector(".pin-jump-btn").addEventListener("click", () => {
@@ -1792,6 +1974,8 @@ function renderTab1AIRescue(data, timestampSec) {
       };
 
       // Save immediately to client storage (0 ms)
+      yn10Audio.playCoin();
+      yn10Audio.playCoin();
       StorageManager.savePin(newPin);
       state.pins.push(newPin);
       state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
@@ -1905,31 +2089,31 @@ function renderAlternativeResourcesList() {
   if (showVideos && videos.length > 0) {
     videos.forEach(v => {
       const card = document.createElement("div");
-      card.className = "flex flex-col sm:flex-row items-start gap-3 bg-[#17191a] border border-[#2d3437] hover:border-[#e59130] rounded-none p-3 transition-none group factorio-panel";
+      card.className = "flex flex-col sm:flex-row items-start gap-3 bg-[#14171a] border border-[#272c30] hover:border-white rounded-none p-3 transition-none group";
       card.innerHTML = `
-        <div class="relative w-full sm:w-28 aspect-video rounded-none overflow-hidden shrink-0 border border-[#3d484b] bg-[#121516] cursor-pointer alt-video-thumb">
+        <div class="relative w-full sm:w-28 aspect-video rounded-none overflow-hidden shrink-0 border border-[#272c30] bg-black cursor-pointer alt-video-thumb">
           <img src="${v.thumbnail}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
           <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <i data-lucide="play" class="w-5 h-5 text-white fill-current" aria-hidden="true"></i>
           </div>
-          <span class="absolute bottom-1 right-1 bg-black/85 text-[9px] font-mono px-1 rounded-none text-[#f59f38] font-bold border border-[#3d484b]">${v.duration || "Visual"}</span>
+          <span class="absolute bottom-1 right-1 bg-black text-[9px] font-mono px-1 rounded-none text-[#ffe600] font-bold border border-[#ffe600]/40">${v.duration || "Visual"}</span>
         </div>
         <div class="flex-1 min-w-0 space-y-1">
           <div class="flex items-center justify-between gap-1">
-            <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-none bg-[#242b2d] text-[#f59f38] border border-[#e59130]/40 truncate">
+            <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-none bg-[#0a0b0d] text-[#ffe600] border border-[#ffe600]/40 truncate">
               <i data-lucide="film" class="w-2.5 h-2.5 inline mr-1"></i>${v.tag || "Visual Explanation"}
             </span>
-            <span class="text-[10px] text-[#8a9699] font-mono truncate">${v.channel}</span>
+            <span class="text-[10px] text-[#889296] font-mono truncate">${v.channel}</span>
           </div>
-          <h5 class="text-xs font-bold text-slate-100 font-mono line-clamp-1 group-hover:text-[#f59f38] transition-colors cursor-pointer alt-video-title">${v.title}</h5>
-          <p class="text-[11px] text-[#b1bec1] line-clamp-2 font-serif">${v.description || "Intuitive visual breakdown of this exact concept."}</p>
+          <h5 class="text-xs font-bold text-white font-mono line-clamp-1 group-hover:text-[#ffe600] transition-colors cursor-pointer alt-video-title">${v.title}</h5>
+          <p class="text-[11px] text-[#889296] line-clamp-2">${v.description || "Intuitive visual breakdown of this exact concept."}</p>
         </div>
         <div class="flex sm:flex-col gap-1.5 shrink-0 w-full sm:w-auto justify-end pt-1 sm:pt-0">
-          <button class="preview-alt-btn factorio-btn-primary min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none cursor-pointer flex items-center justify-center gap-1 shadow-none" title="Preview inside studio" aria-label="Preview video: ${v.title}">
+          <button class="preview-alt-btn yn10-btn-primary min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none cursor-pointer flex items-center justify-center gap-1 shadow-[2px_2px_0px_#ffe600]" title="Preview inside studio" aria-label="Preview video: ${v.title}">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
             <span class="sm:hidden">Preview</span>
           </button>
-          <a href="${v.url || `https://www.youtube.com/watch?v=${v.video_id}`}" target="_blank" rel="noopener noreferrer" class="factorio-btn-secondary min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none flex items-center justify-center gap-1" title="Open on YouTube" aria-label="Open on YouTube: ${v.title}">
+          <a href="${v.url || `https://www.youtube.com/watch?v=${v.video_id}`}" target="_blank" rel="noopener noreferrer" class="yn10-btn min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none flex items-center justify-center gap-1" title="Open on YouTube" aria-label="Open on YouTube: ${v.title}">
             <i data-lucide="external-link" class="w-3 h-3" aria-hidden="true"></i>
             <span class="sm:hidden">YouTube</span>
           </a>
@@ -1949,21 +2133,21 @@ function renderAlternativeResourcesList() {
   if (showPapers && papers.length > 0) {
     papers.forEach(p => {
       const card = document.createElement("div");
-      card.className = "flex flex-col sm:flex-row items-start gap-3 bg-[#15191b] border border-[#2d373a] hover:border-[#27ae60] rounded-none p-3 transition-none group factorio-panel";
+      card.className = "flex flex-col sm:flex-row items-start gap-3 bg-[#14171a] border border-[#272c30] hover:border-[#00d050] rounded-none p-3 transition-none group";
       card.innerHTML = `
-        <div class="w-10 h-10 rounded-none bg-[#101314] border border-[#3d484b] flex items-center justify-center text-[#2ecc71] shrink-0">
-          <i data-lucide="file-text" class="w-5 h-5 text-[#2ecc71]" aria-hidden="true"></i>
+        <div class="w-10 h-10 rounded-none bg-[#0a0b0d] border border-[#272c30] flex items-center justify-center text-[#00d050] shrink-0">
+          <i data-lucide="file-text" class="w-5 h-5 text-[#00d050]" aria-hidden="true"></i>
         </div>
         <div class="flex-1 min-w-0 space-y-1">
           <div class="flex items-center justify-between gap-1">
-            <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-none bg-[#16291e] text-[#2ecc71] border border-[#27ae60]/40 truncate">
+            <span class="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-none bg-[#0a1e10] text-[#00d050] border border-[#00d050]/40 truncate">
               <i data-lucide="book-open" class="w-2.5 h-2.5 inline mr-1"></i>${p.badge || "Research Paper"}
             </span>
-            <span class="text-[10px] text-[#8a9699] font-mono truncate">${p.authors} (${p.year || "Foundational"})</span>
+            <span class="text-[10px] text-[#889296] font-mono truncate">${p.authors} (${p.year || "Foundational"})</span>
           </div>
-          <h5 class="text-xs font-bold text-white font-mono line-clamp-1 group-hover:text-[#2ecc71] transition-colors">${p.title}</h5>
-          <p class="text-[11px] text-[#b1bec1] line-clamp-2 font-serif">${p.summary || ""}</p>
-          <div class="text-[10px] text-[#718286] font-mono truncate italic">${p.journal || ""}</div>
+          <h5 class="text-xs font-bold text-white font-mono line-clamp-1 group-hover:text-[#00d050] transition-colors">${p.title}</h5>
+          <p class="text-[11px] text-[#889296] line-clamp-2">${p.summary || ""}</p>
+          <div class="text-[10px] text-[#545e63] font-mono truncate italic">${p.journal || ""}</div>
         </div>
         <div class="flex sm:flex-col gap-1.5 shrink-0 w-full sm:w-auto justify-end pt-1 sm:pt-0">
           <a href="${p.scholar_url || `https://scholar.google.com/scholar?q=${encodeURIComponent(p.title)}`}" target="_blank" rel="noopener noreferrer" class="min-h-[34px] px-2.5 py-1 text-xs font-mono font-bold rounded-none bg-[#1e2a22] hover:bg-[#27ae60] text-[#2ecc71] hover:text-white border border-[#27ae60]/40 flex items-center justify-center gap-1.5 transition-none cursor-pointer" title="Search on Google Scholar">
@@ -2105,16 +2289,16 @@ function renderVisualDiagram(diagram) {
 
     if (!isHidden) {
       const card = document.createElement("div");
-      card.className = "factorio-panel border border-[#3d484b] hover:border-[#556367] rounded-none p-3.5 flex items-center justify-between gap-3 shadow-sm";
+      card.className = "p-3.5 bg-[#14171a] border border-[#272c30] rounded-none flex items-center justify-between gap-3 shadow-sm";
       card.innerHTML = `
         <div class="space-y-0.5 min-w-0">
-          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-[#8a9699] flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-[#27ae60]"></span> Step ${idx + 1}
+          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-[#889296] flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-[#00d050] inline-block"></span> STEP ${idx + 1}
           </div>
           <div class="text-xs font-bold text-white truncate node-content">${node.label || node.title || node.content || ""}</div>
         </div>
-        <div class="w-7 h-7 rounded-none bg-[#18231c] border border-[#27ae60]/40 flex items-center justify-center shrink-0">
-          <i data-lucide="check" class="w-4 h-4 text-[#2ecc71]" aria-hidden="true"></i>
+        <div class="w-7 h-7 rounded-none bg-[#0a1e10] border border-[#00d050] flex items-center justify-center shrink-0">
+          <i data-lucide="check" class="w-4 h-4 text-[#00d050]" aria-hidden="true"></i>
         </div>
       `;
       renderMathInElementSafe(card.querySelector(".node-content"));
@@ -2122,7 +2306,7 @@ function renderVisualDiagram(diagram) {
     } else {
       const card = document.createElement("div");
       card.id = `diag-node-${idx}`;
-      card.className = "recall-node-card locked border border-[#e59130] rounded-none p-4 factorio-panel space-y-3 shadow-sm";
+      card.className = "recall-node-card locked border-2 border-white rounded-none p-4 bg-[#14171a] space-y-3 shadow-[3px_3px_0px_#ffe600]";
 
       let options = Array.isArray(node.options) && node.options.length >= 2 ? [...node.options] : [
         correctLabel,
@@ -2135,29 +2319,29 @@ function renderVisualDiagram(diagram) {
 
       card.innerHTML = `
         <div class="flex items-center justify-between">
-          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-[#f59f38] flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-[#f59f38] animate-ping"></span>
+          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-[#ffe600] flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-[#ffe600] animate-ping inline-block"></span>
             Practice Slot • Step ${idx + 1}
           </div>
-          <span class="node-status-pill text-[10px] text-[#f59f38] font-mono font-bold bg-[#1e2325] border border-[#e59130]/40 px-2 py-0.5 rounded-none">Click to Recall</span>
+          <span class="node-status-pill text-[10px] text-[#ffe600] font-mono font-bold bg-[#0a0b0d] border border-[#ffe600]/40 px-2 py-0.5 rounded-none">Click to Recall</span>
         </div>
         <div class="slot-action-area">
-          <button class="blank-slot-btn w-full min-h-[44px] px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#1e2325] hover:bg-[#252b2e] border border-[#e59130] text-[#f59f38] flex items-center justify-center gap-2 cursor-pointer">
-            <i data-lucide="help-circle" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
-            <span class="font-mono tracking-wide">[ ? Click to Recall &amp; Test Yourself ]</span>
+          <button class="blank-slot-btn w-full min-h-[44px] px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#0e1113] hover:bg-[#181c20] border-2 border-[#ffe600] text-[#ffe600] flex items-center justify-center gap-2 cursor-pointer shadow-[2px_2px_0px_#ffe600]">
+            <i data-lucide="help-circle" class="w-4 h-4 text-[#ffe600]" aria-hidden="true"></i>
+            <span class="font-mono tracking-wide">[ ? CLICK TO RECALL // 想起 ]</span>
           </button>
         </div>
-        <div id="diag-options-${idx}" class="hidden p-3.5 factorio-inset border border-[#3d484b] rounded-none space-y-2.5 shadow-inner">
-          <div class="flex items-center justify-between text-xs text-[#f59f38] font-bold font-mono">
+        <div id="diag-options-${idx}" class="hidden p-3.5 bg-[#0a0b0d] border border-[#272c30] rounded-none space-y-2.5 shadow-inner">
+          <div class="flex items-center justify-between text-xs text-[#ffe600] font-bold font-mono">
             <span>Choose the correct concept or formula:</span>
-            <span class="text-[10px] text-[#8a9699] font-mono">3 choices</span>
+            <span class="text-[10px] text-[#889296] font-mono">3 choices</span>
           </div>
           <div class="feedback-msg text-xs hidden font-medium"></div>
           <div class="grid grid-cols-1 gap-2">
             ${options.map((opt, oIdx) => `
-              <button class="diag-opt-btn min-h-[44px] text-left text-xs factorio-panel hover:border-[#e59130] px-3.5 py-2.5 rounded-none border border-[#3d484b] text-[#d6dcde] flex items-center justify-between cursor-pointer group" data-node-idx="${idx}" data-val="${opt.replace(/"/g, '&quot;')}">
-                <span class="opt-label group-hover:text-[#f59f38] font-medium font-mono">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-[#8a9699] group-hover:text-[#f59f38]" aria-hidden="true"></i>
+              <button class="diag-opt-btn min-h-[44px] text-left text-xs bg-[#111417] hover:border-white px-3.5 py-2.5 rounded-none border border-[#272c30] text-white flex items-center justify-between cursor-pointer group" data-node-idx="${idx}" data-val="${opt.replace(/"/g, '&quot;')}">
+                <span class="opt-label group-hover:text-[#ffe600] font-medium font-mono">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-[#889296] group-hover:text-[#ffe600]" aria-hidden="true"></i>
               </button>
             `).join("")}
           </div>
@@ -2171,6 +2355,7 @@ function renderVisualDiagram(diagram) {
       const statusPill = card.querySelector(".node-status-pill");
 
       toggleBtn.addEventListener("click", () => {
+        yn10Audio.playBlip();
         optBox.classList.toggle("hidden");
       });
 
@@ -2179,25 +2364,26 @@ function renderVisualDiagram(diagram) {
           const selectedVal = optBtn.getAttribute("data-val");
           if (selectedVal === correctLabel) {
             // Correct choice
-            card.className = "recall-node-card unlocked border border-[#27ae60] rounded-none p-4 factorio-panel space-y-3 shadow-sm";
+            yn10Audio.playSuccess();
+            card.className = "recall-node-card unlocked border-2 border-[#00d050] rounded-none p-4 bg-[#14171a] space-y-3 shadow-[3px_3px_0px_#00d050]";
             
             actionArea.innerHTML = `
-              <div class="w-full min-h-[44px] px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#18231c] border border-[#27ae60] text-[#2ecc71] flex items-center justify-between shadow-sm">
+              <div class="w-full min-h-[44px] px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#0a1e10] border-2 border-[#00d050] text-[#00d050] flex items-center justify-between shadow-sm">
                 <div class="flex items-center gap-2">
-                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#2ecc71] shrink-0" aria-hidden="true"></i>
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#00d050] shrink-0" aria-hidden="true"></i>
                   <span class="revealed-text font-serif text-[13px]">${correctLabel}</span>
                 </div>
-                <span class="text-[10px] font-mono text-[#2ecc71] bg-[#18231c] border border-[#27ae60]/40 px-2 py-0.5 rounded-none font-bold">✓ Solved</span>
+                <span class="text-[10px] font-mono text-white bg-[#00d050] px-2 py-0.5 rounded-none font-bold">✓ Solved</span>
               </div>
             `;
             renderMathInElementSafe(actionArea.querySelector(".revealed-text"));
 
-            statusPill.className = "node-status-pill text-[10px] text-[#2ecc71] font-mono font-bold bg-[#18231c] border border-[#27ae60] px-2 py-0.5 rounded-none";
+            statusPill.className = "node-status-pill text-[10px] text-white font-mono font-bold bg-[#00d050] px-2 py-0.5 rounded-none shadow-[1px_1px_0px_#ffffff]";
             statusPill.textContent = "✓ Mastered";
 
             optBox.innerHTML = `
-              <div class="p-2.5 rounded-none bg-[#18231c] border border-[#27ae60]/40 text-xs text-[#2ecc71] font-bold flex items-center gap-2 font-mono">
-                <i data-lucide="sparkles" class="w-4 h-4 text-[#2ecc71] shrink-0" aria-hidden="true"></i>
+              <div class="p-2.5 rounded-none bg-[#0a1e10] border border-[#00d050] text-xs text-[#00d050] font-bold flex items-center gap-2 font-mono">
+                <i data-lucide="sparkles" class="w-4 h-4 text-[#00d050] shrink-0" aria-hidden="true"></i>
                 <span>Great job! Locked into intuition (+1 Mastery Point)</span>
               </div>
             `;
@@ -2207,10 +2393,11 @@ function renderVisualDiagram(diagram) {
             lucide.createIcons();
           } else {
             // Incorrect choice
+            yn10Audio.playError();
             feedbackDiv.classList.remove("hidden");
-            feedbackDiv.className = "feedback-msg text-xs text-rose-300 font-medium flex items-center gap-2 p-2.5 rounded-none bg-[#2a1715] border border-[#b23b3b]";
+            feedbackDiv.className = "feedback-msg text-xs text-rose-300 font-medium flex items-center gap-2 p-2.5 rounded-none bg-[#1e0a0c] border border-[#e60012]";
             feedbackDiv.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 text-[#ff8f8f] shrink-0" aria-hidden="true"></i> <span>✕ Not quite — think about the core intuition and try another choice!</span>`;
-            optBtn.classList.add("bg-[#2a1715]", "border-[#b23b3b]", "text-[#ff8f8f]");
+            optBtn.classList.add("bg-[#1e0a0c]", "border-[#e60012]", "text-[#ff8f8f]");
             lucide.createIcons();
           }
         });
@@ -2232,29 +2419,29 @@ function renderCheckpointMCQs(mcqs) {
 
   mcqs.forEach((mcq, qIdx) => {
     const qCard = document.createElement("div");
-    qCard.className = "factorio-panel border border-[#3d484b] rounded-none p-4 space-y-3.5";
+    qCard.className = "bg-[#14171a] border border-[#272c30] rounded-none p-4 space-y-3.5 shadow-md";
     
     const reviewTime = mcq.review_timestamp_sec || state.currentTimeSec;
 
     qCard.innerHTML = `
       <div class="flex items-start gap-2.5">
-        <span class="w-6 h-6 rounded-none bg-[#1e2325] text-[#f59f38] font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-[#e59130]/40">
+        <span class="w-6 h-6 rounded-none bg-[#0a0b0d] text-[#ffe600] font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-[#ffe600]/40">
           Q${qIdx + 1}
         </span>
         <p class="text-xs font-bold text-white leading-snug font-mono">${mcq.question}</p>
       </div>
       <div class="grid grid-cols-1 gap-2 pt-0.5">
         ${(mcq.options || []).map((opt, oIdx) => `
-          <button class="mcq-option-btn text-left text-xs factorio-inset border border-[#3d484b] hover:border-[#e59130] rounded-none p-3 text-[#d6dcde] flex items-center justify-between cursor-pointer group" data-q-idx="${qIdx}" data-o-idx="${oIdx}">
-            <span class="group-hover:text-[#f59f38] font-medium font-mono">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
+          <button class="mcq-option-btn text-left text-xs bg-[#0a0b0d] border border-[#272c30] hover:border-white rounded-none p-3 text-white flex items-center justify-between cursor-pointer group font-mono" data-q-idx="${qIdx}" data-o-idx="${oIdx}">
+            <span class="group-hover:text-[#ffe600] font-medium font-mono">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
             <span class="opt-status font-mono text-xs hidden shrink-0 ml-2"></span>
           </button>
         `).join("")}
       </div>
-      <div id="mcq-expl-${qIdx}" class="hidden p-3.5 rounded-none factorio-inset border border-[#3d484b] text-xs text-[#d6dcde] leading-relaxed space-y-2.5 font-mono">
+      <div id="mcq-expl-${qIdx}" class="hidden p-3.5 rounded-none bg-[#0a0b0d] border border-[#272c30] text-xs text-white leading-relaxed space-y-2.5 font-mono">
         <div class="flex items-start gap-2">
-          <i data-lucide="info" class="w-4 h-4 text-[#f59f38] shrink-0 mt-0.5" aria-hidden="true"></i>
-          <div><strong class="text-[#f59f38] uppercase">Intuition &amp; Why This Works:</strong> ${mcq.explanation}</div>
+          <i data-lucide="info" class="w-4 h-4 text-[#ffe600] shrink-0 mt-0.5" aria-hidden="true"></i>
+          <div><strong class="text-[#ffe600] uppercase">Intuition &amp; Why This Works:</strong> ${mcq.explanation}</div>
         </div>
         <div class="review-btn-container pt-1">
           <!-- Rewatch button injected dynamically on wrong answer -->
@@ -2276,22 +2463,24 @@ function renderCheckpointMCQs(mcqs) {
         });
 
         if (oI === targetMcq.correct_index) {
-          btn.className = "mcq-option-btn text-left text-xs bg-[#18231c] border border-[#27ae60] rounded-none p-3 text-[#2ecc71] flex items-center justify-between shadow-sm";
+          yn10Audio.playSuccess();
+          btn.className = "mcq-option-btn text-left text-xs bg-[#0a1e10] border-2 border-[#00d050] rounded-none p-3 text-[#00d050] flex items-center justify-between shadow-[2px_2px_0px_#00d050]";
           const statusSpan = btn.querySelector(".opt-status");
           statusSpan.classList.remove("hidden");
-          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded-none bg-[#18231c] text-[#2ecc71] font-bold flex items-center gap-1 font-mono"><i data-lucide="check" class="w-3.5 h-3.5" aria-hidden="true"></i> Great job! Correct</span>`;
+          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded-none bg-[#0a1e10] text-[#00d050] font-bold flex items-center gap-1 font-mono"><i data-lucide="check" class="w-3.5 h-3.5" aria-hidden="true"></i> Great job! Correct</span>`;
         } else {
-          btn.className = "mcq-option-btn text-left text-xs bg-[#2a1715] border border-[#b23b3b] rounded-none p-3 text-[#ff8f8f] flex items-center justify-between shadow-sm";
+          yn10Audio.playError();
+          btn.className = "mcq-option-btn text-left text-xs bg-[#1e0a0c] border-2 border-[#e60012] rounded-none p-3 text-[#ff8f8f] flex items-center justify-between shadow-[2px_2px_0px_#e60012]";
           const statusSpan = btn.querySelector(".opt-status");
           statusSpan.classList.remove("hidden");
-          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded-none bg-[#2a1715] text-[#ff8f8f] font-bold font-mono">✕ Not quite</span>`;
+          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded-none bg-[#1e0a0c] text-[#ff8f8f] font-bold font-mono">✕ Not quite</span>`;
 
           const allOptions = qCard.querySelectorAll(".mcq-option-btn");
           if (allOptions[targetMcq.correct_index]) {
-            allOptions[targetMcq.correct_index].className = "mcq-option-btn text-left text-xs bg-[#18231c] border border-[#27ae60] rounded-none p-3 text-[#2ecc71] flex items-center justify-between";
+            allOptions[targetMcq.correct_index].className = "mcq-option-btn text-left text-xs bg-[#0a1e10] border-2 border-[#00d050] rounded-none p-3 text-[#00d050] flex items-center justify-between";
             const rightStatus = allOptions[targetMcq.correct_index].querySelector(".opt-status");
             rightStatus.classList.remove("hidden");
-            rightStatus.innerHTML = `<span class="text-xs text-[#2ecc71] font-mono font-bold">✓ Correct Answer</span>`;
+            rightStatus.innerHTML = `<span class="text-xs text-[#00d050] font-mono font-bold">✓ Correct Answer</span>`;
           }
 
           // Record in missedQuizQuestions for Tab 3 Saved Notes
@@ -2312,8 +2501,8 @@ function renderCheckpointMCQs(mcqs) {
           // Inject the Rewatch 30s explanation button
           if (reviewContainer) {
             reviewContainer.innerHTML = `
-              <button class="jump-review-btn factorio-btn-secondary w-full min-h-[44px] px-4 py-2.5 rounded-none text-xs font-bold font-mono flex items-center justify-center gap-2 cursor-pointer">
-                <i data-lucide="rotate-ccw" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+              <button class="jump-review-btn yn10-btn w-full min-h-[44px] px-4 py-2.5 rounded-none text-xs font-bold font-mono flex items-center justify-center gap-2 cursor-pointer">
+                <i data-lucide="rotate-ccw" class="w-4 h-4 text-[#ffe600]" aria-hidden="true"></i>
                 <span>⏪ Rewatch Concept Explanation (${formatTime(reviewTime)})</span>
               </button>
             `;
@@ -2444,16 +2633,18 @@ function switchTab(tabPaneId) {
     sessionStorage.setItem("synclearn_active_tab", tabPaneId);
   } catch (_) {}
 
+  yn10Audio.playBlip();
+
   document.querySelectorAll(".tab-btn").forEach(btn => {
     const isTarget = btn.getAttribute("data-target") === tabPaneId;
     if (isTarget) {
-      btn.classList.add("active", "text-[#f59f38]", "bg-[#24292b]", "border-[#e59130]");
-      btn.classList.remove("text-[#8a9699]", "border-transparent");
+      btn.classList.add("active", "text-white", "bg-[#181c20]", "border-2", "border-white");
+      btn.classList.remove("text-[#889296]", "border-2", "border-transparent", "text-[#f59f38]", "bg-[#24292b]", "border-[#e59130]");
       btn.setAttribute("aria-selected", "true");
       btn.setAttribute("tabindex", "0");
     } else {
-      btn.classList.remove("active", "text-[#f59f38]", "bg-[#24292b]", "border-[#e59130]");
-      btn.classList.add("text-[#8a9699]", "border-transparent");
+      btn.classList.remove("active", "text-white", "bg-[#181c20]", "border-2", "border-white", "text-[#f59f38]", "bg-[#24292b]", "border-[#e59130]");
+      btn.classList.add("text-[#889296]", "border-2", "border-transparent");
       btn.setAttribute("aria-selected", "false");
       btn.setAttribute("tabindex", "-1");
     }
@@ -2479,6 +2670,20 @@ function isValidYouTubeUrl(input) {
 
 function initUIEventListeners() {
   initTimelineInteractions();
+
+  // Yamauchi No.10 Sound Toggles (Landing & Workspace)
+  const landingSoundBtn = document.getElementById("yn10-sound-toggle-btn");
+  if (landingSoundBtn) {
+    landingSoundBtn.addEventListener("click", () => {
+      yn10Audio.toggle();
+    });
+  }
+  const workspaceSoundBtn = document.getElementById("workspace-sound-toggle-btn");
+  if (workspaceSoundBtn) {
+    workspaceSoundBtn.addEventListener("click", () => {
+      yn10Audio.toggle();
+    });
+  }
 
   // Tab Header Click Events
   document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -2885,6 +3090,7 @@ function initModalListeners() {
         created_at: new Date().toISOString()
       };
 
+      yn10Audio.playCoin();
       StorageManager.savePin(newPin);
       state.pins.push(newPin);
       state.pins.sort((a, b) => a.timestamp_sec - b.timestamp_sec);
@@ -3140,23 +3346,23 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   if (isLanding) {
     return `
-      <div class="landing-video-card group factorio-panel border-[#3d484b] hover:border-[#e59130] rounded-none p-3.5 transition-none flex flex-col justify-between cursor-pointer shadow-lg" data-video-id="${v.video_id}">
+      <div class="landing-video-card group yn10-pixel-box bg-[#111417] p-3.5 flex flex-col justify-between cursor-pointer" data-video-id="${v.video_id}">
         <div class="space-y-2.5">
-          <div class="relative w-full aspect-video rounded-none overflow-hidden bg-[#121516] border border-[#3d484b]">
+          <div class="relative w-full aspect-video rounded-none overflow-hidden bg-black border border-[#272c30]">
             <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-            <span class="absolute bottom-1.5 right-1.5 bg-[#121516]/90 backdrop-blur-md text-[10px] font-mono px-2 py-0.5 rounded-none text-[#f59f38] font-bold border border-[#3d484b]">
+            <span class="absolute bottom-1.5 right-1.5 bg-[#0a0b0d]/90 font-mono text-[10px] px-2 py-0.5 rounded-none text-[#ffe600] font-bold border border-[#ffe600]/40">
               ${durStr}
             </span>
           </div>
-          <h3 class="text-xs font-bold text-white group-hover:text-[#f59f38] transition-colors line-clamp-2 leading-relaxed font-mono">
+          <h3 class="text-xs font-bold text-white group-hover:text-[#ffe600] transition-colors line-clamp-2 leading-relaxed font-mono">
             ${v.title}
           </h3>
         </div>
-        <div class="pt-3 mt-3 border-t border-[#3d484b] flex items-center justify-between">
-          <span class="text-[10px] font-mono text-[#8a9699]">ID: ${v.video_id}</span>
-          <button class="factorio-btn-primary px-3 py-1 text-xs font-mono font-bold rounded-none flex items-center gap-1 shadow-none transition-none pointer-events-none">
+        <div class="pt-3 mt-3 border-t border-[#272c30] flex items-center justify-between">
+          <span class="text-[10px] font-mono text-[#889296]">STAGE 01 // ID: ${v.video_id}</span>
+          <button class="yn10-btn-primary px-3 py-1 text-xs font-mono font-bold rounded-none flex items-center gap-1 shadow-[2px_2px_0px_#ffe600] pointer-events-none">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
-            <span>Start Learning</span>
+            <span>ENTER ➔</span>
           </button>
         </div>
       </div>
@@ -3165,28 +3371,28 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   // Inside Main Page Modal
   return `
-    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded-none border ${isActiveVideo ? 'bg-[#292015] border-[#e59130] shadow-md' : 'bg-[#171a1b] border-[#333b3d] hover:border-[#e59130] hover:bg-[#1e2325]'} transition-none cursor-pointer font-mono" data-video-id="${v.video_id}">
+    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded-none border-2 ${isActiveVideo ? 'bg-[#181c20] border-white shadow-[3px_3px_0px_#ffffff]' : 'bg-[#111417] border-[#272c30] hover:border-white hover:bg-[#181c20]'} transition-none cursor-pointer font-mono" data-video-id="${v.video_id}">
       <div class="flex items-center space-x-3 overflow-hidden">
-        <div class="relative w-28 aspect-video rounded-none overflow-hidden bg-[#121516] shrink-0 border border-[#3d484b]">
+        <div class="relative w-28 aspect-video rounded-none overflow-hidden bg-black shrink-0 border border-[#272c30]">
           <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-          <span class="absolute bottom-1 right-1 bg-[#121516]/95 font-mono text-[9px] px-1.5 py-0.5 rounded-none text-[#f59f38] font-bold">${durStr}</span>
+          <span class="absolute bottom-1 right-1 bg-black font-mono text-[9px] px-1.5 py-0.5 rounded-none text-[#ffe600] font-bold">${durStr}</span>
         </div>
         <div class="min-w-0 pr-3">
-          <h4 class="text-xs font-bold ${isActiveVideo ? 'text-[#f59f38]' : 'text-white group-hover:text-[#f59f38]'} truncate transition-colors">
+          <h4 class="text-xs font-bold ${isActiveVideo ? 'text-[#ffe600]' : 'text-white group-hover:text-[#ffe600]'} truncate transition-colors">
             ${v.title}
           </h4>
-          <p class="text-[11px] text-[#8a9699] font-mono mt-1">ID: ${v.video_id}</p>
+          <p class="text-[11px] text-[#889296] font-mono mt-1">ID: ${v.video_id}</p>
         </div>
       </div>
       <div class="shrink-0 pl-2">
         ${isActiveVideo ? `
-          <span class="px-2.5 py-1 rounded-none text-[10px] font-bold font-mono bg-[#18231c] border border-[#27ae60] text-[#2ecc71] flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#2ecc71] animate-pulse"></span> Active
+          <span class="px-2.5 py-1 rounded-none text-[10px] font-bold font-mono bg-[#00d050] text-white flex items-center gap-1.5 shadow-[2px_2px_0px_#ffffff]">
+            <span class="w-1.5 h-1.5 bg-white animate-pulse"></span> Active
           </span>
         ` : `
-          <button class="factorio-btn-primary px-3 py-1.5 text-xs font-mono font-bold rounded-none transition-none flex items-center gap-1 shadow-none">
+          <button class="yn10-btn-primary px-3 py-1.5 text-xs font-mono font-bold rounded-none flex items-center gap-1 shadow-[2px_2px_0px_#ffe600]">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
-            <span>Start Learning</span>
+            <span>ENTER ➔</span>
           </button>
         `}
       </div>
@@ -3224,18 +3430,19 @@ function renderLandingFolders(folders) {
     const btn = document.createElement("button");
     const isActive = String(f.id) === String(activeId);
     btn.type = "button";
-    btn.className = `px-3.5 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap transition-none flex items-center gap-2 cursor-pointer border ${
+    btn.className = `px-3.5 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap transition-none flex items-center gap-2 cursor-pointer border-2 ${
       isActive 
-        ? "bg-[#24292b] border-[#e59130] text-[#f59f38] shadow-[0_0_8px_rgba(229,145,48,0.3)]" 
-        : "bg-[#171a1b] border-[#333b3d] text-[#8a9699] hover:text-white hover:bg-[#1e2325] hover:border-[#556367]"
+        ? "bg-white text-black border-white shadow-[3px_3px_0px_#ffe600]" 
+        : "bg-[#111417] border-[#272c30] text-[#889296] hover:text-white hover:border-white"
     }`;
     btn.innerHTML = `
-      <i data-lucide="${f.icon || 'folder'}" class="w-3.5 h-3.5 ${isActive ? 'text-[#f59f38]' : 'text-[#8a9699]'}" aria-hidden="true"></i>
+      <span class="w-2 h-2 ${isActive ? 'bg-[#e60012]' : 'bg-[#ffe600]'} inline-block"></span>
       <span>${f.name}</span>
-      <span class="px-1.5 py-0.2 rounded-none text-[10px] font-mono ${isActive ? 'bg-[#3d2b15] text-[#f59f38] border border-[#e59130]/40' : 'bg-[#121516] text-[#8a9699] border border-[#2b3336]'}">${f.video_count !== undefined ? f.video_count : 0}</span>
+      <span class="px-1.5 py-0.2 rounded-none text-[10px] font-mono ${isActive ? 'bg-black text-[#ffe600]' : 'bg-[#0a0b0d] text-[#889296]'}">${f.video_count !== undefined ? f.video_count : 0}</span>
     `;
 
     btn.addEventListener("click", () => {
+      yn10Audio.playBlip();
       state.currentFolderId = f.id;
       localStorage.setItem("synclearn_landing_folder", f.id);
       renderLandingFolders(folders);
