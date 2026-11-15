@@ -812,3 +812,16 @@ select option {
   outline: 2px solid #ffffff !important;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.85), 0 0 20px var(--yn10-yellow) !important;
 }
+
+/* ========================================================
+   10. SPA VIEW ROUTING & SECTION ISOLATION
+   ======================================================== */
+/* When on landing page, completely remove workspace from layout */
+html:not(.in-workspace) #workspace-view {
+  display: none !important;
+}
+
+/* When in workspace, completely remove landing page from layout */
+html.in-workspace #landing-page-view {
+  display: none !important;
+}

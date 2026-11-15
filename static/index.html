@@ -85,7 +85,7 @@
   <div class="yn10-scanlines-overlay" aria-hidden="true"></div>
 
   <!-- 0. FULL-SCREEN LANDING PAGE OVERLAY -->
-  <div id="landing-page-view" class="fixed inset-0 z-50 bg-[#0a0b0d] flex flex-col justify-between overflow-y-auto p-6 sm:p-10 rounded-none relative">
+  <div id="landing-page-view" class="fixed inset-0 z-50 bg-[#0a0b0d] flex flex-col justify-between overflow-y-auto p-6 sm:p-10 rounded-none">
     
     <!-- 3D Floating Voxels & Clusters in Background -->
     <div class="yn10-scene-3d absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
@@ -425,6 +425,9 @@
       <span>ACTIVE LEARNING THAT ACTUALLY STICKS • TEAM CLAUDENSONS</span>
     </footer>
   </div>
+
+  <!-- WORKSPACE VIEW WRAPPER (HIDDEN ON LANDING PAGE) -->
+  <div id="workspace-view" class="flex-1 flex flex-col min-h-screen">
 
   <!-- TOP CONSOLE BAR -->
   <header class="sticky top-0 z-40 bg-[#0a0b0d]/98 backdrop-blur-md border-b-2 border-[#272c30] px-4 lg:px-6 py-2.5 shadow-xl rounded-none">
@@ -875,6 +878,23 @@
         <!-- TAB CONTENT 1: SIMPLE EXPLANATION (PROGRESSIVE DISCLOSURE & HICK'S LAW) -->
         <div id="tab-content-rescue" role="tabpanel" aria-labelledby="tab-btn-rescue" class="tab-pane flex-1 p-5 overflow-y-auto space-y-5">
           
+          <!-- Empty State (Shown until user presses Explain This Step) -->
+          <div id="rescue-empty-state" class="p-8 text-center space-y-4 my-auto flex flex-col items-center justify-center min-h-[380px]">
+            <div class="w-12 h-12 bg-[#14171a] border-2 border-[#ffe600] flex items-center justify-center text-[#ffe600] shadow-[3px_3px_0px_#ffe600]">
+              <i data-lucide="sparkles" class="w-6 h-6" aria-hidden="true"></i>
+            </div>
+            <div class="space-y-1.5 max-w-sm">
+              <h3 class="text-sm font-bold text-white font-mono uppercase tracking-wider">Ready to Explain Any Lecture Moment</h3>
+              <p class="text-xs text-[#889296] leading-relaxed">
+                Watch the lecture and press <strong class="text-white">"EXPLAIN THIS STEP"</strong> (or <kbd class="px-1.5 py-0.5 bg-[#0a0b0d] border border-[#ffe600] text-[#ffe600] font-mono text-[10px] font-bold">Alt + E</kbd>) at any timestamp to unpack physical intuition, step-by-step derivations, and interactive practice.
+              </p>
+            </div>
+            <button type="button" id="tab1-explain-trigger-btn" class="yn10-btn-primary min-h-[44px] px-6 py-2.5 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2 cursor-pointer">
+              <i data-lucide="sparkles" class="w-4 h-4 text-white" aria-hidden="true"></i>
+              <span>EXPLAIN THIS STEP ➔</span>
+            </button>
+          </div>
+
           <!-- Step-by-Step Friendly Skeleton Loader -->
           <div id="rescue-loading-skeleton" class="hidden p-5 yn10-pixel-box bg-[#111417] space-y-4" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-[#00e5ff] font-mono font-bold">
@@ -903,7 +923,7 @@
           </div>
 
           <!-- Real Content Container -->
-          <div id="rescue-real-content" class="space-y-5" aria-live="polite">
+          <div id="rescue-real-content" class="hidden space-y-5" aria-live="polite">
 
             <!-- Active Focus Window & Auto-Save Pin Bar -->
             <div class="p-4 bg-[#14171a] border-2 border-white shadow-[3px_3px_0px_#ffffff]">
@@ -1067,50 +1087,70 @@
         <!-- TAB CONTENT 2: QUICK PRACTICE (VISUAL FLOW & MCQS) -->
         <div id="tab-content-recall" role="tabpanel" aria-labelledby="tab-btn-recall" class="tab-pane hidden flex-1 p-5 overflow-y-auto space-y-5">
           
-          <!-- Recall Header -->
-          <div class="p-4 bg-[#14171a] border-2 border-white shadow-[3px_3px_0px_#ffffff]">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-[#00d050] uppercase font-mono tracking-wider flex items-center gap-1.5">
-                <span class="w-2 h-2 bg-[#00d050] inline-block"></span> ACTIVE PRACTICE
-              </span>
-              <span id="recall-score-badge" class="text-xs font-mono font-bold text-white bg-[#00d050] px-2.5 py-0.5 rounded-none shadow-[2px_2px_0px_#ffffff]">
-                0 / 5 MASTERED
-              </span>
+          <!-- Empty State (Shown until user clicks "Explain This Step") -->
+          <div id="recall-empty-state" class="p-8 text-center space-y-4 my-auto flex flex-col items-center justify-center min-h-[380px]">
+            <div class="w-12 h-12 bg-[#14171a] border-2 border-[#00d050] flex items-center justify-center text-[#00d050] shadow-[3px_3px_0px_#00d050]">
+              <i data-lucide="target" class="w-6 h-6" aria-hidden="true"></i>
             </div>
-            <h2 id="diagram-title" class="text-sm font-bold text-white font-mono mt-1.5">
-              Bite-Sized Puzzles &amp; Conceptual Checkpoints
-            </h2>
+            <div class="space-y-1.5 max-w-sm">
+              <h3 class="text-sm font-bold text-white font-mono uppercase tracking-wider">No Practice Checkpoints Yet</h3>
+              <p class="text-xs text-[#889296] leading-relaxed">
+                Active practice puzzles and fill-in-the-blank concept pathways are generated when you click <strong class="text-white">"EXPLAIN THIS STEP"</strong> during any lecture moment.
+              </p>
+            </div>
+            <button type="button" id="tab2-explain-trigger-btn" class="yn10-btn min-h-[44px] px-6 py-2.5 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2 cursor-pointer border-2 border-[#00d050] text-[#00d050] hover:bg-[#00d050]/10">
+              <i data-lucide="sparkles" class="w-4 h-4 text-[#00d050]" aria-hidden="true"></i>
+              <span>EXPLAIN THIS STEP ➔</span>
+            </button>
           </div>
 
-          <!-- Fill-in-the-Blank Visual Concept Flow Diagram -->
-          <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> CONCEPT PATHWAY
-              </h3>
-              <span class="text-[11px] font-mono text-[#889296]">Fill in the missing step to complete the mental model</span>
+          <!-- Real Content Container (Hidden until user presses Explain This Step) -->
+          <div id="recall-real-content" class="hidden space-y-5">
+            <!-- Recall Header -->
+            <div class="p-4 bg-[#14171a] border-2 border-white shadow-[3px_3px_0px_#ffffff]">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-[#00d050] uppercase font-mono tracking-wider flex items-center gap-1.5">
+                  <span class="w-2 h-2 bg-[#00d050] inline-block"></span> ACTIVE PRACTICE
+                </span>
+                <span id="recall-score-badge" class="text-xs font-mono font-bold text-white bg-[#00d050] px-2.5 py-0.5 rounded-none shadow-[2px_2px_0px_#ffffff]">
+                  0 / 5 MASTERED
+                </span>
+              </div>
+              <h2 id="diagram-title" class="text-sm font-bold text-white font-mono mt-1.5">
+                Bite-Sized Puzzles &amp; Conceptual Checkpoints
+              </h2>
             </div>
 
-            <!-- Interactive Flow Nodes Container -->
-            <div id="diagram-nodes-container" class="space-y-3" aria-live="polite">
-              <!-- Dynamically rendered visual flowchart cards -->
-            </div>
-          </div>
+            <!-- Fill-in-the-Blank Visual Concept Flow Diagram -->
+            <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                  <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> CONCEPT PATHWAY
+                </h3>
+                <span class="text-[11px] font-mono text-[#889296]">Fill in the missing step to complete the mental model</span>
+              </div>
 
-          <!-- Checkpoint Multiple Choice Questions (MCQs) -->
-          <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#e60012] inline-block"></span> CONCEPT CHECKPOINTS
-              </h3>
-              <button id="reset-quiz-btn" class="text-xs text-[#889296] hover:text-[#ffe600] underline font-mono cursor-pointer">
-                TRY AGAIN
-              </button>
+              <!-- Interactive Flow Nodes Container -->
+              <div id="diagram-nodes-container" class="space-y-3" aria-live="polite">
+                <!-- Dynamically rendered visual flowchart cards -->
+              </div>
             </div>
 
-            <!-- MCQ Questions Container -->
-            <div id="mcqs-container" class="space-y-4" aria-live="polite">
-              <!-- Rendered by JS -->
+            <!-- Checkpoint Multiple Choice Questions (MCQs) -->
+            <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                  <span class="w-2 h-2 bg-[#e60012] inline-block"></span> CONCEPT CHECKPOINTS
+                </h3>
+                <button id="reset-quiz-btn" class="text-xs text-[#889296] hover:text-[#ffe600] underline font-mono cursor-pointer">
+                  TRY AGAIN
+                </button>
+              </div>
+
+              <!-- MCQ Questions Container -->
+              <div id="mcqs-container" class="space-y-4" aria-live="polite">
+                <!-- Rendered by JS -->
+              </div>
             </div>
           </div>
 
@@ -1119,92 +1159,112 @@
         <!-- TAB CONTENT 3: SAVED NOTES (CHEAT-SHEET & SUMMARY) -->
         <div id="tab-content-cheatsheet" role="tabpanel" aria-labelledby="tab-btn-cheatsheet" class="tab-pane hidden flex-1 p-5 overflow-y-auto space-y-5">
           
-          <!-- Cheat Sheet Header -->
-          <div class="p-4 bg-[#14171a] border-2 border-white flex items-center justify-between shadow-[3px_3px_0px_#ffffff]">
-            <div>
-              <div class="flex items-center gap-2">
-                <h2 class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-1.5">
-                  <span class="w-2 h-2 bg-[#0080ff] inline-block"></span>
-                  STUDY DOSSIER &amp; FORMULA CHEAT SHEET
-                </h2>
-                <span class="text-[10px] px-2 py-0.5 rounded-none bg-[#0a0b0d] border border-[#ffe600] text-[#ffe600] font-mono font-bold">EXAM READY</span>
-              </div>
-              <p class="text-[11px] text-[#889296] font-mono mt-1">
-                Your saved formulas, key insights, and concept flashcards ready for quick revision
+          <!-- Empty State (Shown until user clicks "Explain This Step" or saves notes) -->
+          <div id="cheatsheet-empty-state" class="p-8 text-center space-y-4 my-auto flex flex-col items-center justify-center min-h-[380px]">
+            <div class="w-12 h-12 bg-[#14171a] border-2 border-[#0080ff] flex items-center justify-center text-[#0080ff] shadow-[3px_3px_0px_#0080ff]">
+              <i data-lucide="bookmark-plus" class="w-6 h-6" aria-hidden="true"></i>
+            </div>
+            <div class="space-y-1.5 max-w-sm">
+              <h3 class="text-sm font-bold text-white font-mono uppercase tracking-wider">Study Dossier Is Empty</h3>
+              <p class="text-xs text-[#889296] leading-relaxed">
+                Click <strong class="text-white">"EXPLAIN THIS STEP"</strong> to extract terminology bridges and formula derivations, or press <kbd class="px-1.5 py-0.5 bg-[#0a0b0d] border border-white text-white font-mono text-[10px] font-bold">Alt + S</kbd> to save personal timestamp notes.
               </p>
             </div>
-            <button 
-              id="export-cheatsheet-btn" 
-              class="yn10-btn-primary min-h-[44px] px-4 py-2 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer rounded-none"
-            >
-              <i data-lucide="file-down" class="w-4 h-4 text-white" aria-hidden="true"></i>
-              <span>EXPORT STUDY GUIDE ➔</span>
+            <button type="button" id="tab3-explain-trigger-btn" class="yn10-btn min-h-[44px] px-6 py-2.5 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2 cursor-pointer border-2 border-[#0080ff] text-[#0080ff] hover:bg-[#0080ff]/10">
+              <i data-lucide="sparkles" class="w-4 h-4 text-[#0080ff]" aria-hidden="true"></i>
+              <span>EXPLAIN THIS STEP ➔</span>
             </button>
           </div>
 
-          <!-- Section 1: Study Pins & Formulas -->
-          <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SAVED INSIGHTS &amp; FORMULAS
-              </h3>
-              <!-- Filter Pills -->
-              <div class="flex items-center gap-1.5 text-xs font-mono">
-                <button class="pin-filter-btn active bg-white text-black font-bold px-2.5 py-1 rounded-none transition-colors cursor-pointer border-2 border-white" data-filter="all">
-                  ALL (<span id="filter-cnt-all">0</span>)
-                </button>
-                <button class="pin-filter-btn yn10-btn px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-white" data-filter="exam_priority">
-                  ★ EXAM (<span id="filter-cnt-exam">0</span>)
-                </button>
-                <button class="pin-filter-btn yn10-btn px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-white" data-filter="revisit">
-                  ? REVIEW (<span id="filter-cnt-revisit">0</span>)
-                </button>
-                <button class="pin-filter-btn yn10-btn px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-white" data-filter="key_formula">
-                  ∑ FORMULA (<span id="filter-cnt-formula">0</span>)
-                </button>
+          <!-- Real Content Container (Hidden until user presses Explain This Step or saves notes) -->
+          <div id="cheatsheet-real-content" class="hidden space-y-5">
+            <!-- Cheat Sheet Header -->
+            <div class="p-4 bg-[#14171a] border-2 border-white flex items-center justify-between shadow-[3px_3px_0px_#ffffff]">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="w-2 h-2 bg-[#0080ff] inline-block"></span>
+                    STUDY DOSSIER &amp; FORMULA CHEAT SHEET
+                  </h2>
+                  <span class="text-[10px] px-2 py-0.5 rounded-none bg-[#0a0b0d] border border-[#ffe600] text-[#ffe600] font-mono font-bold">EXAM READY</span>
+                </div>
+                <p class="text-[11px] text-[#889296] font-mono mt-1">
+                  Your saved formulas, key insights, and concept flashcards ready for quick revision
+                </p>
+              </div>
+              <button 
+                id="export-cheatsheet-btn" 
+                class="yn10-btn-primary min-h-[44px] px-4 py-2 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer rounded-none"
+              >
+                <i data-lucide="file-down" class="w-4 h-4 text-white" aria-hidden="true"></i>
+                <span>EXPORT STUDY GUIDE ➔</span>
+              </button>
+            </div>
+
+            <!-- Section 1: Study Pins & Formulas -->
+            <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3.5 shadow-md">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                  <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SAVED INSIGHTS &amp; FORMULAS
+                </h3>
+                <!-- Filter Pills -->
+                <div class="flex items-center gap-1.5 text-xs font-mono">
+                  <button class="pin-filter-btn active bg-white text-black font-bold px-2.5 py-1 rounded-none transition-colors cursor-pointer border-2 border-white" data-filter="all">
+                    ALL (<span id="filter-cnt-all">0</span>)
+                  </button>
+                  <button class="pin-filter-btn yn10-btn px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-white" data-filter="exam_priority">
+                    ★ EXAM (<span id="filter-cnt-exam">0</span>)
+                  </button>
+                  <button class="pin-filter-btn yn10-btn px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-white" data-filter="revisit">
+                    ? REVIEW (<span id="filter-cnt-revisit">0</span>)
+                  </button>
+                  <button class="pin-filter-btn yn10-btn px-2.5 py-1 rounded-none font-medium transition-colors cursor-pointer text-white" data-filter="key_formula">
+                    ∑ FORMULA (<span id="filter-cnt-formula">0</span>)
+                  </button>
+                </div>
+              </div>
+
+              <!-- Pins List Container -->
+              <div id="pins-list-container" class="space-y-2.5" aria-live="polite">
+                <!-- Dynamically populated from SQLite -->
               </div>
             </div>
 
-            <!-- Pins List Container -->
-            <div id="pins-list-container" class="space-y-2.5" aria-live="polite">
-              <!-- Dynamically populated from SQLite -->
+            <!-- Section 2: Collected Session Terminology Bridge -->
+            <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3 shadow-md">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                  <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> TERM MATRIX
+                </h3>
+                <span id="bridges-count-badge" class="text-[10px] font-mono text-[#00d050] bg-[#0a0b0d] border border-[#00d050] px-2 py-0.5 rounded-none font-bold">0 Mappings</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border border-[#272c30] rounded-none overflow-hidden">
+                  <thead class="bg-[#0a0b0d] text-[#ffe600] text-[10px] uppercase font-mono">
+                    <tr>
+                      <th class="p-2.5 border-b border-[#272c30] font-bold">Lecture Term / Symbol</th>
+                      <th class="p-2.5 border-b border-[#272c30] font-bold">Standard Textbook Name</th>
+                      <th class="p-2.5 border-b border-[#272c30] font-bold">How They Connect</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cheatsheet-bridge-body" class="divide-y divide-[#272c30] text-[#d6dcde] font-mono text-[11px]">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
 
-          <!-- Section 2: Collected Session Terminology Bridge -->
-          <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3 shadow-md">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> TERM MATRIX
-              </h3>
-              <span id="bridges-count-badge" class="text-[10px] font-mono text-[#00d050] bg-[#0a0b0d] border border-[#00d050] px-2 py-0.5 rounded-none font-bold">0 Mappings</span>
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border border-[#272c30] rounded-none overflow-hidden">
-                <thead class="bg-[#0a0b0d] text-[#ffe600] text-[10px] uppercase font-mono">
-                  <tr>
-                    <th class="p-2.5 border-b border-[#272c30] font-bold">Lecture Term / Symbol</th>
-                    <th class="p-2.5 border-b border-[#272c30] font-bold">Standard Textbook Name</th>
-                    <th class="p-2.5 border-b border-[#272c30] font-bold">How They Connect</th>
-                  </tr>
-                </thead>
-                <tbody id="cheatsheet-bridge-body" class="divide-y divide-[#272c30] text-[#d6dcde] font-mono text-[11px]">
-                  <!-- Populated dynamically -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Section 3: Targeted Revision: Missed Checkpoints -->
-          <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3 shadow-md">
-            <div class="flex items-center justify-between">
-              <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
-                <span class="w-2 h-2 bg-[#e60012] inline-block"></span> MISSED CHECKPOINTS
-              </h3>
-              <span id="missed-count-badge" class="text-[10px] font-mono text-white bg-[#e60012] px-2 py-0.5 rounded-none font-bold">0 To Review</span>
-            </div>
-            <div id="cheatsheet-missed-mcqs-container" class="space-y-2.5" aria-live="polite">
-              <!-- Missed MCQs injected here, or empty celebratory card -->
+            <!-- Section 3: Targeted Revision: Missed Checkpoints -->
+            <div class="p-4 bg-[#14171a] border border-[#272c30] space-y-3 shadow-md">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-bold text-white flex items-center gap-1.5 font-mono uppercase tracking-wider">
+                  <span class="w-2 h-2 bg-[#e60012] inline-block"></span> MISSED CHECKPOINTS
+                </h3>
+                <span id="missed-count-badge" class="text-[10px] font-mono text-white bg-[#e60012] px-2 py-0.5 rounded-none font-bold">0 To Review</span>
+              </div>
+              <div id="cheatsheet-missed-mcqs-container" class="space-y-2.5" aria-live="polite">
+                <!-- Missed MCQs injected here, or empty celebratory card -->
+              </div>
             </div>
           </div>
 
@@ -1215,6 +1275,8 @@
     </div>
 
   </main>
+  </div>
+  <!-- END WORKSPACE VIEW WRAPPER -->
 
   <!-- MODAL 1: DROP PERSONAL PIN MODAL -->
   <div id="pin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 rounded-none" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title">

@@ -1107,7 +1107,7 @@ function syncPlayhead() {
   state.previousTimeSec = current;
 }
 
-function jumpToTime(seconds, triggerAnalysis = true) {
+function jumpToTime(seconds, triggerAnalysis = false) {
   state.previousTimeSec = seconds;
   yn10Audio.playSeek();
   if (state.isPlayerReady && state.player && typeof state.player.seekTo === "function") {
@@ -1136,8 +1136,7 @@ function jumpToTime(seconds, triggerAnalysis = true) {
   syncPlayhead();
 
   if (triggerAnalysis) {
-    fetchSegmentAnalysis(seconds);
-    fetchSegmentQuiz(seconds);
+    triggerExplainThisStep();
   }
 }
 
@@ -1163,6 +1162,10 @@ async function navigateToWorkspace(videoId, customTitle = null, pushHistory = tr
     sessionStorage.setItem("synclearn_video_id", videoId);
     document.documentElement.classList.add("in-workspace");
   } catch (_) {}
+
+  // Reveal Workspace View
+  const workspaceView = document.getElementById("workspace-view");
+  if (workspaceView) workspaceView.classList.remove("hidden");
 
   // 2. Hide Landing Page Overlay smoothly
   const landingView = document.getElementById("landing-page-view");
@@ -1213,6 +1216,10 @@ function navigateToLanding(pushHistory = true) {
     sessionStorage.setItem("synclearn_view", "landing");
     document.documentElement.classList.remove("in-workspace");
   } catch (_) {}
+
+  // Hide Workspace View
+  const workspaceView = document.getElementById("workspace-view");
+  if (workspaceView) workspaceView.classList.add("hidden");
 
   // 3. Display Landing Page Overlay
   const landingView = document.getElementById("landing-page-view");
@@ -1342,15 +1349,8 @@ async function loadVideoStudio(videoId, customTitle = null) {
       folder_id: state.currentFolderId || 1
     });
 
-    // Determine target initial peak for analysis
-    let initialTimestamp = 30;
-    if (activeHeatmap.peaks && activeHeatmap.peaks.length > 0) {
-      initialTimestamp = activeHeatmap.peaks[0].peak_sec || activeHeatmap.peaks[0].start_sec;
-    }
-
-    // Automatically load analysis & quiz for this video's initial focus point
-    await fetchSegmentAnalysis(initialTimestamp);
-    await fetchSegmentQuiz(initialTimestamp);
+    // Keep tabs 1, 2, and 3 completely empty until user presses "Explain This Step"
+    resetTabsToEmptyState();
 
   } catch (err) {
     console.error("Failed to load video studio:", err);
@@ -1388,12 +1388,12 @@ function renderDynamicPeaksUI(heatmap) {
       span.className = "text-[#ffe600] hover:text-white cursor-pointer truncate max-w-[200px] font-mono font-medium";
       span.title = p.description || p.label;
       span.textContent = `${startStr} - ${endStr} (${cleanLabel})`;
-      span.addEventListener("click", () => jumpToTime(p.peak_sec || p.start_sec, true));
+      span.addEventListener("click", () => jumpToTime(p.peak_sec || p.start_sec, false));
       labelsContainer.appendChild(span);
     });
   }
 
-  // Render Quick Peak Jump Navigator Bar (Yamauchi Road Milestone Pills)
+  // Render Quick Peak Jump Navigator Bar
   if (buttonsContainer) {
     buttonsContainer.innerHTML = "";
     peaks.forEach(p => {
@@ -1405,9 +1405,9 @@ function renderDynamicPeaksUI(heatmap) {
       btn.className = "peak-jump-btn yn10-peak-pill min-h-[38px] px-3 py-1.5 rounded-none text-white whitespace-nowrap flex items-center gap-1.5 cursor-pointer font-mono text-xs font-bold";
       btn.innerHTML = `
         <span class="w-2 h-2 bg-[#e60012] shrink-0 inline-block"></span>
-        <span class="truncate max-w-[210px]">MILE ${formatTime(peakTime)} • ${cleanLabel} (${intensityPct}%)</span>
+        <span class="truncate max-w-[210px]">${formatTime(peakTime)} • ${cleanLabel} (${intensityPct}%)</span>
       `;
-      btn.addEventListener("click", () => jumpToTime(peakTime, true));
+      btn.addEventListener("click", () => jumpToTime(peakTime, false));
       buttonsContainer.appendChild(btn);
     });
     lucide.createIcons();
@@ -1525,7 +1525,7 @@ function initTimelineInteractions() {
     const offsetX = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
     const pct = offsetX / rect.width;
     const targetTimeSec = Math.round(pct * state.durationSec);
-    jumpToTime(targetTimeSec, true);
+    jumpToTime(targetTimeSec, false);
   });
 }
 
@@ -1596,8 +1596,7 @@ function renderTimelinePins() {
     badge.title = `[${accessibleLabel}] ${pin.title}: ${pin.note || ""}`;
     badge.addEventListener("click", (e) => {
       e.stopPropagation();
-      jumpToTime(pin.timestamp_sec, true);
-      switchTab("tab-content-rescue");
+      jumpToTime(pin.timestamp_sec, false);
     });
 
     overlay.appendChild(badge);
@@ -1615,6 +1614,17 @@ function renderCheatSheetPins() {
   if (!container) return;
 
   const total = state.pins.length;
+
+  const cheatsheetEmpty = document.getElementById("cheatsheet-empty-state");
+  const cheatsheetReal = document.getElementById("cheatsheet-real-content");
+  if (!state.hasExplainedCurrent && total === 0) {
+    if (cheatsheetEmpty) cheatsheetEmpty.classList.remove("hidden");
+    if (cheatsheetReal) cheatsheetReal.classList.add("hidden");
+  } else if (state.hasExplainedCurrent || total > 0) {
+    if (cheatsheetEmpty) cheatsheetEmpty.classList.add("hidden");
+    if (cheatsheetReal) cheatsheetReal.classList.remove("hidden");
+  }
+
   const examCnt = state.pins.filter(p => p.tag === "exam_priority").length;
   const revisitCnt = state.pins.filter(p => p.tag === "revisit").length;
   const formulaCnt = state.pins.filter(p => p.tag === "key_formula").length;
@@ -1670,8 +1680,7 @@ function renderCheatSheetPins() {
     `;
 
     card.querySelector(".pin-jump-btn").addEventListener("click", () => {
-      jumpToTime(pin.timestamp_sec, true);
-      switchTab("tab-content-rescue");
+      jumpToTime(pin.timestamp_sec, false);
     });
 
     card.querySelector(".delete-pin-btn").addEventListener("click", (e) => {
@@ -1756,7 +1765,78 @@ async function executePermanentDelete(pinId) {
 // 5. TAB 1: SIMPLE EXPLANATION (STEP-BY-STEP PROGRESS & PLAIN LANGUAGE)
 // ==========================================
 
+function resetTabsToEmptyState() {
+  state.hasExplainedCurrent = false;
+  state.activeAnalysis = null;
+
+  // Tab 1: Show empty state, hide skeleton and real content
+  const rescueEmpty = document.getElementById("rescue-empty-state");
+  const rescueSkeleton = document.getElementById("rescue-loading-skeleton");
+  const rescueReal = document.getElementById("rescue-real-content");
+  if (rescueEmpty) rescueEmpty.classList.remove("hidden");
+  if (rescueSkeleton) rescueSkeleton.classList.add("hidden");
+  if (rescueReal) rescueReal.classList.add("hidden");
+
+  // Tab 2: Show empty state, hide real content
+  const recallEmpty = document.getElementById("recall-empty-state");
+  const recallReal = document.getElementById("recall-real-content");
+  if (recallEmpty) recallEmpty.classList.remove("hidden");
+  if (recallReal) recallReal.classList.add("hidden");
+
+  // Tab 3: Show empty state if no saved pins, otherwise show real content
+  const cheatsheetEmpty = document.getElementById("cheatsheet-empty-state");
+  const cheatsheetReal = document.getElementById("cheatsheet-real-content");
+  const pinCount = (state.pins && state.pins.length) || 0;
+  if (pinCount === 0) {
+    if (cheatsheetEmpty) cheatsheetEmpty.classList.remove("hidden");
+    if (cheatsheetReal) cheatsheetReal.classList.add("hidden");
+  } else {
+    if (cheatsheetEmpty) cheatsheetEmpty.classList.add("hidden");
+    if (cheatsheetReal) cheatsheetReal.classList.remove("hidden");
+  }
+
+  if (window.lucide) window.lucide.createIcons();
+}
+
+async function triggerExplainThisStep() {
+  state.hasExplainedCurrent = true;
+
+  // Ensure Tab 1 is active view
+  switchTab("tab-content-rescue");
+
+  // Show loading skeleton, hide empty state and real content
+  const rescueEmpty = document.getElementById("rescue-empty-state");
+  const rescueSkeleton = document.getElementById("rescue-loading-skeleton");
+  const rescueReal = document.getElementById("rescue-real-content");
+  if (rescueEmpty) rescueEmpty.classList.add("hidden");
+  if (rescueSkeleton) rescueSkeleton.classList.remove("hidden");
+  if (rescueReal) rescueReal.classList.add("hidden");
+
+  try {
+    await fetchSegmentAnalysis(state.currentTimeSec);
+    await fetchSegmentQuiz(state.currentTimeSec);
+  } catch (err) {
+    console.warn("triggerExplainThisStep error:", err);
+  } finally {
+    if (rescueSkeleton) rescueSkeleton.classList.add("hidden");
+    if (rescueReal) rescueReal.classList.remove("hidden");
+
+    const recallEmpty = document.getElementById("recall-empty-state");
+    const recallReal = document.getElementById("recall-real-content");
+    if (recallEmpty) recallEmpty.classList.add("hidden");
+    if (recallReal) recallReal.classList.remove("hidden");
+
+    const cheatsheetEmpty = document.getElementById("cheatsheet-empty-state");
+    const cheatsheetReal = document.getElementById("cheatsheet-real-content");
+    if (cheatsheetEmpty) cheatsheetEmpty.classList.add("hidden");
+    if (cheatsheetReal) cheatsheetReal.classList.remove("hidden");
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+}
+
 async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
+  const emptyState = document.getElementById("rescue-empty-state");
   const skeleton = document.getElementById("rescue-loading-skeleton");
   const content = document.getElementById("rescue-real-content");
   const winBanner = document.getElementById("rescue-window-time");
@@ -1774,6 +1854,7 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
   }
 
   // Show friendly step-by-step skeleton while AI analysis is running
+  if (emptyState) emptyState.classList.add("hidden");
   if (skeleton) skeleton.classList.remove("hidden");
   if (content) content.classList.add("hidden");
 
@@ -1797,8 +1878,20 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
     renderTab1AIRescue(cached, timestampSec);
     if (cached.visual_diagram) renderVisualDiagram(cached.visual_diagram);
     if (cached.checkpoint_mcqs) renderCheckpointMCQs(cached.checkpoint_mcqs);
+    if (emptyState) emptyState.classList.add("hidden");
     if (skeleton) skeleton.classList.add("hidden");
     if (content) content.classList.remove("hidden");
+
+    const recallEmpty = document.getElementById("recall-empty-state");
+    const recallReal = document.getElementById("recall-real-content");
+    if (recallEmpty) recallEmpty.classList.add("hidden");
+    if (recallReal) recallReal.classList.remove("hidden");
+
+    const cheatsheetEmpty = document.getElementById("cheatsheet-empty-state");
+    const cheatsheetReal = document.getElementById("cheatsheet-real-content");
+    if (cheatsheetEmpty) cheatsheetEmpty.classList.add("hidden");
+    if (cheatsheetReal) cheatsheetReal.classList.remove("hidden");
+
     lucide.createIcons();
     return;
   }
@@ -1846,8 +1939,20 @@ async function runAiSegmentAnalysis(timestampSec, studentDoubt = null) {
   } finally {
     clearTimeout(stepTimer1);
     clearTimeout(stepTimer2);
+    if (emptyState) emptyState.classList.add("hidden");
     if (skeleton) skeleton.classList.add("hidden");
     if (content) content.classList.remove("hidden");
+
+    const recallEmpty = document.getElementById("recall-empty-state");
+    const recallReal = document.getElementById("recall-real-content");
+    if (recallEmpty) recallEmpty.classList.add("hidden");
+    if (recallReal) recallReal.classList.remove("hidden");
+
+    const cheatsheetEmpty = document.getElementById("cheatsheet-empty-state");
+    const cheatsheetReal = document.getElementById("cheatsheet-real-content");
+    if (cheatsheetEmpty) cheatsheetEmpty.classList.add("hidden");
+    if (cheatsheetReal) cheatsheetReal.classList.remove("hidden");
+
     lucide.createIcons();
   }
 }
@@ -2724,11 +2829,19 @@ function initUIEventListeners() {
   const confusedBtn = document.getElementById("btn-confused-rescue");
   if (confusedBtn) {
     confusedBtn.addEventListener("click", () => {
-      fetchSegmentAnalysis(state.currentTimeSec);
-      fetchSegmentQuiz(state.currentTimeSec);
-      switchTab("tab-content-rescue");
+      triggerExplainThisStep();
     });
   }
+
+  // Also bind empty state buttons inside tabs
+  ["tab1-explain-trigger-btn", "tab2-explain-trigger-btn", "tab3-explain-trigger-btn"].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener("click", () => {
+        triggerExplainThisStep();
+      });
+    }
+  });
 
   // Advanced Settings Popover Button & Window Adjustments
   const advSettingsBtn = document.getElementById("btn-advanced-settings");
