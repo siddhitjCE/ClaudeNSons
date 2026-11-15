@@ -175,7 +175,167 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
 .pixel-chip-yellow { background-color: var(--yn10-yellow); }
 .pixel-chip-green { background-color: var(--yn10-green); }
 
-/* Floating Animated Pixel Particles in Background */
+/* ========================================================
+   1B. 3D VOXEL & 3D PIXEL ENGINE (y-n10 VOXEL UNIVERSE)
+   ======================================================== */
+.yn10-scene-3d {
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+/* Individual 3D Voxel Cube */
+.yn10-voxel {
+  --v-size: 22px;
+  width: var(--v-size);
+  height: var(--v-size);
+  position: relative;
+  transform-style: preserve-3d;
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+/* Size Modifiers */
+.v-xs { --v-size: 10px; }
+.v-sm { --v-size: 14px; }
+.v-md { --v-size: 22px; }
+.v-lg { --v-size: 32px; }
+.v-xl { --v-size: 44px; }
+
+/* 6 Shaded Isometric Faces of the 3D Voxel */
+.yn10-voxel .v-face {
+  position: absolute;
+  width: var(--v-size);
+  height: var(--v-size);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  backface-visibility: visible;
+  image-rendering: pixelated;
+  box-sizing: border-box;
+}
+
+.yn10-voxel .v-front  { transform: translateZ(calc(var(--v-size) / 2)); background: var(--v-base); }
+.yn10-voxel .v-back   { transform: rotateY(180deg) translateZ(calc(var(--v-size) / 2)); background: var(--v-dark); }
+.yn10-voxel .v-right  { transform: rotateY(90deg) translateZ(calc(var(--v-size) / 2)); background: var(--v-side); }
+.yn10-voxel .v-left   { transform: rotateY(-90deg) translateZ(calc(var(--v-size) / 2)); background: var(--v-side); }
+.yn10-voxel .v-top    { transform: rotateX(90deg) translateZ(calc(var(--v-size) / 2)); background: var(--v-light); }
+.yn10-voxel .v-bottom { transform: rotateX(-90deg) translateZ(calc(var(--v-size) / 2)); background: var(--v-dark); }
+
+/* Quad-Accent Voxel Color Palettes */
+.v-red {
+  --v-base: #d82d17;
+  --v-light: #ff523b;
+  --v-side: #a61f10;
+  --v-dark: #660e05;
+}
+.v-cyan {
+  --v-base: #4398cd;
+  --v-light: #72c3f7;
+  --v-side: #2b6d94;
+  --v-dark: #16405c;
+}
+.v-yellow {
+  --v-base: #ffd200;
+  --v-light: #ffea70;
+  --v-side: #cca800;
+  --v-dark: #7a6400;
+}
+.v-green {
+  --v-base: #298f1a;
+  --v-light: #48c433;
+  --v-side: #1c6b12;
+  --v-dark: #0f3d0a;
+}
+.v-white {
+  --v-base: #d0d6da;
+  --v-light: #ffffff;
+  --v-side: #889296;
+  --v-dark: #3a4247;
+}
+
+/* 3D Voxel Multi-Axis Animations */
+@keyframes yn10-voxel-tumble-a {
+  0% {
+    transform: translateY(0px) rotateX(15deg) rotateY(0deg) rotateZ(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotateX(195deg) rotateY(180deg) rotateZ(45deg);
+  }
+  100% {
+    transform: translateY(0px) rotateX(375deg) rotateY(360deg) rotateZ(0deg);
+  }
+}
+
+@keyframes yn10-voxel-tumble-b {
+  0% {
+    transform: translateY(0px) rotateX(-20deg) rotateY(360deg) rotateZ(0deg);
+  }
+  50% {
+    transform: translateY(18px) rotateX(160deg) rotateY(180deg) rotateZ(-30deg);
+  }
+  100% {
+    transform: translateY(0px) rotateX(340deg) rotateY(0deg) rotateZ(0deg);
+  }
+}
+
+@keyframes yn10-voxel-spin-iso {
+  0% {
+    transform: rotateX(-26deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(-26deg) rotateY(360deg);
+  }
+}
+
+@keyframes yn10-voxel-spin-step {
+  0% {
+    transform: rotateX(-26deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(-26deg) rotateY(360deg);
+  }
+}
+
+.tumble-a {
+  animation: yn10-voxel-tumble-a 10s ease-in-out infinite;
+}
+.tumble-b {
+  animation: yn10-voxel-tumble-b 12s ease-in-out infinite;
+}
+.spin-iso {
+  animation: yn10-voxel-spin-iso 5s linear infinite;
+}
+.spin-step {
+  animation: yn10-voxel-spin-step 3.6s steps(12) infinite;
+}
+
+/* Floating 3D Voxel Host Container */
+.yn10-floating-voxel {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  user-select: none;
+}
+
+.yn10-floating-voxel:hover {
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9));
+}
+
+.yn10-floating-voxel:active .yn10-voxel {
+  transform: scale(1.35) rotateX(45deg) rotateY(45deg) !important;
+}
+
+/* 3D Voxel Cluster (Multi-Cube Assembly) */
+.yn10-voxel-cluster {
+  position: relative;
+  transform-style: preserve-3d;
+  display: inline-block;
+}
+
+/* Floating Animated Pixel Particles in Background (Backward Compatibility) */
 @keyframes yn10-drift-slow {
   0% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-12px) rotate(2deg); }

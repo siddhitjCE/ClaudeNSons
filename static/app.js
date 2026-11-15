@@ -2697,6 +2697,21 @@ function initUIEventListeners() {
     });
   }
 
+  // Interactive 3D Voxel Tap / Click Reaction
+  document.querySelectorAll(".yn10-floating-voxel").forEach(voxel => {
+    voxel.addEventListener("click", (e) => {
+      e.stopPropagation();
+      yn10Audio.playCoin();
+      const cube = voxel.querySelector(".yn10-voxel");
+      if (cube) {
+        cube.style.transform = "scale(1.45) rotateX(180deg) rotateY(180deg)";
+        setTimeout(() => {
+          cube.style.transform = "";
+        }, 600);
+      }
+    });
+  });
+
   // Tab Header Click Events
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
