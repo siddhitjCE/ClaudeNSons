@@ -350,12 +350,12 @@ const OnboardingTour = {
     {
       id: "step-timeline",
       targetId: "timeline-container",
-      title: "1. Spot Tricky Parts on Timeline",
+      title: "1. Real Student Rewind Data",
       icon: "flame",
       badge: "Step 1 of 5",
-      tag: "Crowd Replay Peaks",
-      description: "This curve isn't audio volume—it's real YouTube crowd replay data. The peaks show where thousands of students hit rewind. Click any highlighted peak to jump directly to tricky derivations.",
-      actionText: "Next: Plain English Breakdown →",
+      tag: "Student Rewind Peaks",
+      description: "This curve highlights real rewind data from YouTube. The glowing peaks show where thousands of learners paused or rewound to understand a tricky derivation. Click any peak to dive right in!",
+      actionText: "Next: Plain-English Intuition →",
       onEnter: () => {
         const landing = document.getElementById("landing-page-view");
         if (landing) landing.classList.add("hidden");
@@ -364,12 +364,12 @@ const OnboardingTour = {
     {
       id: "step-rescue-btn",
       targetId: "btn-confused-rescue",
-      title: "2. Context-Locked AI Rescue",
+      title: "2. Plain-English Intuition",
       icon: "sparkles",
       badge: "Step 2 of 5",
-      tag: "Plain English Explanations",
-      description: "Whenever you feel stuck, click 'Explain This Part Simply' (or press Alt + E). SyncLearn breaks down the current segment step-by-step using the instructor's exact chalkboard terms.",
-      actionText: "Next: Terminology Bridge →",
+      tag: "Simple Step-by-Step",
+      description: "Whenever a derivation feels confusing, click 'Explain This Part Simply' (or press Alt + E). SyncLearn breaks down the core intuition step by step using the instructor's exact chalkboard terms.",
+      actionText: "Next: Compare Terms Across Courses →",
       onEnter: () => {
         switchTab("tab-content-rescue");
       }
@@ -377,12 +377,12 @@ const OnboardingTour = {
     {
       id: "step-terminology",
       targetId: "tab-btn-rescue",
-      title: "3. Chalkboard Terminology Bridge",
+      title: "3. Compare Terms Across Courses",
       icon: "book-open",
       badge: "Step 3 of 5",
-      tag: "Notation Translation",
-      description: "Professors frequently use custom chalkboard shorthand (like PDI, Mn, or Mw). SyncLearn translates chalkboard shorthand into standard textbook definitions so you never misread exam questions.",
-      actionText: "Next: Active Recall Quiz →",
+      tag: "Term Cross-Reference",
+      description: "Different professors use different symbols for the same concept. Our Term Matrix shows you how lecture terms connect directly to standard textbook definitions.",
+      actionText: "Next: Learn by Doing (Active Recall) →",
       onEnter: () => {
         switchTab("tab-content-rescue");
         const bridge = document.getElementById("rescue-terminology-bridge-table");
@@ -392,12 +392,12 @@ const OnboardingTour = {
     {
       id: "step-quiz",
       targetId: "tab-btn-recall",
-      title: "4. Active Recall & Quizzes",
+      title: "4. Learn by Doing (Active Recall)",
       icon: "target",
       badge: "Step 4 of 5",
-      tag: "Auto-Pause & Memory",
-      description: "Passive watching leads to forgetting. Tab 2 generates fill-in-the-blank concept diagrams and exam MCQs, and auto-pauses the video right after tricky sections so you can test yourself.",
-      actionText: "Next: Study Cheatsheet →",
+      tag: "Interactive Practice",
+      description: "Passive watching leads to forgetting. Don't just watch—test yourself! Tab 2 gives you interactive fill-in-the-blank concept flows and quick checkpoint puzzles to lock knowledge into memory.",
+      actionText: "Next: Your Exam Study Guide →",
       onEnter: () => {
         switchTab("tab-content-recall");
       }
@@ -405,12 +405,12 @@ const OnboardingTour = {
     {
       id: "step-pins",
       targetId: "btn-drop-pin",
-      title: "5. Pinned Notes & Cheatsheet",
+      title: "5. Your Personal Exam Study Guide",
       icon: "bookmark-plus",
       badge: "Step 5 of 5",
-      tag: "1-Click Export",
-      description: "Drop timestamp notes (★ Exam Priority, ∑ Key Formula) as you watch. In Tab 3, SyncLearn compiles your notes into a clean, 1-page markdown cheatsheet you can export or print!",
-      actionText: "Finish Tour & Start Studying 🎉",
+      tag: "1-Click Printable Guide",
+      description: "Save notes and key formulas anytime with Alt + S. In Tab 3, everything you save is automatically organized into a clean 1-page study guide ready to print for exams!",
+      actionText: "Finish Tour & Start Learning! 🎉",
       onEnter: () => {
         switchTab("tab-content-notes");
       }
@@ -1831,14 +1831,14 @@ function renderVisualDiagram(diagram) {
     if (!scoreBadge) return;
     if (totalHidden === 0) {
       scoreBadge.textContent = "⚡ Mastered";
-      scoreBadge.className = "text-xs font-mono font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-0.5 rounded";
+      scoreBadge.className = "text-xs font-mono font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-0.5 rounded-none";
     } else {
       const pct = Math.round((state.conceptMastery.unlocked / totalHidden) * 100);
-      scoreBadge.textContent = `⚡ Mastery: ${state.conceptMastery.unlocked} / ${totalHidden} (${pct}%)`;
+      scoreBadge.textContent = `💡 Mastery: ${state.conceptMastery.unlocked} / ${totalHidden} (${pct}%)`;
       if (pct === 100) {
-        scoreBadge.className = "text-xs font-mono font-bold text-emerald-300 bg-emerald-500/25 border border-emerald-500/50 px-2.5 py-0.5 rounded shadow-[0_0_8px_rgba(16,185,129,0.3)] animate-pulse";
+        scoreBadge.className = "text-xs font-mono font-bold text-emerald-300 bg-emerald-500/25 border border-emerald-500/50 px-2.5 py-0.5 rounded-none shadow-[0_0_8px_rgba(16,185,129,0.3)] animate-pulse";
       } else {
-        scoreBadge.className = "text-xs font-mono font-bold text-cyan-300 bg-cyan-500/20 border border-cyan-500/40 px-2.5 py-0.5 rounded";
+        scoreBadge.className = "text-xs font-mono font-bold text-[#f59f38] bg-[#1e2325] border border-[#e59130]/40 px-2.5 py-0.5 rounded-none";
       }
     }
   };
@@ -1848,7 +1848,7 @@ function renderVisualDiagram(diagram) {
     // Flowchart Arrow Connector between sequential nodes
     if (idx > 0) {
       const connector = document.createElement("div");
-      connector.className = "flex justify-center my-1 text-cyan-400";
+      connector.className = "flex justify-center my-1 text-[#f59f38]";
       connector.innerHTML = `<i data-lucide="arrow-down" class="w-4 h-4" aria-hidden="true"></i>`;
       nodesContainer.appendChild(connector);
     }
@@ -1858,16 +1858,16 @@ function renderVisualDiagram(diagram) {
 
     if (!isHidden) {
       const card = document.createElement("div");
-      card.className = "bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-3.5 flex items-center justify-between gap-3 shadow-sm";
+      card.className = "factorio-panel border border-[#3d484b] hover:border-[#556367] rounded-none p-3.5 flex items-center justify-between gap-3 shadow-sm";
       card.innerHTML = `
         <div class="space-y-0.5 min-w-0">
-          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-slate-400 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Step ${idx + 1}
+          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-[#8a9699] flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#27ae60]"></span> Step ${idx + 1}
           </div>
-          <div class="text-xs font-bold text-slate-100 truncate node-content">${node.label || node.title || node.content || ""}</div>
+          <div class="text-xs font-bold text-white truncate node-content">${node.label || node.title || node.content || ""}</div>
         </div>
-        <div class="w-7 h-7 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
-          <i data-lucide="check" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i>
+        <div class="w-7 h-7 rounded-none bg-[#18231c] border border-[#27ae60]/40 flex items-center justify-center shrink-0">
+          <i data-lucide="check" class="w-4 h-4 text-[#2ecc71]" aria-hidden="true"></i>
         </div>
       `;
       renderMathInElementSafe(card.querySelector(".node-content"));
@@ -1875,7 +1875,7 @@ function renderVisualDiagram(diagram) {
     } else {
       const card = document.createElement("div");
       card.id = `diag-node-${idx}`;
-      card.className = "recall-node-card locked border border-cyan-500/50 rounded-2xl p-4 bg-gradient-to-br from-slate-900 via-slate-900 to-cyan-950/20 space-y-3 shadow-sm transition-all";
+      card.className = "recall-node-card locked border border-[#e59130] rounded-none p-4 factorio-panel space-y-3 shadow-sm";
 
       let options = Array.isArray(node.options) && node.options.length >= 2 ? [...node.options] : [
         correctLabel,
@@ -1888,29 +1888,29 @@ function renderVisualDiagram(diagram) {
 
       card.innerHTML = `
         <div class="flex items-center justify-between">
-          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-cyan-300 flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <div class="text-[10px] uppercase font-mono font-bold tracking-wider text-[#f59f38] flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#f59f38] animate-ping"></span>
             Practice Slot • Step ${idx + 1}
           </div>
-          <span class="node-status-pill text-[10px] text-cyan-300 font-mono font-bold bg-cyan-500/15 border border-cyan-500/30 px-2 py-0.5 rounded">Click to Recall</span>
+          <span class="node-status-pill text-[10px] text-[#f59f38] font-mono font-bold bg-[#1e2325] border border-[#e59130]/40 px-2 py-0.5 rounded-none">Click to Recall</span>
         </div>
         <div class="slot-action-area">
-          <button class="blank-slot-btn w-full min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs font-bold bg-cyan-950/50 hover:bg-cyan-900/60 border border-cyan-500/60 text-cyan-100 shadow-[0_0_12px_rgba(6,182,212,0.25)] flex items-center justify-center gap-2 cursor-pointer transition-all">
-            <i data-lucide="help-circle" class="w-4 h-4 text-cyan-400 animate-pulse" aria-hidden="true"></i>
-            <span class="font-mono tracking-wide">[ ? Click to Recall ]</span>
+          <button class="blank-slot-btn w-full min-h-[44px] px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#1e2325] hover:bg-[#252b2e] border border-[#e59130] text-[#f59f38] flex items-center justify-center gap-2 cursor-pointer">
+            <i data-lucide="help-circle" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+            <span class="font-mono tracking-wide">[ ? Click to Recall &amp; Test Yourself ]</span>
           </button>
         </div>
-        <div id="diag-options-${idx}" class="hidden p-3.5 bg-slate-950 border border-slate-800 rounded-xl space-y-2.5 shadow-inner">
-          <div class="flex items-center justify-between text-xs text-cyan-300 font-bold">
+        <div id="diag-options-${idx}" class="hidden p-3.5 factorio-inset border border-[#3d484b] rounded-none space-y-2.5 shadow-inner">
+          <div class="flex items-center justify-between text-xs text-[#f59f38] font-bold font-mono">
             <span>Choose the correct concept or formula:</span>
-            <span class="text-[10px] text-slate-400 font-mono">3 choices</span>
+            <span class="text-[10px] text-[#8a9699] font-mono">3 choices</span>
           </div>
           <div class="feedback-msg text-xs hidden font-medium"></div>
           <div class="grid grid-cols-1 gap-2">
             ${options.map((opt, oIdx) => `
-              <button class="diag-opt-btn min-h-[44px] text-left text-xs bg-slate-900 hover:bg-slate-800 px-3.5 py-2.5 rounded-xl border border-slate-700 hover:border-slate-600 text-slate-100 transition-all flex items-center justify-between cursor-pointer group" data-node-idx="${idx}" data-val="${opt.replace(/"/g, '&quot;')}">
-                <span class="opt-label group-hover:text-cyan-300 transition-colors font-medium">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors" aria-hidden="true"></i>
+              <button class="diag-opt-btn min-h-[44px] text-left text-xs factorio-panel hover:border-[#e59130] px-3.5 py-2.5 rounded-none border border-[#3d484b] text-[#d6dcde] flex items-center justify-between cursor-pointer group" data-node-idx="${idx}" data-val="${opt.replace(/"/g, '&quot;')}">
+                <span class="opt-label group-hover:text-[#f59f38] font-medium font-mono">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-[#8a9699] group-hover:text-[#f59f38]" aria-hidden="true"></i>
               </button>
             `).join("")}
           </div>
@@ -1932,26 +1932,26 @@ function renderVisualDiagram(diagram) {
           const selectedVal = optBtn.getAttribute("data-val");
           if (selectedVal === correctLabel) {
             // Correct choice
-            card.className = "recall-node-card unlocked border border-emerald-500/60 rounded-2xl p-4 bg-gradient-to-br from-slate-900 via-emerald-950/20 to-slate-900 space-y-3 shadow-sm transition-all";
+            card.className = "recall-node-card unlocked border border-[#27ae60] rounded-none p-4 factorio-panel space-y-3 shadow-sm";
             
             actionArea.innerHTML = `
-              <div class="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs font-bold bg-emerald-950/60 border border-emerald-500/70 text-emerald-200 flex items-center justify-between shadow-sm">
+              <div class="w-full min-h-[44px] px-3.5 py-2.5 rounded-none text-xs font-bold bg-[#18231c] border border-[#27ae60] text-[#2ecc71] flex items-center justify-between shadow-sm">
                 <div class="flex items-center gap-2">
-                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true"></i>
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#2ecc71] shrink-0" aria-hidden="true"></i>
                   <span class="revealed-text font-serif text-[13px]">${correctLabel}</span>
                 </div>
-                <span class="text-[10px] font-mono text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded font-bold">Locked</span>
+                <span class="text-[10px] font-mono text-[#2ecc71] bg-[#18231c] border border-[#27ae60]/40 px-2 py-0.5 rounded-none font-bold">✓ Solved</span>
               </div>
             `;
             renderMathInElementSafe(actionArea.querySelector(".revealed-text"));
 
-            statusPill.className = "node-status-pill text-[10px] text-emerald-300 font-mono font-bold bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 rounded";
-            statusPill.textContent = "✓ Unlocked";
+            statusPill.className = "node-status-pill text-[10px] text-[#2ecc71] font-mono font-bold bg-[#18231c] border border-[#27ae60] px-2 py-0.5 rounded-none";
+            statusPill.textContent = "✓ Mastered";
 
             optBox.innerHTML = `
-              <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-xs text-emerald-200 font-bold flex items-center gap-2">
-                <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true"></i>
-                <span>Locked into memory! (+1 Mastery Point)</span>
+              <div class="p-2.5 rounded-none bg-[#18231c] border border-[#27ae60]/40 text-xs text-[#2ecc71] font-bold flex items-center gap-2 font-mono">
+                <i data-lucide="sparkles" class="w-4 h-4 text-[#2ecc71] shrink-0" aria-hidden="true"></i>
+                <span>Great job! Locked into intuition (+1 Mastery Point)</span>
               </div>
             `;
             
@@ -1961,9 +1961,9 @@ function renderVisualDiagram(diagram) {
           } else {
             // Incorrect choice
             feedbackDiv.classList.remove("hidden");
-            feedbackDiv.className = "feedback-msg text-xs text-rose-300 font-medium flex items-center gap-2 p-2.5 rounded-xl bg-rose-950/40 border border-rose-900/60";
-            feedbackDiv.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0" aria-hidden="true"></i> <span>✕ Not quite right — consider the core intuition and try another choice!</span>`;
-            optBtn.classList.add("bg-rose-950/50", "border-rose-500/80", "text-rose-200");
+            feedbackDiv.className = "feedback-msg text-xs text-rose-300 font-medium flex items-center gap-2 p-2.5 rounded-none bg-[#2a1715] border border-[#b23b3b]";
+            feedbackDiv.innerHTML = `<i data-lucide="alert-circle" class="w-4 h-4 text-[#ff8f8f] shrink-0" aria-hidden="true"></i> <span>✕ Not quite — think about the core intuition and try another choice!</span>`;
+            optBtn.classList.add("bg-[#2a1715]", "border-[#b23b3b]", "text-[#ff8f8f]");
             lucide.createIcons();
           }
         });
@@ -1985,29 +1985,29 @@ function renderCheckpointMCQs(mcqs) {
 
   mcqs.forEach((mcq, qIdx) => {
     const qCard = document.createElement("div");
-    qCard.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3.5";
+    qCard.className = "factorio-panel border border-[#3d484b] rounded-none p-4 space-y-3.5";
     
     const reviewTime = mcq.review_timestamp_sec || state.currentTimeSec;
 
     qCard.innerHTML = `
       <div class="flex items-start gap-2.5">
-        <span class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-300 font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-indigo-500/30">
+        <span class="w-6 h-6 rounded-none bg-[#1e2325] text-[#f59f38] font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 border border-[#e59130]/40">
           Q${qIdx + 1}
         </span>
-        <p class="text-xs font-bold text-slate-100 leading-snug">${mcq.question}</p>
+        <p class="text-xs font-bold text-white leading-snug font-mono">${mcq.question}</p>
       </div>
       <div class="grid grid-cols-1 gap-2 pt-0.5">
         ${(mcq.options || []).map((opt, oIdx) => `
-          <button class="mcq-option-btn text-left text-xs bg-slate-950 border border-slate-800 hover:border-slate-700 rounded-xl p-3 text-slate-200 flex items-center justify-between transition-all cursor-pointer group" data-q-idx="${qIdx}" data-o-idx="${oIdx}">
-            <span class="group-hover:text-indigo-200 transition-colors font-medium">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
+          <button class="mcq-option-btn text-left text-xs factorio-inset border border-[#3d484b] hover:border-[#e59130] rounded-none p-3 text-[#d6dcde] flex items-center justify-between cursor-pointer group" data-q-idx="${qIdx}" data-o-idx="${oIdx}">
+            <span class="group-hover:text-[#f59f38] font-medium font-mono">${String.fromCharCode(65 + oIdx)}) ${opt}</span>
             <span class="opt-status font-mono text-xs hidden shrink-0 ml-2"></span>
           </button>
         `).join("")}
       </div>
-      <div id="mcq-expl-${qIdx}" class="hidden p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-900/60 text-xs text-slate-200 leading-relaxed font-serif space-y-2.5">
+      <div id="mcq-expl-${qIdx}" class="hidden p-3.5 rounded-none factorio-inset border border-[#3d484b] text-xs text-[#d6dcde] leading-relaxed space-y-2.5 font-mono">
         <div class="flex items-start gap-2">
-          <i data-lucide="info" class="w-4 h-4 text-indigo-300 shrink-0 mt-0.5" aria-hidden="true"></i>
-          <div><strong class="text-indigo-200 font-sans">Explanation & Intuition:</strong> ${mcq.explanation}</div>
+          <i data-lucide="info" class="w-4 h-4 text-[#f59f38] shrink-0 mt-0.5" aria-hidden="true"></i>
+          <div><strong class="text-[#f59f38] uppercase">Intuition &amp; Why This Works:</strong> ${mcq.explanation}</div>
         </div>
         <div class="review-btn-container pt-1">
           <!-- Rewatch button injected dynamically on wrong answer -->
@@ -2025,26 +2025,26 @@ function renderCheckpointMCQs(mcqs) {
 
         qCard.querySelectorAll(".mcq-option-btn").forEach(b => {
           b.disabled = true;
-          b.classList.remove("cursor-pointer", "hover:border-slate-700");
+          b.classList.remove("cursor-pointer", "hover:border-[#e59130]");
         });
 
         if (oI === targetMcq.correct_index) {
-          btn.className = "mcq-option-btn text-left text-xs bg-emerald-950/50 border border-emerald-500 rounded-xl p-3 text-emerald-200 flex items-center justify-between shadow-sm";
+          btn.className = "mcq-option-btn text-left text-xs bg-[#18231c] border border-[#27ae60] rounded-none p-3 text-[#2ecc71] flex items-center justify-between shadow-sm";
           const statusSpan = btn.querySelector(".opt-status");
           statusSpan.classList.remove("hidden");
-          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded bg-emerald-500/25 text-emerald-300 font-bold flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5" aria-hidden="true"></i> Correct</span>`;
+          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded-none bg-[#18231c] text-[#2ecc71] font-bold flex items-center gap-1 font-mono"><i data-lucide="check" class="w-3.5 h-3.5" aria-hidden="true"></i> Great job! Correct</span>`;
         } else {
-          btn.className = "mcq-option-btn text-left text-xs bg-rose-950/50 border border-rose-500 rounded-xl p-3 text-rose-200 flex items-center justify-between shadow-sm";
+          btn.className = "mcq-option-btn text-left text-xs bg-[#2a1715] border border-[#b23b3b] rounded-none p-3 text-[#ff8f8f] flex items-center justify-between shadow-sm";
           const statusSpan = btn.querySelector(".opt-status");
           statusSpan.classList.remove("hidden");
-          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded bg-rose-500/25 text-rose-300 font-bold">✕ Incorrect</span>`;
+          statusSpan.innerHTML = `<span class="px-2 py-0.5 rounded-none bg-[#2a1715] text-[#ff8f8f] font-bold font-mono">✕ Not quite</span>`;
 
           const allOptions = qCard.querySelectorAll(".mcq-option-btn");
           if (allOptions[targetMcq.correct_index]) {
-            allOptions[targetMcq.correct_index].className = "mcq-option-btn text-left text-xs bg-emerald-950/40 border border-emerald-500/70 rounded-xl p-3 text-emerald-200 flex items-center justify-between";
+            allOptions[targetMcq.correct_index].className = "mcq-option-btn text-left text-xs bg-[#18231c] border border-[#27ae60] rounded-none p-3 text-[#2ecc71] flex items-center justify-between";
             const rightStatus = allOptions[targetMcq.correct_index].querySelector(".opt-status");
             rightStatus.classList.remove("hidden");
-            rightStatus.innerHTML = `<span class="text-xs text-emerald-400 font-mono font-bold">✓ Correct Answer</span>`;
+            rightStatus.innerHTML = `<span class="text-xs text-[#2ecc71] font-mono font-bold">✓ Correct Answer</span>`;
           }
 
           // Record in missedQuizQuestions for Tab 3 Saved Notes
@@ -2065,9 +2065,9 @@ function renderCheckpointMCQs(mcqs) {
           // Inject the Rewatch 30s explanation button
           if (reviewContainer) {
             reviewContainer.innerHTML = `
-              <button class="jump-review-btn w-full min-h-[44px] bg-gradient-to-r from-rose-600/30 via-amber-600/30 to-rose-600/30 hover:from-rose-600/50 hover:to-amber-600/50 border border-amber-500/50 text-amber-100 hover:text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer">
-                <i data-lucide="rotate-ccw" class="w-4 h-4 text-amber-400" aria-hidden="true"></i>
-                <span>⏪ Rewatch Exact 30s Explanation (${formatTime(reviewTime)})</span>
+              <button class="jump-review-btn factorio-btn-secondary w-full min-h-[44px] px-4 py-2.5 rounded-none text-xs font-bold font-mono flex items-center justify-center gap-2 cursor-pointer">
+                <i data-lucide="rotate-ccw" class="w-4 h-4 text-[#f59f38]" aria-hidden="true"></i>
+                <span>⏪ Rewatch Concept Explanation (${formatTime(reviewTime)})</span>
               </button>
             `;
             const rBtn = reviewContainer.querySelector(".jump-review-btn");
@@ -2138,12 +2138,12 @@ function renderCheatSheetMissedMCQs() {
 
   if (state.missedQuizQuestions.length === 0) {
     container.innerHTML = `
-      <div class="text-center py-5 bg-emerald-950/20 border border-emerald-900/40 rounded-2xl text-xs text-emerald-300 flex flex-col items-center justify-center gap-1.5">
-        <div class="w-8 h-8 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+      <div class="text-center py-5 bg-emerald-950/20 border border-emerald-900/40 rounded-none text-xs text-emerald-300 flex flex-col items-center justify-center gap-1.5">
+        <div class="w-8 h-8 rounded-none bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
           <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i>
         </div>
-        <span class="font-bold text-slate-100">Zero Missed Checkpoints!</span>
-        <span class="text-xs text-slate-300">When you answer a checkpoint question incorrectly, it appears here for targeted pre-exam cramming.</span>
+        <span class="font-bold text-slate-100">All Concepts Mastered!</span>
+        <span class="text-xs text-slate-300">Any questions you'd like to revisit will appear here so you can review and reinforce your intuition.</span>
       </div>
     `;
     lucide.createIcons();
@@ -2153,25 +2153,25 @@ function renderCheatSheetMissedMCQs() {
   container.innerHTML = "";
   state.missedQuizQuestions.forEach((m, idx) => {
     const card = document.createElement("div");
-    card.className = "bg-slate-950/80 border border-rose-900/50 hover:border-rose-700/60 rounded-2xl p-3.5 space-y-2.5 transition-all shadow-sm";
+    card.className = "bg-[#151819] border border-[#2d3739] hover:border-amber-500/60 rounded-none p-3.5 space-y-2.5 transition-none shadow-none";
     card.innerHTML = `
       <div class="flex items-center justify-between gap-2">
-        <span class="text-[10px] font-mono uppercase text-rose-300 font-bold flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-          Question to Review #${idx + 1}
+        <span class="text-[10px] font-mono uppercase text-amber-300 font-bold flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          Concept to Revisit #${idx + 1}
         </span>
-        <button class="review-missed-btn min-h-[36px] px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600 border border-indigo-500/40 text-xs text-indigo-200 hover:text-white font-mono font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer" data-rev-time="${m.review_timestamp_sec}">
-          <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i> Jump to ${formatTime(m.review_timestamp_sec)}
+        <button class="review-missed-btn min-h-[36px] px-3 py-1.5 rounded-none bg-[#242b2d] hover:bg-[#313b3e] border border-[#414d52] text-xs text-amber-200 hover:text-white font-mono font-bold flex items-center gap-1.5 transition-none cursor-pointer" data-rev-time="${m.review_timestamp_sec}">
+          <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i> Review at ${formatTime(m.review_timestamp_sec)}
         </button>
       </div>
       <p class="text-xs font-bold text-slate-100 leading-snug">${m.question}</p>
-      <div class="bg-slate-900 rounded-xl p-3 border border-slate-800 space-y-1.5 text-xs">
-        <div class="text-emerald-300 font-bold flex items-center gap-1.5 text-xs">
+      <div class="bg-[#101213] rounded-none p-3 border border-[#242b2d] space-y-1.5 text-xs">
+        <div class="text-emerald-400 font-bold flex items-center gap-1.5 text-xs">
           <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true"></i>
-          <span>Correct Insight: <strong>${m.correct_answer || m.options?.[m.correct_index] || ""}</strong></span>
+          <span>Key Takeaway: <strong>${m.correct_answer || m.options?.[m.correct_index] || ""}</strong></span>
         </div>
         <div class="text-slate-300 font-serif text-xs leading-relaxed pl-5 border-l-2 border-emerald-500/40">
-          ${m.explanation || "Review the video explanation at this exact timestamp."}
+          ${m.explanation || "Revisit the video segment at this timestamp to review the full intuition."}
         </div>
       </div>
     `;
@@ -2909,13 +2909,13 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
       </div>
       <div class="shrink-0 pl-2">
         ${isActiveVideo ? `
-          <span class="px-2.5 py-1 rounded text-[10px] font-bold font-mono bg-[#18231c] border border-[#27ae60] text-[#2ecc71] flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#2ecc71] animate-pulse"></span> ONLINE
+          <span class="px-2.5 py-1 rounded-none text-[10px] font-bold font-mono bg-[#18231c] border border-[#27ae60] text-[#2ecc71] flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#2ecc71] animate-pulse"></span> Active
           </span>
         ` : `
-          <button class="factorio-btn-primary px-3 py-1.5 text-xs font-mono font-bold rounded transition-colors flex items-center gap-1 shadow-sm">
+          <button class="factorio-btn-primary px-3 py-1.5 text-xs font-mono font-bold rounded-none transition-none flex items-center gap-1 shadow-none">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
-            <span>ENGAGE</span>
+            <span>Start Learning</span>
           </button>
         `}
       </div>
@@ -3177,10 +3177,10 @@ function renderVisualCheatSheetPreview() {
       }
 
       html += `
-        <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+        <div class="p-3 rounded-none bg-[#151819] border border-[#2d3739] space-y-1">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-slate-100">[${formatTime(p.timestamp_sec)}] ${p.title}</span>
-            <span class="text-[10px] px-2 py-0.2 rounded border font-mono font-bold ${tagColor}">${tagBadge}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-none border font-mono font-bold ${tagColor}">${tagBadge}</span>
           </div>
           ${p.note ? `<p class="text-xs text-slate-300 font-serif leading-relaxed">${p.note.replace(/\n/g, '<br/>')}</p>` : ""}
         </div>
@@ -3194,8 +3194,8 @@ function renderVisualCheatSheetPreview() {
 
     <!-- Section 2: Terminology Comparison Matrix -->
     <div class="space-y-2">
-      <h4 class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-        <i data-lucide="git-compare" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i> Term Comparison Matrix (${state.sessionTerminologyBridges.length})
+      <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+        <i data-lucide="git-compare" class="w-4 h-4 text-amber-400" aria-hidden="true"></i> Term Comparison Matrix (${state.sessionTerminologyBridges.length})
       </h4>
   `;
 
@@ -3203,22 +3203,22 @@ function renderVisualCheatSheetPreview() {
     html += `<p class="text-[11px] text-slate-400 italic">No term comparisons accumulated yet.</p>`;
   } else {
     html += `
-      <table class="w-full text-left text-xs border border-slate-800 rounded-xl overflow-hidden">
-        <thead class="bg-slate-900 text-slate-300 text-[10px] uppercase font-mono">
+      <table class="w-full text-left text-xs border border-[#2d3739] rounded-none overflow-hidden">
+        <thead class="bg-[#151819] text-slate-300 text-[10px] uppercase font-mono">
           <tr>
-            <th class="p-2.5 border-b border-slate-800 font-bold">Lecture Term / Symbol</th>
-            <th class="p-2.5 border-b border-slate-800 font-bold">What Other Videos Call It</th>
-            <th class="p-2.5 border-b border-slate-800 font-bold">How They Connect</th>
+            <th class="p-2.5 border-b border-[#2d3739] font-bold">Lecture Term / Symbol</th>
+            <th class="p-2.5 border-b border-[#2d3739] font-bold">What Other Videos Call It</th>
+            <th class="p-2.5 border-b border-[#2d3739] font-bold">How They Connect</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-800 text-slate-200">
+        <tbody class="divide-y divide-[#2d3739] text-slate-200">
     `;
     state.sessionTerminologyBridges.forEach(b => {
       html += `
         <tr>
-          <td class="p-2.5 border-b border-slate-800 font-mono text-indigo-300 font-bold">${b.prof_term}</td>
-          <td class="p-2.5 border-b border-slate-800 font-mono text-cyan-300">${b.alt_video_term}</td>
-          <td class="p-2.5 border-b border-slate-800 font-serif">${b.clarification}</td>
+          <td class="p-2.5 border-b border-[#2d3739] font-mono text-amber-300 font-bold">${b.prof_term}</td>
+          <td class="p-2.5 border-b border-[#2d3739] font-mono text-cyan-300">${b.alt_video_term}</td>
+          <td class="p-2.5 border-b border-[#2d3739] font-serif">${b.clarification}</td>
         </tr>
       `;
     });
@@ -3233,22 +3233,22 @@ function renderVisualCheatSheetPreview() {
 
     <!-- Section 3: Targeted Revision: Missed Checkpoints -->
     <div class="space-y-2">
-      <h4 class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
-        <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400" aria-hidden="true"></i> Targeted Revision: Questions to Review (${state.missedQuizQuestions.length})
+      <h4 class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400" aria-hidden="true"></i> Review & Reinforce (${state.missedQuizQuestions.length})
       </h4>
   `;
 
   if (state.missedQuizQuestions.length === 0) {
-    html += `<p class="text-xs text-emerald-300 font-semibold">✓ No missed checkpoints! All practice questions were cleared successfully.</p>`;
+    html += `<p class="text-xs text-emerald-400 font-semibold">✓ Outstanding! All practice questions completed with 100% mastery.</p>`;
   } else {
     state.missedQuizQuestions.forEach((m, idx) => {
       html += `
-        <div class="p-3 rounded-xl bg-slate-900 border border-rose-900/40 space-y-1">
+        <div class="p-3 rounded-none bg-[#151819] border border-[#2d3739] space-y-1">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-slate-100">#${idx + 1}. ${m.question}</span>
-            <span class="font-mono text-indigo-300 text-[10px] bg-indigo-950/60 px-2 py-0.5 rounded font-bold">Review @ ${formatTime(m.review_timestamp_sec)}</span>
+            <span class="font-mono text-amber-300 text-[10px] bg-[#242b2d] border border-[#414d52] px-2 py-0.5 rounded-none font-bold">Review @ ${formatTime(m.review_timestamp_sec)}</span>
           </div>
-          <div class="text-xs text-emerald-300 font-bold">✓ Correct Answer: ${m.correct_answer || m.options?.[m.correct_index] || ""}</div>
+          <div class="text-xs text-emerald-400 font-bold">✓ Key Takeaway: ${m.correct_answer || m.options?.[m.correct_index] || ""}</div>
           <p class="text-xs text-slate-300 font-serif">${m.explanation || ""}</p>
         </div>
       `;

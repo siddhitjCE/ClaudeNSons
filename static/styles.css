@@ -1,4 +1,4 @@
-/* static/styles.css - Factorio Industrial Theme for SyncLearn */
+/* static/styles.css - Factorio Industrial Theme (Sharp & Zero-Delay) with Brilliant-style Learning Interface */
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Titillium+Web:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400;1,600&display=swap');
 
 /* 0. Factorio Global Theme & Typography */
@@ -16,6 +16,20 @@
   --factorio-steel: #8a9699;
 }
 
+/* Sharp Factorio Aesthetics - Strip all curvy bubbles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.rounded-3xl, .rounded-2xl, .rounded-xl, .rounded-lg, .rounded-md, .rounded {
+  border-radius: 0px !important;
+}
+
+/* Allow only micro-dots (w-2 h-2) to be round indicator lights */
+.rounded-full:not(.w-1\.5):not(.w-2):not(.w-2\.5):not(.w-3) {
+  border-radius: 0px !important;
+}
+
 body {
   font-family: 'Titillium Web', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: #151819;
@@ -23,6 +37,7 @@ body {
   background-size: 24px 24px;
   color: #e2e4e5;
   letter-spacing: 0.015em;
+  border-radius: 0 !important;
 }
 
 code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text {
@@ -30,16 +45,19 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
 }
 
 /* 1. Form Controls & Select Theming (Factorio Inset Steel) */
-select {
+select, input, textarea {
   color-scheme: dark !important;
   background-color: #1b1e1f !important;
   color: #f0f2f2 !important;
   border-color: #3d4447 !important;
+  border-radius: 0px !important;
+  transition: border-color 0.04s ease !important;
 }
 
 select option {
   background-color: #1b1e1f !important;
   color: #f0f2f2 !important;
+  border-radius: 0px !important;
 }
 
 select option:hover,
@@ -53,6 +71,7 @@ select option:checked {
   color-scheme: dark !important;
   background-color: #1b1e1f !important;
   color: #f0f2f2 !important;
+  border-radius: 0px !important;
 }
 
 #folder-select option {
@@ -64,8 +83,8 @@ select option:checked {
 /* 2. Global Accessibility Focus (Factorio Amber Spark) */
 :focus-visible {
   outline: 2px solid #e59130 !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 10px rgba(229, 145, 48, 0.6) !important;
+  outline-offset: 1px !important;
+  box-shadow: 0 0 8px rgba(229, 145, 48, 0.7) !important;
 }
 
 button, select, input, textarea, summary, [role="button"] {
@@ -84,59 +103,70 @@ button, select, input, textarea, summary, [role="button"] {
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #d87515, #8a4805);
   border: 1px solid #542b03;
-  border-radius: 2px;
+  border-radius: 0px !important;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #f59f38, #b86514);
 }
 
-/* 4. Factorio Panel & Inset Classes */
+/* 4. Factorio Sharp Industrial Panel & Inset Classes */
 .factorio-panel {
   background: #24282a;
   border: 1px solid #3d4447;
+  border-radius: 0px !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 16px rgba(0, 0, 0, 0.7);
 }
 
 .factorio-inset {
   background: #17191a;
   border: 1px solid #101213;
+  border-radius: 0px !important;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.85);
 }
 
-/* 5. Factorio Action Buttons */
+/* 5. Factorio Action Buttons - Sharp, Zero Delay Mechanical Click */
 .factorio-btn-primary {
   background: linear-gradient(180deg, #f29c38 0%, #d87515 50%, #b85d0d 100%) !important;
   border: 1px solid #7a3a05 !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 5px rgba(0, 0, 0, 0.7) !important;
+  border-radius: 0px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.7) !important;
   color: #ffffff !important;
   font-weight: 700 !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-  transition: all 0.15s ease-in-out !important;
+  transition: background 0.04s ease, border-color 0.04s ease, box-shadow 0.04s ease !important;
 }
 .factorio-btn-primary:hover {
   background: linear-gradient(180deg, #ffa845 0%, #e68322 50%, #c96b17 100%) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 15px rgba(242, 156, 56, 0.6) !important;
-  transform: translateY(-1px);
+  border-color: #ffa845 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 12px rgba(242, 156, 56, 0.6) !important;
+  transform: none !important;
 }
 .factorio-btn-primary:active {
   background: linear-gradient(180deg, #b85d0d 0%, #d87515 100%) !important;
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+  transform: translateY(1px) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8) !important;
 }
 
 .factorio-btn-secondary {
   background: linear-gradient(180deg, #444b4e 0%, #303638 50%, #23282a 100%) !important;
   border: 1px solid #1a1d1e !important;
+  border-radius: 0px !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.6) !important;
   color: #d8dcde !important;
   font-weight: 600 !important;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.8) !important;
-  transition: all 0.15s ease-in-out !important;
+  transition: background 0.04s ease, border-color 0.04s ease !important;
 }
 .factorio-btn-secondary:hover {
   background: linear-gradient(180deg, #4f575a 0%, #3a4245 50%, #2b3134 100%) !important;
   border-color: #e59130 !important;
   color: #ffffff !important;
+  transform: none !important;
+}
+.factorio-btn-secondary:active {
+  background: linear-gradient(180deg, #23282a 0%, #303638 100%) !important;
+  transform: translateY(1px) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* 6. Factorio Hazard Caution Stripes */
@@ -149,27 +179,30 @@ button, select, input, textarea, summary, [role="button"] {
     rgba(229, 145, 48, 0.25) 20px
   );
   border: 1px solid rgba(229, 145, 48, 0.4);
+  border-radius: 0px !important;
 }
 
 /* 7. Timeline Scrubber (Conveyor Throughput Track) */
 #timeline-container {
   background: #141718;
   border: 1px solid #333a3d;
+  border-radius: 0px !important;
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.9);
 }
 
 #timeline-playhead {
   will-change: left;
+  border-radius: 0px !important;
 }
 
-/* 8. Timeline Pin Markers (Factorio Science / Logistics Tags) */
+/* 8. Timeline Pin Markers */
 .timeline-pin-badge {
   position: absolute;
   top: 4px;
   transform: translateX(-50%);
   cursor: pointer;
   pointer-events: auto;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transition: none !important;
   z-index: 20;
   min-height: 44px;
   min-width: 44px;
@@ -178,17 +211,18 @@ button, select, input, textarea, summary, [role="button"] {
   justify-content: center;
 }
 .timeline-pin-badge:hover {
-  transform: translateX(-50%) scale(1.15);
-  filter: drop-shadow(0 0 10px rgba(229, 145, 48, 0.9));
+  transform: translateX(-50%) !important;
+  filter: drop-shadow(0 0 8px rgba(229, 145, 48, 0.9));
 }
 
-/* 9. Active Tab Buttons (Factorio Heavy Machinery Tabs) */
+/* 9. Active Tab Buttons (Factorio Industrial Tabs - Sharp) */
 .tab-btn {
   background: #1c2022;
   border-top: 3px solid transparent;
   border-bottom: 1px solid #333a3d;
+  border-radius: 0px !important;
   color: #8c979a;
-  transition: all 0.15s ease;
+  transition: background 0.04s ease, color 0.04s ease !important;
 }
 .tab-btn:hover:not(.active) {
   background: #24292c;
@@ -202,33 +236,34 @@ button, select, input, textarea, summary, [role="button"] {
   border-bottom: 1px solid transparent !important;
   color: #f59f38 !important;
   font-weight: 700 !important;
-  text-shadow: 0 0 10px rgba(229, 145, 48, 0.5);
+  text-shadow: 0 0 8px rgba(229, 145, 48, 0.5);
 }
 
-/* 10. Active Recall Diagram Nodes (Factory Circuit Assemblies) */
+/* 10. Active Recall Diagram Nodes */
 .recall-node-card {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.04s ease, background 0.04s ease !important;
   background: #1d2123;
   border: 1px solid #384144;
+  border-radius: 0px !important;
 }
 .recall-node-card.locked {
   border-color: #e59130;
-  box-shadow: inset 0 0 15px rgba(229, 145, 48, 0.15);
+  box-shadow: inset 0 0 10px rgba(229, 145, 48, 0.15);
 }
 .recall-node-card.unlocked {
   border-color: #27ae60;
   background: rgba(39, 174, 96, 0.12);
-  box-shadow: 0 0 12px rgba(39, 174, 96, 0.25);
+  box-shadow: 0 0 10px rgba(39, 174, 96, 0.25);
 }
 
-/* 11. Fill-in-the-blank Slot Badge (Electronic Component Socket) */
+/* 11. Fill-in-the-blank Slot Badge */
 .blank-slot-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   min-height: 44px;
   padding: 6px 14px;
-  border-radius: 4px;
+  border-radius: 0px !important;
   font-family: 'Share Tech Mono', monospace;
   font-weight: 700;
   font-size: 12px;
@@ -236,12 +271,11 @@ button, select, input, textarea, summary, [role="button"] {
   border: 1px dashed #e59130;
   color: #f5b263;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.04s ease, border-color 0.04s ease !important;
 }
 .blank-slot-btn:hover {
   background: rgba(229, 145, 48, 0.3);
   border-color: #f59f38;
-  transform: translateY(-1px);
 }
 .blank-slot-btn.solved {
   background: rgba(39, 174, 96, 0.2);
@@ -250,13 +284,14 @@ button, select, input, textarea, summary, [role="button"] {
   cursor: default;
 }
 
-/* 12. Quiz Option Cards (Heavy Assembly Modules) */
+/* 12. Quiz Option Cards (Sharp Industrial Choices) */
 .mcq-option-btn {
   min-height: 44px;
   background: #1d2123;
   border: 1px solid #384144;
+  border-radius: 0px !important;
   color: #d8dcde;
-  transition: all 0.15s ease;
+  transition: background 0.04s ease, border-color 0.04s ease !important;
 }
 .mcq-option-btn:hover:not(:disabled) {
   border-color: #e59130;
@@ -281,8 +316,11 @@ details summary::-webkit-details-marker {
 details summary {
   list-style: none;
 }
+details {
+  border-radius: 0px !important;
+}
 
-/* 14. Motion Accessibility */
+/* 14. Motion Accessibility & Zero-Delay Snappiness */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -300,47 +338,36 @@ details summary {
   background: #121415;
   background-image: radial-gradient(#252a2c 1px, transparent 1px);
   background-size: 24px 24px;
-  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+  border-radius: 0px !important;
 }
 #landing-page-view.hidden {
   display: none !important;
 }
 
-/* 16. Contextual Onboarding Tour & Factorio Electrical Spotlight */
+/* 16. Contextual Onboarding Tour Dialogue */
 .tour-spotlight-active {
   position: relative !important;
   z-index: 55 !important;
-  box-shadow: 0 0 0 3px #e59130, 0 0 30px rgba(229, 145, 48, 0.6) !important;
+  box-shadow: 0 0 0 3px #e59130, 0 0 20px rgba(229, 145, 48, 0.6) !important;
   border-color: #f59f38 !important;
-  transition: all 0.3s ease-in-out !important;
-  animation: factorio-spark-pulse 2s infinite ease-in-out;
-}
-
-@keyframes factorio-spark-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 3px #e59130, 0 0 20px rgba(229, 145, 48, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 5px #f59f38, 0 0 40px rgba(245, 159, 56, 0.8);
-  }
+  border-radius: 0px !important;
 }
 
 #tour-dialog {
   background: #1e2224;
   border: 1px solid #e59130;
+  border-radius: 0px !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 10px 30px rgba(0, 0, 0, 0.85);
-  animation: tour-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes tour-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+/* Modals & Dialogs Sharp Override */
+#pin-modal > div,
+#folder-modal > div,
+#folder-videos-modal > div,
+#export-modal > div,
+#alt-video-modal > div,
+#undo-delete-toast {
+  border-radius: 0px !important;
 }
 
 /* 17. Printable Cheat-Sheet */
