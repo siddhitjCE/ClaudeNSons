@@ -71,18 +71,93 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
     0 0 0 4px #22272a,
     8px 8px 0px rgba(0, 0, 0, 0.8);
   image-rendering: pixelated;
+  animation: yn10-glitch-jitter 6s steps(1) infinite;
+}
+
+@keyframes yn10-glitch-jitter {
+  0%, 86%, 100% {
+    transform: translate(0, 0);
+    box-shadow: 
+      0 0 0 2px #000000,
+      0 0 0 4px #22272a,
+      8px 8px 0px rgba(0, 0, 0, 0.8);
+  }
+  88% {
+    transform: translate(-2px, 1px);
+    box-shadow: 
+      -3px 0 0 var(--yn10-red),
+      3px 0 0 var(--yn10-cyan),
+      8px 8px 0px rgba(0, 0, 0, 0.8);
+  }
+  90% {
+    transform: translate(2px, -2px);
+    box-shadow: 
+      3px 0 0 var(--yn10-yellow),
+      -3px 0 0 var(--yn10-red),
+      8px 8px 0px rgba(0, 0, 0, 0.8);
+  }
+  92% {
+    transform: translate(0, 0);
+  }
+  94% {
+    transform: translate(1px, 2px);
+    box-shadow: 
+      2px 0 0 var(--yn10-cyan),
+      -2px 0 0 var(--yn10-yellow),
+      8px 8px 0px rgba(0, 0, 0, 0.8);
+  }
+  96% {
+    transform: translate(0, 0);
+  }
 }
 
 .yn10-pixel-box {
+  position: relative;
   border: 2px solid #ffffff;
   box-shadow: 4px 4px 0px #ffffff;
   background: #111417;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 
+/* Reticle corner accents that expand on hover */
+.yn10-pixel-box::before,
+.yn10-pixel-box::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  transition: transform 0.08s steps(2), border-color 0.08s ease;
+  z-index: 10;
+}
+
+.yn10-pixel-box::before {
+  top: -4px;
+  left: -4px;
+  border-top: 2px solid var(--yn10-yellow);
+  border-left: 2px solid var(--yn10-yellow);
+}
+
+.yn10-pixel-box::after {
+  bottom: -4px;
+  right: -4px;
+  border-bottom: 2px solid var(--yn10-yellow);
+  border-right: 2px solid var(--yn10-yellow);
+}
+
 .yn10-pixel-box:hover {
   transform: translate(-1px, -1px);
   box-shadow: 5px 5px 0px #ffe600;
+}
+
+.yn10-pixel-box:hover::before {
+  transform: translate(-3px, -3px);
+  border-color: #ffffff;
+}
+
+.yn10-pixel-box:hover::after {
+  transform: translate(3px, 3px);
+  border-color: #ffffff;
 }
 
 /* Japanese Bilingual Label */
@@ -265,18 +340,38 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
   right: 0;
   height: 2px;
   background: repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 12px, transparent 12px, transparent 24px);
+  background-size: 24px 2px;
   opacity: 0.25;
   pointer-events: none;
+  animation: yn10-road-crawl 12s linear infinite;
 }
 
-/* Peak zone marker glow */
+/* Dynamic Highway Speed-up when Video is Playing */
+.yn10-road-track.is-driving::before {
+  opacity: 0.75;
+  animation: yn10-road-drive 0.38s linear infinite;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+@keyframes yn10-road-crawl {
+  from { background-position-x: 0px; }
+  to { background-position-x: -24px; }
+}
+
+@keyframes yn10-road-drive {
+  from { background-position-x: 0px; }
+  to { background-position-x: -24px; }
+}
+
+/* Peak zone marker glow & radar pulse */
 .yn10-peak-pill {
   border: 1px solid var(--yn10-red);
-  background: rgba(230, 0, 18, 0.15);
+  background: rgba(216, 45, 23, 0.2);
   color: #ffffff;
   font-family: 'Share Tech Mono', monospace;
   box-shadow: 2px 2px 0px var(--yn10-red);
   transition: transform 0.06s ease, background-color 0.06s ease;
+  animation: yn10-beacon-pulse 2s steps(2) infinite;
 }
 
 .yn10-peak-pill:hover {
@@ -284,6 +379,44 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
   background: var(--yn10-red);
   color: #ffffff;
   box-shadow: 1px 1px 0px #ffffff;
+  animation: none;
+}
+
+@keyframes yn10-beacon-pulse {
+  0%, 100% {
+    box-shadow: 2px 2px 0px var(--yn10-red);
+    background-color: rgba(216, 45, 23, 0.2);
+  }
+  50% {
+    box-shadow: 2px 2px 0px var(--yn10-yellow), 0 0 10px rgba(255, 210, 0, 0.4);
+    background-color: rgba(255, 210, 0, 0.3);
+  }
+}
+
+#difficult-zones-group rect {
+  animation: yn10-radar-scan 3s steps(4) infinite alternate;
+}
+
+@keyframes yn10-radar-scan {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.95; filter: drop-shadow(0 0 6px var(--yn10-red)); }
+  100% { opacity: 0.6; }
+}
+
+/* Playhead Scrubber Beacon */
+.yn10-playhead-beacon {
+  animation: yn10-beacon-flash 0.9s steps(2) infinite;
+}
+
+@keyframes yn10-beacon-flash {
+  0%, 49% {
+    background-color: #ffd200 !important;
+    box-shadow: 0 0 8px #ffd200;
+  }
+  50%, 100% {
+    background-color: #ffffff !important;
+    box-shadow: 0 0 12px #ffffff;
+  }
 }
 
 /* ========================================================
@@ -328,12 +461,12 @@ select option {
 }
 
 /* ========================================================
-   6. SOUND SYNTHESIZER HUD TOGGLE
+   6. SOUND SYNTHESIZER HUD TOGGLE & 8-BIT EQUALIZER BARS
    ======================================================== */
 .yn10-sound-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   padding: 0.35rem 0.65rem;
   font-family: 'Share Tech Mono', monospace;
   font-size: 0.75rem;
@@ -344,28 +477,152 @@ select option {
   color: #889296;
   cursor: pointer;
   user-select: none;
+  transition: border-color 0.08s ease, color 0.08s ease, box-shadow 0.08s ease;
 }
 
 .yn10-sound-toggle.active {
   border-color: var(--yn10-green);
   color: #ffffff;
-  box-shadow: 0 0 8px rgba(0, 208, 80, 0.3);
+  box-shadow: 0 0 8px rgba(41, 143, 26, 0.4);
 }
 
 .yn10-sound-indicator {
-  width: 6px;
-  height: 6px;
-  border-radius: 0 !important;
-  background-color: #4a5156;
+  display: inline-flex;
+  align-items: center;
 }
 
-.yn10-sound-toggle.active .yn10-sound-indicator {
+/* 8-bit Equalizer Visualizer */
+.yn10-sound-eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+  width: 14px;
+}
+
+.yn10-eq-bar {
+  width: 2px;
+  height: 3px;
+  background-color: #4a5156;
+  transition: height 0.08s steps(3);
+}
+
+.yn10-sound-toggle.active .yn10-eq-bar {
   background-color: var(--yn10-green);
-  box-shadow: 0 0 6px var(--yn10-green);
+  box-shadow: 0 0 4px var(--yn10-green);
+}
+
+.yn10-sound-toggle.active .eq-bar-1 {
+  animation: yn10-eq-bounce 0.52s steps(4) infinite alternate;
+}
+.yn10-sound-toggle.active .eq-bar-2 {
+  animation: yn10-eq-bounce 0.36s steps(4) infinite alternate 0.1s;
+}
+.yn10-sound-toggle.active .eq-bar-3 {
+  animation: yn10-eq-bounce 0.64s steps(4) infinite alternate 0.05s;
+}
+.yn10-sound-toggle.active .eq-bar-4 {
+  animation: yn10-eq-bounce 0.42s steps(4) infinite alternate 0.16s;
+}
+
+@keyframes yn10-eq-bounce {
+  0% { height: 2px; }
+  33% { height: 5px; }
+  66% { height: 12px; }
+  100% { height: 8px; }
 }
 
 /* ========================================================
-   7. CUSTOM PIXEL SCROLLBAR
+   7. RETRO 3D WIREFRAME MOTIFS & ROTATING ACCENTS
+   ======================================================== */
+/* Rotating 8-bit Cross / Reticle [+] */
+.yn10-cross-spin {
+  display: inline-block;
+  animation: yn10-cross-step 2.5s steps(4) infinite;
+}
+
+@keyframes yn10-cross-step {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 3D Isometric Rotating Wireframe Box */
+.yn10-wireframe-cube {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--yn10-yellow);
+  box-shadow: inset 0 0 4px rgba(255, 210, 0, 0.4);
+  animation: yn10-cube-flip 4s steps(8) infinite;
+}
+
+@keyframes yn10-cube-flip {
+  0% { transform: rotate(0deg) skew(0deg, 0deg); }
+  25% { transform: rotate(45deg) skew(10deg, 10deg); border-color: var(--yn10-cyan); }
+  50% { transform: rotate(90deg) skew(0deg, 0deg); border-color: var(--yn10-red); }
+  75% { transform: rotate(135deg) skew(-10deg, -10deg); border-color: var(--yn10-green); }
+  100% { transform: rotate(180deg) skew(0deg, 0deg); border-color: var(--yn10-yellow); }
+}
+
+/* Tab Panel Entrance Snap Animation */
+.tab-content.active, .tab-pane:not(.hidden) {
+  animation: yn10-pane-appear 0.15s steps(3);
+}
+
+@keyframes yn10-pane-appear {
+  0% { opacity: 0; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================================
+   8. CRT SCANLINES OVERLAY & TICKER BAND
+   ======================================================== */
+.yn10-scanlines-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  background: linear-gradient(
+    rgba(18, 18, 18, 0) 50%, 
+    rgba(0, 0, 0, 0.22) 50%
+  );
+  background-size: 100% 4px;
+  opacity: 0.35;
+}
+
+/* Scrolling Bilingual Ticker Tape */
+.yn10-ticker-band {
+  overflow: hidden;
+  white-space: nowrap;
+  background: #0d0f12;
+  border-top: 1px solid #282f34;
+  border-bottom: 1px solid #282f34;
+  padding: 0.35rem 0;
+  user-select: none;
+}
+
+.yn10-ticker-content {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: yn10-ticker-scroll 35s linear infinite;
+  gap: 2rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #7b8890;
+}
+
+@keyframes yn10-ticker-scroll {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ========================================================
+   9. CUSTOM PIXEL SCROLLBAR
    ======================================================== */
 ::-webkit-scrollbar {
   width: 6px;

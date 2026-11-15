@@ -81,6 +81,9 @@
 </head>
 <body class="bg-[#0a0b0d] text-white min-h-screen flex flex-col font-sans antialiased selection:bg-[#e60012] selection:text-white rounded-none">
 
+  <!-- Retro Arcade CRT Scanlines Overlay -->
+  <div class="yn10-scanlines-overlay" aria-hidden="true"></div>
+
   <!-- 0. FULL-SCREEN LANDING PAGE OVERLAY (YAMAUCHI NO.10 / Y-N10 AESTHETICS) -->
   <div id="landing-page-view" class="fixed inset-0 z-50 bg-[#0a0b0d] flex flex-col justify-between overflow-y-auto p-6 sm:p-10 rounded-none relative">
     
@@ -119,12 +122,20 @@
           class="yn10-sound-toggle"
           title="Toggle 8-bit retro sound effects"
         >
-          <span id="yn10-sound-indicator" class="yn10-sound-indicator"></span>
+          <span id="yn10-sound-indicator" class="yn10-sound-indicator">
+            <span class="yn10-sound-eq" aria-hidden="true">
+              <span class="yn10-eq-bar eq-bar-1"></span>
+              <span class="yn10-eq-bar eq-bar-2"></span>
+              <span class="yn10-eq-bar eq-bar-3"></span>
+              <span class="yn10-eq-bar eq-bar-4"></span>
+            </span>
+          </span>
           <span>SOUND : </span>
           <span id="yn10-sound-label">OFF</span>
         </button>
-        <div class="text-xs text-white font-mono border border-[#333b40] px-3 py-1 rounded-none bg-[#14171a] hidden sm:block">
-          STAGE 01 // 理念
+        <div class="text-xs text-white font-mono border border-[#333b40] px-3 py-1 rounded-none bg-[#14171a] hidden sm:flex items-center gap-2">
+          <span class="yn10-wireframe-cube"></span>
+          <span>STAGE 01 // 理念</span>
         </div>
       </div>
     </header>
@@ -249,6 +260,26 @@
       </div>
     </main>
 
+    <!-- Continuous Retro Scrolling Ticker Band (Yamauchi No.10 Ticker) -->
+    <div class="yn10-ticker-band my-4" aria-hidden="true">
+      <div class="yn10-ticker-content">
+        <span>[ SYNCLEARN STUDIO ]</span>
+        <span>理念 // PHILOSOPHY &amp; PEDAGOGY</span>
+        <span>STAGE 01: COURSE SELECTION</span>
+        <span>STAGE 02: ACTIVE LECTURE PLAYBACK</span>
+        <span>HEATMAP ROAD MOVIE タイムライン</span>
+        <span>8-BIT RETRO INTERACTIVE SYNTHESIZER</span>
+        <span>CLAUDENSONS ARCHIVE // 2026</span>
+        <span>[ SYNCLEARN STUDIO ]</span>
+        <span>理念 // PHILOSOPHY &amp; PEDAGOGY</span>
+        <span>STAGE 01: COURSE SELECTION</span>
+        <span>STAGE 02: ACTIVE LECTURE PLAYBACK</span>
+        <span>HEATMAP ROAD MOVIE タイムライン</span>
+        <span>8-BIT RETRO INTERACTIVE SYNTHESIZER</span>
+        <span>CLAUDENSONS ARCHIVE // 2026</span>
+      </div>
+    </div>
+
     <!-- Bottom Footer -->
     <footer class="max-w-6xl mx-auto w-full pt-4 border-t border-[#2d3437] text-center text-xs text-[#8f9ea2] font-mono flex items-center justify-between">
       <span>SYNCLEARN • INTERACTIVE STUDY STUDIO</span>
@@ -334,7 +365,14 @@
           class="yn10-sound-toggle"
           title="Toggle 8-bit retro sound effects"
         >
-          <span id="workspace-sound-indicator" class="yn10-sound-indicator"></span>
+          <span id="workspace-sound-indicator" class="yn10-sound-indicator">
+            <span class="yn10-sound-eq" aria-hidden="true">
+              <span class="yn10-eq-bar eq-bar-1"></span>
+              <span class="yn10-eq-bar eq-bar-2"></span>
+              <span class="yn10-eq-bar eq-bar-3"></span>
+              <span class="yn10-eq-bar eq-bar-4"></span>
+            </span>
+          </span>
           <span>SOUND : </span>
           <span id="workspace-sound-label">OFF</span>
         </button>
@@ -394,8 +432,9 @@
         <!-- Lecture Header Banner -->
         <div class="flex items-center justify-between mb-2.5 pb-2.5 border-b border-[#272c30]">
           <div class="flex items-center space-x-2 truncate">
-            <span class="px-2 py-0.5 rounded-none bg-[#e60012] text-white text-[10px] font-mono font-bold tracking-wider uppercase">
-              STAGE 02 // 講義映像
+            <span class="px-2 py-0.5 rounded-none bg-[#e60012] text-white text-[10px] font-mono font-bold tracking-wider uppercase flex items-center gap-1.5">
+              <span class="yn10-cross-spin">✦</span>
+              <span>STAGE 02 // 講義映像</span>
             </span>
             <h1 id="video-title" class="text-sm font-bold text-white truncate font-mono">
               Engineering Chemistry: Polymers, Molecular Weight Distribution &amp; Stereochemistry
@@ -521,7 +560,7 @@
 
             <!-- Current Playhead Scrubber Bar (White Retro Needle with Yellow Head) -->
             <div id="timeline-playhead" class="absolute top-0 bottom-0 w-[3px] bg-white shadow-[0_0_8px_#ffffff] pointer-events-none" style="left: 0%;">
-              <div class="absolute -top-1 -left-1.5 w-3.5 h-3.5 rounded-none bg-[#ffe600] border-2 border-black shadow"></div>
+              <div class="absolute -top-1 -left-1.5 w-3.5 h-3.5 rounded-none bg-[#ffe600] yn10-playhead-beacon border-2 border-black shadow"></div>
             </div>
 
             <!-- Hover Time & Intensity Tooltip -->

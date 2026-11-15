@@ -74,15 +74,17 @@ const yn10Audio = {
   },
 
   updateUI() {
+    const landingBtn = document.getElementById("yn10-sound-toggle-btn");
     const landingLabel = document.getElementById("yn10-sound-label");
     const landingIndicator = document.getElementById("yn10-sound-indicator");
+    const workspaceBtn = document.getElementById("workspace-sound-toggle-btn");
     const workspaceLabel = document.getElementById("workspace-sound-label");
     const workspaceIndicator = document.getElementById("workspace-sound-indicator");
 
     [landingLabel, workspaceLabel].forEach(el => {
       if (el) el.textContent = this.enabled ? "ON" : "OFF";
     });
-    [landingIndicator, workspaceIndicator].forEach(el => {
+    [landingBtn, workspaceBtn, landingIndicator, workspaceIndicator].forEach(el => {
       if (el) {
         if (this.enabled) {
           el.classList.add("active");
@@ -946,6 +948,16 @@ function fallbackToDirectIframe() {
 }
 
 function onPlayerStateChange(event) {
+  // Dynamic Road Track Highway Drive Animation
+  const timelineTrack = document.getElementById("timeline-container");
+  if (timelineTrack) {
+    if (event.data === YT.PlayerState.PLAYING) {
+      timelineTrack.classList.add("is-driving");
+    } else {
+      timelineTrack.classList.remove("is-driving");
+    }
+  }
+
   // If landing page overlay is visible and video begins playing, immediately pause it
   const landingOverlay = document.getElementById("landing-page-view");
   if (landingOverlay && !landingOverlay.classList.contains("hidden") && event.data === YT.PlayerState.PLAYING) {
