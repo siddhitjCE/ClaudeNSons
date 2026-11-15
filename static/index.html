@@ -171,7 +171,7 @@
     <header class="max-w-6xl mx-auto w-full flex items-center justify-between pb-4 border-b border-[#22272b] relative z-10">
       <div class="flex items-center space-x-3.5">
         <!-- Retro Pixel Logo Box -->
-        <div class="w-10 h-10 bg-[#14171a] border-2 border-white flex flex-col justify-between p-1 shadow-[3px_3px_0px_#ffffff] select-none">
+        <div class="w-10 h-10 block-bevel-steel flex flex-col justify-between p-1.5 select-none">
           <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#e60012]"></span><span class="w-1.5 h-1.5 bg-[#0080ff]"></span></div>
           <div class="text-[9px] font-mono font-black text-center text-white leading-none">SYNC</div>
           <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#ffe600]"></span><span class="w-1.5 h-1.5 bg-[#00d050]"></span></div>
@@ -340,7 +340,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 text-left max-w-4xl mx-auto">
         <div class="p-5 rounded-none yn10-pixel-box space-y-2">
           <div class="flex items-center justify-between mb-3">
-            <div class="w-8 h-8 rounded-none bg-[#14171a] border border-[#4398cd] flex items-center justify-center text-[#4398cd]">
+            <div class="w-8 h-8 block-bevel-cyan flex items-center justify-center text-white">
               <span class="font-mono text-xs font-bold">01</span>
             </div>
             <div class="yn10-scene-3d">
@@ -359,7 +359,7 @@
 
         <div class="p-5 rounded-none yn10-pixel-box space-y-2">
           <div class="flex items-center justify-between mb-3">
-            <div class="w-8 h-8 rounded-none bg-[#14171a] border border-[#ffd200] flex items-center justify-center text-[#ffd200]">
+            <div class="w-8 h-8 block-bevel-yellow flex items-center justify-center text-black">
               <span class="font-mono text-xs font-bold">02</span>
             </div>
             <div class="yn10-scene-3d">
@@ -378,7 +378,7 @@
 
         <div class="p-5 rounded-none yn10-pixel-box space-y-2">
           <div class="flex items-center justify-between mb-3">
-            <div class="w-8 h-8 rounded-none bg-[#14171a] border border-[#298f1a] flex items-center justify-center text-[#298f1a]">
+            <div class="w-8 h-8 block-bevel-green flex items-center justify-center text-white">
               <span class="font-mono text-xs font-bold">03</span>
             </div>
             <div class="yn10-scene-3d">
@@ -452,7 +452,7 @@
           title="Return to Course Library"
         >
           <!-- Retro Pixel Logo Box -->
-          <div class="w-9 h-9 bg-[#14171a] border-2 border-white flex flex-col justify-between p-1 shadow-[2px_2px_0px_#ffffff] select-none">
+          <div class="w-9 h-9 block-bevel-steel flex flex-col justify-between p-1 select-none">
             <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#e60012]"></span><span class="w-1.5 h-1.5 bg-[#0080ff]"></span></div>
             <div class="text-[8px] font-mono font-black text-center text-white leading-none">SYNC</div>
             <div class="flex justify-between"><span class="w-1.5 h-1.5 bg-[#ffe600]"></span><span class="w-1.5 h-1.5 bg-[#00d050]"></span></div>
@@ -880,7 +880,7 @@
           
           <!-- Empty State (Shown until user presses Explain This Step) -->
           <div id="rescue-empty-state" class="p-8 text-center space-y-4 my-auto flex flex-col items-center justify-center min-h-[380px]">
-            <div class="w-12 h-12 bg-[#14171a] border-2 border-[#ffe600] flex items-center justify-center text-[#ffe600] shadow-[3px_3px_0px_#ffe600]">
+            <div class="w-12 h-12 block-bevel-yellow flex items-center justify-center text-black">
               <i data-lucide="sparkles" class="w-6 h-6" aria-hidden="true"></i>
             </div>
             <div class="space-y-1.5 max-w-sm">
@@ -926,7 +926,7 @@
           <div id="rescue-real-content" class="hidden space-y-5" aria-live="polite">
 
             <!-- Active Focus Window & Auto-Save Pin Bar -->
-            <div class="p-4 bg-[#14171a] border-2 border-white shadow-[3px_3px_0px_#ffffff]">
+            <div class="p-4 yn10-pixel-box">
               <div class="flex items-center justify-between gap-2">
                 <span class="text-xs font-bold text-[#ffe600] uppercase font-mono tracking-wider flex items-center gap-1.5">
                   <span class="w-2 h-2 bg-[#ffe600] inline-block"></span>
@@ -1089,7 +1089,7 @@
           
           <!-- Empty State (Shown until user clicks "Explain This Step") -->
           <div id="recall-empty-state" class="p-8 text-center space-y-4 my-auto flex flex-col items-center justify-center min-h-[380px]">
-            <div class="w-12 h-12 bg-[#14171a] border-2 border-[#00d050] flex items-center justify-center text-[#00d050] shadow-[3px_3px_0px_#00d050]">
+            <div class="w-12 h-12 block-bevel-green flex items-center justify-center text-white">
               <i data-lucide="target" class="w-6 h-6" aria-hidden="true"></i>
             </div>
             <div class="space-y-1.5 max-w-sm">
@@ -1098,8 +1098,8 @@
                 Active practice puzzles and fill-in-the-blank concept pathways are generated when you click <strong class="text-white">"EXPLAIN THIS STEP"</strong> during any lecture moment.
               </p>
             </div>
-            <button type="button" id="tab2-explain-trigger-btn" class="yn10-btn min-h-[44px] px-6 py-2.5 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2 cursor-pointer border-2 border-[#00d050] text-[#00d050] hover:bg-[#00d050]/10">
-              <i data-lucide="sparkles" class="w-4 h-4 text-[#00d050]" aria-hidden="true"></i>
+            <button type="button" id="tab2-explain-trigger-btn" class="block-bevel-green min-h-[44px] px-6 py-2.5 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2 cursor-pointer text-white">
+              <i data-lucide="sparkles" class="w-4 h-4 text-white" aria-hidden="true"></i>
               <span>EXPLAIN THIS STEP ➔</span>
             </button>
           </div>
@@ -1107,12 +1107,12 @@
           <!-- Real Content Container (Hidden until user presses Explain This Step) -->
           <div id="recall-real-content" class="hidden space-y-5">
             <!-- Recall Header -->
-            <div class="p-4 bg-[#14171a] border-2 border-white shadow-[3px_3px_0px_#ffffff]">
+            <div class="p-4 yn10-pixel-box">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-[#00d050] uppercase font-mono tracking-wider flex items-center gap-1.5">
                   <span class="w-2 h-2 bg-[#00d050] inline-block"></span> ACTIVE PRACTICE
                 </span>
-                <span id="recall-score-badge" class="text-xs font-mono font-bold text-white bg-[#00d050] px-2.5 py-0.5 rounded-none shadow-[2px_2px_0px_#ffffff]">
+                <span id="recall-score-badge" class="block-bevel-green text-xs font-mono font-bold text-white px-2.5 py-0.5 rounded-none">
                   0 / 5 MASTERED
                 </span>
               </div>
@@ -1161,7 +1161,7 @@
           
           <!-- Empty State (Shown until user clicks "Explain This Step" or saves notes) -->
           <div id="cheatsheet-empty-state" class="p-8 text-center space-y-4 my-auto flex flex-col items-center justify-center min-h-[380px]">
-            <div class="w-12 h-12 bg-[#14171a] border-2 border-[#0080ff] flex items-center justify-center text-[#0080ff] shadow-[3px_3px_0px_#0080ff]">
+            <div class="w-12 h-12 block-bevel-cyan flex items-center justify-center text-white">
               <i data-lucide="bookmark-plus" class="w-6 h-6" aria-hidden="true"></i>
             </div>
             <div class="space-y-1.5 max-w-sm">
@@ -1170,8 +1170,8 @@
                 Click <strong class="text-white">"EXPLAIN THIS STEP"</strong> to extract terminology bridges and formula derivations, or press <kbd class="px-1.5 py-0.5 bg-[#0a0b0d] border border-white text-white font-mono text-[10px] font-bold">Alt + S</kbd> to save personal timestamp notes.
               </p>
             </div>
-            <button type="button" id="tab3-explain-trigger-btn" class="yn10-btn min-h-[44px] px-6 py-2.5 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2 cursor-pointer border-2 border-[#0080ff] text-[#0080ff] hover:bg-[#0080ff]/10">
-              <i data-lucide="sparkles" class="w-4 h-4 text-[#0080ff]" aria-hidden="true"></i>
+            <button type="button" id="tab3-explain-trigger-btn" class="block-bevel-cyan min-h-[44px] px-6 py-2.5 text-xs font-bold font-mono uppercase tracking-wider flex items-center gap-2 cursor-pointer text-white">
+              <i data-lucide="sparkles" class="w-4 h-4 text-white" aria-hidden="true"></i>
               <span>EXPLAIN THIS STEP ➔</span>
             </button>
           </div>
@@ -1179,7 +1179,7 @@
           <!-- Real Content Container (Hidden until user presses Explain This Step or saves notes) -->
           <div id="cheatsheet-real-content" class="hidden space-y-5">
             <!-- Cheat Sheet Header -->
-            <div class="p-4 bg-[#14171a] border-2 border-white flex items-center justify-between shadow-[3px_3px_0px_#ffffff]">
+            <div class="p-4 yn10-pixel-box flex items-center justify-between">
               <div>
                 <div class="flex items-center gap-2">
                   <h2 class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-1.5">
@@ -1280,7 +1280,7 @@
 
   <!-- MODAL 1: DROP PERSONAL PIN MODAL -->
   <div id="pin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 rounded-none" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title">
-    <div class="bg-[#111417] border-2 border-white rounded-none w-full max-w-md p-5 shadow-[6px_6px_0px_#000000] space-y-4">
+    <div class="yn10-pixel-box w-full max-w-md p-5 space-y-4">
       <div class="flex items-center justify-between border-b border-[#272c30] pb-3">
         <h2 id="pin-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
           <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> SAVE STUDY NOTE
@@ -1339,7 +1339,7 @@
 
   <!-- MODAL 2: ADD SUBJECT FOLDER MODAL -->
   <div id="folder-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 rounded-none" role="dialog" aria-modal="true" aria-labelledby="folder-modal-title">
-    <div class="bg-[#111417] border-2 border-white rounded-none w-full max-w-sm p-5 shadow-[6px_6px_0px_#000000] space-y-4">
+    <div class="yn10-pixel-box w-full max-w-sm p-5 space-y-4">
       <div class="flex items-center justify-between border-b border-[#272c30] pb-3">
         <h2 id="folder-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
           <span class="w-2 h-2 bg-[#ffe600] inline-block"></span> NEW SUBJECT FOLDER
@@ -1377,10 +1377,10 @@
 
   <!-- MODAL: BROWSE FOLDER VIDEOS (MAIN STUDIO VIEW) -->
   <div id="folder-videos-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 rounded-none" role="dialog" aria-modal="true" aria-labelledby="folder-videos-modal-title">
-    <div class="bg-[#111417] border-2 border-white rounded-none w-full max-w-2xl max-h-[85vh] flex flex-col p-5 shadow-[6px_6px_0px_#000000] space-y-3.5 overflow-hidden">
+    <div class="yn10-pixel-box w-full max-w-2xl max-h-[85vh] flex flex-col p-5 space-y-3.5 overflow-hidden">
       <div class="flex items-center justify-between border-b border-[#272c30] pb-3">
         <div class="flex items-center space-x-2.5">
-          <div class="w-8 h-8 rounded-none bg-[#14171a] border-2 border-white flex items-center justify-center text-[#ffe600]">
+          <div class="w-8 h-8 rounded-none bg-[#14171a] border-2 border-black flex items-center justify-center text-[#ffe600]">
             <i data-lucide="folder" class="w-4 h-4" aria-hidden="true"></i>
           </div>
           <div>
@@ -1412,7 +1412,7 @@
 
   <!-- MODAL 3: EXPORT SAVED NOTES MODAL -->
   <div id="export-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 rounded-none" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
-    <div class="bg-[#111417] border-2 border-white rounded-none w-full max-w-2xl max-h-[90vh] flex flex-col p-5 shadow-[6px_6px_0px_#000000] space-y-3.5 overflow-hidden">
+    <div class="yn10-pixel-box w-full max-w-2xl max-h-[90vh] flex flex-col p-5 space-y-3.5 overflow-hidden">
       <div class="flex items-center justify-between border-b border-[#272c30] pb-3">
         <h2 id="export-modal-title" class="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
           <span class="w-2 h-2 bg-[#00e5ff] inline-block"></span> STUDY DOSSIER &amp; CHEAT SHEET

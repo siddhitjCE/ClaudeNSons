@@ -3486,11 +3486,11 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   if (isLanding) {
     return `
-      <div class="landing-video-card group yn10-pixel-box bg-[#111417] p-3.5 flex flex-col justify-between cursor-pointer" data-video-id="${v.video_id}">
-        <div class="space-y-2.5">
-          <div class="relative w-full aspect-video rounded-none overflow-hidden bg-black border border-[#272c30]">
+      <div class="landing-video-card group yn10-pixel-box p-3.5 flex flex-col justify-between cursor-pointer" data-video-id="${v.video_id}">
+        <div class="space-y-3">
+          <div class="relative w-full aspect-video rounded-none overflow-hidden bg-black">
             <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-            <span class="absolute bottom-1.5 right-1.5 bg-[#0a0b0d]/90 font-mono text-[10px] px-2 py-0.5 rounded-none text-[#ffe600] font-bold border border-[#ffe600]/40">
+            <span class="absolute bottom-1.5 right-1.5 bg-[#000000] font-mono text-[10px] px-2 py-0.5 rounded-none text-[#ffe600] font-bold border border-[#ffe600] shadow-[0_2px_0_#000000]">
               ${durStr}
             </span>
           </div>
@@ -3498,9 +3498,9 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
             ${v.title}
           </h3>
         </div>
-        <div class="pt-3 mt-3 border-t border-[#272c30] flex items-center justify-between">
-          <span class="text-[10px] font-mono text-[#889296]">STAGE 01 // ID: ${v.video_id}</span>
-          <button class="yn10-btn-primary px-3 py-1 text-xs font-mono font-bold rounded-none flex items-center gap-1 shadow-[2px_2px_0px_#ffe600] pointer-events-none">
+        <div class="pt-3 mt-3 border-t-2 border-[#000000] flex items-center justify-between">
+          <span class="text-[10px] font-mono text-[#889296] bg-[#0c0e10] px-2 py-0.5 border border-[#272c30]">STAGE 01 // ID: ${v.video_id}</span>
+          <button class="block-bevel-red px-3 py-1 text-xs font-mono font-bold rounded-none flex items-center gap-1.5 pointer-events-none">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
             <span>ENTER ➔</span>
           </button>
@@ -3511,11 +3511,11 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
 
   // Inside Main Page Modal
   return `
-    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded-none border-2 ${isActiveVideo ? 'bg-[#181c20] border-white shadow-[3px_3px_0px_#ffffff]' : 'bg-[#111417] border-[#272c30] hover:border-white hover:bg-[#181c20]'} transition-none cursor-pointer font-mono" data-video-id="${v.video_id}">
+    <div class="folder-modal-video-card group flex items-center justify-between p-3 rounded-none border-2 border-black ${isActiveVideo ? 'bg-[#181c20] shadow-[0_4px_0_#000000]' : 'bg-[#121518] hover:bg-[#181c20] shadow-[0_3px_0_#000000]'} cursor-pointer font-mono" data-video-id="${v.video_id}">
       <div class="flex items-center space-x-3 overflow-hidden">
-        <div class="relative w-28 aspect-video rounded-none overflow-hidden bg-black shrink-0 border border-[#272c30]">
+        <div class="relative w-28 aspect-video rounded-none overflow-hidden bg-black shrink-0">
           <img src="${thumb}" alt="${v.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100" onerror="this.src='https://img.youtube.com/vi/${v.video_id}/hqdefault.jpg'" />
-          <span class="absolute bottom-1 right-1 bg-black font-mono text-[9px] px-1.5 py-0.5 rounded-none text-[#ffe600] font-bold">${durStr}</span>
+          <span class="absolute bottom-1 right-1 bg-black font-mono text-[9px] px-1.5 py-0.5 rounded-none text-[#ffe600] font-bold border border-[#ffe600]/60">${durStr}</span>
         </div>
         <div class="min-w-0 pr-3">
           <h4 class="text-xs font-bold ${isActiveVideo ? 'text-[#ffe600]' : 'text-white group-hover:text-[#ffe600]'} truncate transition-colors">
@@ -3526,11 +3526,11 @@ function createVideoCardHtml(v, isActiveVideo = false, isLanding = false) {
       </div>
       <div class="shrink-0 pl-2">
         ${isActiveVideo ? `
-          <span class="px-2.5 py-1 rounded-none text-[10px] font-bold font-mono bg-[#00d050] text-white flex items-center gap-1.5 shadow-[2px_2px_0px_#ffffff]">
-            <span class="w-1.5 h-1.5 bg-white animate-pulse"></span> Active
+          <span class="block-bevel-green px-3 py-1.5 rounded-none text-[10px] font-bold font-mono text-white flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 bg-white animate-pulse"></span> ACTIVE
           </span>
         ` : `
-          <button class="yn10-btn-primary px-3 py-1.5 text-xs font-mono font-bold rounded-none flex items-center gap-1 shadow-[2px_2px_0px_#ffe600]">
+          <button class="block-bevel-red px-3 py-1.5 text-xs font-mono font-bold rounded-none flex items-center gap-1">
             <i data-lucide="play" class="w-3 h-3 fill-current" aria-hidden="true"></i>
             <span>ENTER ➔</span>
           </button>
@@ -3570,15 +3570,15 @@ function renderLandingFolders(folders) {
     const btn = document.createElement("button");
     const isActive = String(f.id) === String(activeId);
     btn.type = "button";
-    btn.className = `px-3.5 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap transition-none flex items-center gap-2 cursor-pointer border-2 ${
+    btn.className = `px-3.5 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap flex items-center gap-2 cursor-pointer ${
       isActive 
-        ? "bg-white text-black border-white shadow-[3px_3px_0px_#ffe600]" 
-        : "bg-[#111417] border-[#272c30] text-[#889296] hover:text-white hover:border-white"
+        ? "block-bevel-yellow" 
+        : "block-bevel-steel"
     }`;
     btn.innerHTML = `
-      <span class="w-2 h-2 ${isActive ? 'bg-[#e60012]' : 'bg-[#ffe600]'} inline-block"></span>
+      <span class="w-2 h-2 ${isActive ? 'bg-[#000000]' : 'bg-[#ffe600]'} inline-block"></span>
       <span>${f.name}</span>
-      <span class="px-1.5 py-0.2 rounded-none text-[10px] font-mono ${isActive ? 'bg-black text-[#ffe600]' : 'bg-[#0a0b0d] text-[#889296]'}">${f.video_count !== undefined ? f.video_count : 0}</span>
+      <span class="px-1.5 py-0.2 rounded-none text-[10px] font-mono ${isActive ? 'bg-black text-[#ffe600] font-bold' : 'bg-[#0e1114] text-[#889296]'}">${f.video_count !== undefined ? f.video_count : 0}</span>
     `;
 
     btn.addEventListener("click", () => {
@@ -3596,8 +3596,8 @@ function renderLandingFolders(folders) {
   const addFolderBtn = document.createElement("button");
   addFolderBtn.type = "button";
   addFolderBtn.id = "landing-add-folder-btn";
-  addFolderBtn.className = "px-3 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap bg-[#171a1b] border border-dashed border-[#556367] text-[#8a9699] hover:text-[#f59f38] hover:border-[#e59130] cursor-pointer flex items-center gap-1.5 transition-none";
-  addFolderBtn.innerHTML = `<i data-lucide="folder-plus" class="w-3.5 h-3.5 text-[#f59f38]"></i><span>+ New Subject</span>`;
+  addFolderBtn.className = "px-3.5 py-1.5 rounded-none text-xs font-mono font-bold whitespace-nowrap bg-[#171b1e] border-2 border-dashed border-[#556367] text-[#ffe600] hover:text-white hover:border-[#ffe600] hover:bg-[#202529] cursor-pointer flex items-center gap-1.5 shadow-[0_3px_0_#000000] active:translate-y-[2px] transition-all";
+  addFolderBtn.innerHTML = `<i data-lucide="folder-plus" class="w-3.5 h-3.5 text-[#ffe600]"></i><span>+ New Subject</span>`;
   addFolderBtn.addEventListener("click", () => {
     const folderModal = document.getElementById("folder-modal");
     if (folderModal) folderModal.classList.remove("hidden");

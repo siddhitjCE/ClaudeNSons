@@ -111,53 +111,284 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
   }
 }
 
+/* ========================================================
+   1A. SOLID ARCADE BEVELED BLOCKS & COMPUTER CHASSIS
+   Authentic 3D physical relief matching arcade tetromino blocks:
+   - 2px solid black chassis outline
+   - 4-facet trapezoidal beveled shading (Top highlight, Left mid-light, Right shade, Bottom dark shadow)
+   - Deep physical 3D extrusion slab (0 4px 0 #000000)
+   - Mechanical depressed translation & lighting inversion on :active
+   ======================================================== */
+
+/* Ruby Red Block (Primary Actions, Enter, Rescue CTA) */
+.block-bevel-red {
+  background-color: #d82d17 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #ff7575,
+    inset 3px 0 0 0 #ee4a4a,
+    inset -3px 0 0 0 #9e1b10,
+    inset 0 -4px 0 0 #5c0903,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  text-shadow: 1px 1px 0 #4a0000;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+}
+
+.block-bevel-red:hover {
+  background-color: #e6341d !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 3px 0 0 #ff8c8c,
+    inset 3px 0 0 0 #f55b5b,
+    inset -3px 0 0 0 #9e1b10,
+    inset 0 -4px 0 0 #5c0903,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
+}
+
+.block-bevel-red:active {
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #5c0903,
+    inset 3px 0 0 0 #9e1b10,
+    inset -3px 0 0 0 #ee4a4a,
+    inset 0 -2px 0 0 #ff7575,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Arcade Gold / Yellow Block (Active Selectors, Badges, Checkpoints) */
+.block-bevel-yellow {
+  background-color: #e6b800 !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #fff480,
+    inset 3px 0 0 0 #ffd626,
+    inset -3px 0 0 0 #ad8300,
+    inset 0 -4px 0 0 #5e4500,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  text-shadow: none;
+  font-weight: 800;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+}
+
+.block-bevel-yellow:hover {
+  background-color: #f5c505 !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 3px 0 0 #ffff99,
+    inset 3px 0 0 0 #ffe047,
+    inset -3px 0 0 0 #ad8300,
+    inset 0 -4px 0 0 #5e4500,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
+}
+
+.block-bevel-yellow:active {
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #5e4500,
+    inset 3px 0 0 0 #ad8300,
+    inset -3px 0 0 0 #ffd626,
+    inset 0 -2px 0 0 #fff480,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Emerald Green Block (Active Practice, Recall, Success) */
+.block-bevel-green {
+  background-color: #229916 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #74f266,
+    inset 3px 0 0 0 #3bd426,
+    inset -3px 0 0 0 #14750d,
+    inset 0 -4px 0 0 #093d06,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  text-shadow: 1px 1px 0 #062804;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+}
+
+.block-bevel-green:hover {
+  background-color: #29ad1b !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 3px 0 0 #8bff7d,
+    inset 3px 0 0 0 #4fe339,
+    inset -3px 0 0 0 #14750d,
+    inset 0 -4px 0 0 #093d06,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
+}
+
+.block-bevel-green:active {
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #093d06,
+    inset 3px 0 0 0 #14750d,
+    inset -3px 0 0 0 #3bd426,
+    inset 0 -2px 0 0 #74f266,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Cyan / Sapphire Block (Info, Study Dossier, Links) */
+.block-bevel-cyan {
+  background-color: #138ec2 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #70e4ff,
+    inset 3px 0 0 0 #2ebcf2,
+    inset -3px 0 0 0 #0d6b94,
+    inset 0 -4px 0 0 #05374e,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  text-shadow: 1px 1px 0 #032535;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+}
+
+.block-bevel-cyan:hover {
+  background-color: #1aa2dc !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 3px 0 0 #8aecff,
+    inset 3px 0 0 0 #45cbff,
+    inset -3px 0 0 0 #0d6b94,
+    inset 0 -4px 0 0 #05374e,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
+}
+
+.block-bevel-cyan:active {
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #05374e,
+    inset 3px 0 0 0 #0d6b94,
+    inset -3px 0 0 0 #2ebcf2,
+    inset 0 -2px 0 0 #70e4ff,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Industrial Computer Steel Block (Tactile Keycaps, Neutral Buttons, Chassis) */
+.block-bevel-steel {
+  background-color: #24292e !important;
+  color: #f0f3f5 !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #525c64,
+    inset 3px 0 0 0 #3d454b,
+    inset -3px 0 0 0 #171a1c,
+    inset 0 -4px 0 0 #0a0c0d,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  text-shadow: 1px 1px 0 #0a0c0d;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+}
+
+.block-bevel-steel:hover {
+  background-color: #2f363d !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 3px 0 0 #68757f,
+    inset 3px 0 0 0 #4e5860,
+    inset -3px 0 0 0 #171a1c,
+    inset 0 -4px 0 0 #0a0c0d,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
+}
+
+.block-bevel-steel:active {
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #0a0c0d,
+    inset 3px 0 0 0 #171a1c,
+    inset -3px 0 0 0 #3d454b,
+    inset 0 -2px 0 0 #525c64,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* White / Light Computer Plate Block */
+.block-bevel-white {
+  background-color: #dce1e5 !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #ffffff,
+    inset 3px 0 0 0 #eff2f5,
+    inset -3px 0 0 0 #9ca6ae,
+    inset 0 -4px 0 0 #68727a,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  font-weight: 800;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+}
+
+.block-bevel-white:hover {
+  background-color: #eaf0f4 !important;
+  transform: translateY(-1px);
+}
+
+.block-bevel-white:active {
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #68727a,
+    inset 3px 0 0 0 #9ca6ae,
+    inset -3px 0 0 0 #eff2f5,
+    inset 0 -2px 0 0 #ffffff,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Solid Computer Module Chassis (Replaces flimsy yn10-pixel-box) */
 .yn10-pixel-box {
   position: relative;
-  border: 2px solid #ffffff;
-  box-shadow: 4px 4px 0px #ffffff;
-  background: #111417;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
-}
-
-/* Reticle corner accents that expand on hover */
-.yn10-pixel-box::before,
-.yn10-pixel-box::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  pointer-events: none;
-  transition: transform 0.08s steps(2), border-color 0.08s ease;
-  z-index: 10;
-}
-
-.yn10-pixel-box::before {
-  top: -4px;
-  left: -4px;
-  border-top: 2px solid var(--yn10-yellow);
-  border-left: 2px solid var(--yn10-yellow);
-}
-
-.yn10-pixel-box::after {
-  bottom: -4px;
-  right: -4px;
-  border-bottom: 2px solid var(--yn10-yellow);
-  border-right: 2px solid var(--yn10-yellow);
+  background-color: #15191c !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 2px 0 0 #3c444c,
+    inset 2px 0 0 0 #2e353c,
+    inset -2px 0 0 0 #101215,
+    inset 0 -3px 0 0 #07090b,
+    0 6px 0 0 #000000,
+    0 10px 0 0 rgba(0, 0, 0, 0.55) !important;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s ease !important;
 }
 
 .yn10-pixel-box:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0px #ffe600;
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 2px 0 0 #4f5a65,
+    inset 2px 0 0 0 #3d4750,
+    inset -2px 0 0 0 #101215,
+    inset 0 -3px 0 0 #07090b,
+    0 8px 0 0 #000000,
+    0 14px 0 0 rgba(0, 0, 0, 0.65) !important;
 }
 
-.yn10-pixel-box:hover::before {
-  transform: translate(-3px, -3px);
-  border-color: #ffffff;
+/* Video Card CRT Bezel & Screen */
+.landing-video-card {
+  border-radius: 0 !important;
 }
 
-.yn10-pixel-box:hover::after {
-  transform: translate(3px, 3px);
-  border-color: #ffffff;
+.landing-video-card .aspect-video {
+  border: 2px solid #000000 !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9) !important;
+  background: #000000 !important;
+}
+
+.folder-modal-video-card .aspect-video {
+  border: 2px solid #000000 !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9) !important;
+  background: #000000 !important;
 }
 
 /* Japanese Bilingual Label */
@@ -362,7 +593,8 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
 }
 
 /* ========================================================
-   2. TACTILE PIXEL BUTTONS (y-n10 AESTHETICS)
+   2. TACTILE ARCADE BUTTONS & MECHANICAL SWITCHES
+   Tactile computer keycaps with physical 3D block relief
    ======================================================== */
 .yn10-btn {
   display: inline-flex;
@@ -370,10 +602,16 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
   justify-content: center;
   gap: 0.5rem;
   padding: 0.65rem 1.25rem;
-  background-color: #171b1e;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  box-shadow: 4px 4px 0px #ffffff;
+  background-color: #24292e !important;
+  color: #f0f3f5 !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #525c64,
+    inset 3px 0 0 0 #3d454b,
+    inset -3px 0 0 0 #171a1c,
+    inset 0 -4px 0 0 #0a0c0d,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
   font-family: 'Share Tech Mono', monospace;
   font-size: 0.85rem;
   font-weight: 700;
@@ -381,61 +619,151 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
   letter-spacing: 0.05em;
   cursor: pointer;
   border-radius: 0 !important;
-  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease, color 0.06s ease;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease, color 0.06s ease !important;
   user-select: none;
+  text-shadow: 1px 1px 0 #0a0c0d;
 }
 
 .yn10-btn:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px #ffffff;
-  background-color: #ffffff;
-  color: #000000;
+  transform: translateY(-1px);
+  background-color: #2f363d !important;
+  color: #ffffff !important;
+  box-shadow: 
+    inset 0 3px 0 0 #68757f,
+    inset 3px 0 0 0 #4e5860,
+    inset -3px 0 0 0 #171a1c,
+    inset 0 -4px 0 0 #0a0c0d,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
 }
 
 .yn10-btn:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px transparent;
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #0a0c0d,
+    inset 3px 0 0 0 #171a1c,
+    inset -3px 0 0 0 #3d454b,
+    inset 0 -2px 0 0 #525c64,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Primary Action Button (Red with Yellow Offset Shadow) */
+/* Primary Action Button (Ruby Red Arcade Push Button) */
 .yn10-btn-primary {
-  background-color: var(--yn10-red);
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  box-shadow: 4px 4px 0px var(--yn10-yellow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background-color: #d82d17 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #ff7575,
+    inset 3px 0 0 0 #ee4a4a,
+    inset -3px 0 0 0 #9e1b10,
+    inset 0 -4px 0 0 #5c0903,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-radius: 0 !important;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+  user-select: none;
+  text-shadow: 1px 1px 0 #4a0000;
 }
 
 .yn10-btn-primary:hover {
-  background-color: #ff1f32;
-  color: #ffffff;
-  box-shadow: 2px 2px 0px var(--yn10-yellow);
+  background-color: #e6341d !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 3px 0 0 #ff8c8c,
+    inset 3px 0 0 0 #f55b5b,
+    inset -3px 0 0 0 #9e1b10,
+    inset 0 -4px 0 0 #5c0903,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
 }
 
 .yn10-btn-primary:active {
-  transform: translate(4px, 4px);
-  box-shadow: 0px 0px 0px transparent;
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #5c0903,
+    inset 3px 0 0 0 #9e1b10,
+    inset -3px 0 0 0 #ee4a4a,
+    inset 0 -2px 0 0 #ff7575,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Secondary Button (Cyan Accent) */
+/* Secondary Button (Sapphire / Cyan Accent) */
 .yn10-btn-cyan {
-  background-color: #0d1e2e;
-  color: var(--yn10-cyan);
-  border: 2px solid var(--yn10-cyan);
-  box-shadow: 3px 3px 0px var(--yn10-cyan);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background-color: #138ec2 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #70e4ff,
+    inset 3px 0 0 0 #2ebcf2,
+    inset -3px 0 0 0 #0d6b94,
+    inset 0 -4px 0 0 #05374e,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-radius: 0 !important;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, background-color 0.06s ease !important;
+  user-select: none;
+  text-shadow: 1px 1px 0 #032535;
 }
 
 .yn10-btn-cyan:hover {
-  background-color: var(--yn10-cyan);
-  color: #000000;
-  box-shadow: 1px 1px 0px var(--yn10-cyan);
+  background-color: #1aa2dc !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 3px 0 0 #8aecff,
+    inset 3px 0 0 0 #45cbff,
+    inset -3px 0 0 0 #0d6b94,
+    inset 0 -4px 0 0 #05374e,
+    0 5px 0 0 #000000,
+    0 8px 0 0 rgba(0, 0, 0, 0.55) !important;
+}
+
+.yn10-btn-cyan:active {
+  transform: translateY(3px) !important;
+  box-shadow: 
+    inset 0 4px 0 0 #05374e,
+    inset 3px 0 0 0 #0d6b94,
+    inset -3px 0 0 0 #2ebcf2,
+    inset 0 -2px 0 0 #70e4ff,
+    0 1px 0 0 #000000,
+    0 2px 0 0 rgba(0, 0, 0, 0.35) !important;
 }
 
 /* Backward Compatibility with legacy factorio classes */
 .factorio-panel {
-  background: var(--yn10-surface) !important;
-  border: 1px solid var(--yn10-border) !important;
+  background: #15191c !important;
+  border: 2px solid #000000 !important;
   border-radius: 0px !important;
-  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.6) !important;
+  box-shadow: 
+    inset 0 2px 0 0 #3c444c,
+    inset 2px 0 0 0 #2e353c,
+    inset -2px 0 0 0 #101215,
+    inset 0 -3px 0 0 #07090b,
+    0 6px 0 0 #000000,
+    0 10px 0 0 rgba(0, 0, 0, 0.55) !important;
 }
 
 .factorio-btn-primary {
@@ -443,10 +771,16 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: var(--yn10-red) !important;
+  background-color: #d82d17 !important;
   color: #ffffff !important;
-  border: 2px solid #ffffff !important;
-  box-shadow: 4px 4px 0px var(--yn10-yellow) !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #ff7575,
+    inset 3px 0 0 0 #ee4a4a,
+    inset -3px 0 0 0 #9e1b10,
+    inset 0 -4px 0 0 #5c0903,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
   border-radius: 0px !important;
   font-family: 'Share Tech Mono', monospace !important;
   text-transform: uppercase !important;
@@ -456,9 +790,12 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
 }
 
 .factorio-btn-primary:hover {
-  transform: translate(2px, 2px) !important;
-  box-shadow: 2px 2px 0px var(--yn10-yellow) !important;
-  background-color: #ff1f32 !important;
+  transform: translateY(-1px) !important;
+  background-color: #e6341d !important;
+}
+
+.factorio-btn-primary:active {
+  transform: translateY(3px) !important;
 }
 
 .factorio-btn-secondary {
@@ -466,20 +803,28 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: #171b1e !important;
-  color: #ffffff !important;
-  border: 1px solid #ffffff !important;
-  box-shadow: 3px 3px 0px #ffffff !important;
+  background-color: #24292e !important;
+  color: #f0f3f5 !important;
+  border: 2px solid #000000 !important;
+  box-shadow: 
+    inset 0 3px 0 0 #525c64,
+    inset 3px 0 0 0 #3d454b,
+    inset -3px 0 0 0 #171a1c,
+    inset 0 -4px 0 0 #0a0c0d,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
   border-radius: 0px !important;
   cursor: pointer !important;
   transition: transform 0.06s ease, box-shadow 0.06s ease !important;
 }
 
 .factorio-btn-secondary:hover {
-  transform: translate(2px, 2px) !important;
-  box-shadow: 1px 1px 0px #ffffff !important;
-  background-color: #ffffff !important;
-  color: #000000 !important;
+  transform: translateY(-1px) !important;
+  background-color: #2f363d !important;
+}
+
+.factorio-btn-secondary:active {
+  transform: translateY(3px) !important;
 }
 
 /* ========================================================
@@ -580,22 +925,29 @@ code, pre, .font-mono, #time-display, #video-duration-badge, .timeline-time-text
 }
 
 /* ========================================================
-   4. FORM CONTROLS & DROPDOWNS
+   4. FORM CONTROLS & RECESSED TERMINAL SLOTS
    ======================================================== */
 select, input, textarea {
   color-scheme: dark !important;
-  background-color: #0e1113 !important;
+  background-color: #0b0e10 !important;
   color: #ffffff !important;
-  border: 1px solid #384045 !important;
+  border: 2px solid #000000 !important;
   border-radius: 0px !important;
   font-family: 'Share Tech Mono', monospace !important;
+  box-shadow: 
+    inset 0 3px 5px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px #22282d,
+    0 2px 0 0 rgba(0, 0, 0, 0.4) !important;
   transition: border-color 0.08s ease, box-shadow 0.08s ease !important;
 }
 
 select:focus, input:focus, textarea:focus {
-  border-color: #ffffff !important;
+  border-color: #000000 !important;
   outline: none !important;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 
+    inset 0 3px 5px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 1px #ffe600,
+    0 0 8px rgba(255, 230, 0, 0.3) !important;
 }
 
 select option {
@@ -605,45 +957,117 @@ select option {
 }
 
 /* ========================================================
-   5. STUDY TABS & PANELS (y-n10 STAGE TABS)
+   5. STUDY TABS & STAGE MODULES (SOLID CARTRIDGE KEYS)
    ======================================================== */
 .tab-btn {
-  border-bottom: 2px solid transparent !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #14171a !important;
+  color: #889296 !important;
+  border: 2px solid #000000 !important;
   border-radius: 0 !important;
-  transition: background-color 0.08s ease, border-color 0.08s ease, color 0.08s ease !important;
+  box-shadow: 
+    inset 0 2px 0 #2b3238,
+    inset 2px 0 0 #21262b,
+    inset -2px 0 0 #0c0e10,
+    inset 0 -2px 0 #070809,
+    0 2px 0 0 #000000 !important;
+  transition: transform 0.06s ease, background-color 0.06s ease, color 0.06s ease, box-shadow 0.06s ease !important;
+  user-select: none;
+}
+
+.tab-btn:hover:not(.active) {
+  background: #1d2227 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 2px 0 #3b444c,
+    inset 2px 0 0 #2a3036,
+    inset -2px 0 0 #0c0e10,
+    inset 0 -2px 0 #070809,
+    0 3px 0 0 #000000 !important;
 }
 
 .tab-btn.active {
-  background-color: #171b1e !important;
-  border-bottom: 2px solid var(--yn10-yellow) !important;
+  background: #252b30 !important;
   color: #ffffff !important;
-  box-shadow: inset 0 -2px 0 var(--yn10-yellow) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 
+    inset 0 3px 0 0 var(--tab-accent, #ffe600),
+    inset 2px 0 0 0 #4a545c,
+    inset -2px 0 0 0 #121517,
+    inset 0 -3px 0 0 #000000,
+    0 4px 0 0 #000000,
+    0 6px 0 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+#tab-btn-rescue.active {
+  --tab-accent: #ffe600;
+}
+#tab-btn-recall.active {
+  --tab-accent: #00d050;
+}
+#tab-btn-cheatsheet.active {
+  --tab-accent: #00e5ff;
 }
 
 /* ========================================================
    6. SOUND SYNTHESIZER HUD TOGGLE & 8-BIT EQUALIZER BARS
+   Tactile Arcade Rocker Switch
    ======================================================== */
 .yn10-sound-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.35rem 0.65rem;
+  padding: 0.4rem 0.75rem;
   font-family: 'Share Tech Mono', monospace;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  background: #14171a;
-  border: 1px solid #3d464d;
+  background: #24292e;
+  border: 2px solid #000000;
   color: #889296;
+  box-shadow: 
+    inset 0 2px 0 #525c64,
+    inset 2px 0 0 #3d454b,
+    inset -2px 0 0 #171a1c,
+    inset 0 -3px 0 #0a0c0d,
+    0 3px 0 0 #000000;
   cursor: pointer;
   user-select: none;
-  transition: border-color 0.08s ease, color 0.08s ease, box-shadow 0.08s ease;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, color 0.06s ease, background-color 0.06s ease;
+}
+
+.yn10-sound-toggle:hover {
+  background-color: #2e353b;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 2px 0 #64707a,
+    inset 2px 0 0 #475158,
+    inset -2px 0 0 #171a1c,
+    inset 0 -3px 0 #0a0c0d,
+    0 4px 0 0 #000000;
+}
+
+.yn10-sound-toggle:active {
+  transform: translateY(2px);
+  box-shadow: 
+    inset 0 3px 0 #0a0c0d,
+    0 1px 0 0 #000000;
 }
 
 .yn10-sound-toggle.active {
-  border-color: var(--yn10-green);
   color: #ffffff;
-  box-shadow: 0 0 8px rgba(41, 143, 26, 0.4);
+  background-color: #1e2c22;
+  box-shadow: 
+    inset 0 2px 0 #74f266,
+    inset 2px 0 0 #3bd426,
+    inset -2px 0 0 #14750d,
+    inset 0 -3px 0 #093d06,
+    0 3px 0 0 #000000,
+    0 0 10px rgba(41, 143, 26, 0.45);
 }
 
 .yn10-sound-indicator {
